@@ -60,6 +60,14 @@ public class PlatformController {
 		return "index";
 	}
 	
+	 @RequestMapping("/acceptRequest")
+	 public String acceptRequest(HttpServletRequest req, Integer request_id){
+		int requestID = Integer.valueOf(request_id);
+		Boolean flag = PlatformServiceImp.acceptRequest(requestID);
+		System.out.println("flag: " + flag);
+		return "index";
+	 }
+	
 	
 	@RequestMapping("/exitTest")
 	public String exit(HttpServletRequest req) {
