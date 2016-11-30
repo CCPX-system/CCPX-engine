@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Bootstrap template</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+        <script src="js/jquery-1.11.2.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/ljs.js"></script>
+	</head>
+	
+	<body>
+	
+	
+	<script>
+	function jumpBack(){
+	location.href="HomePageSeller.html";
+	}
+	</script>
+		<div class="container">
+			<div class="header">
+
+				<!-- Form Name -->
+				<legend>Company's Presentation</legend>
+			
+				<!-- Navbar --> 
+				<nav class="navbar navbar-default" style="background-image: url('img/red.png'); background-position : 10% 10%;" role="navigation">
+					<div class="container-fluid">  
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+									data-target="#mynav">
+								<span class="sr-only">change nav</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+					   
+							</button>
+							<a class="navbar-brand" href="#">Exchange Platform</a>
+						</div>
+						<div class="collapse navbar-collapse" id="mynav">
+							<ul class="nav navbar-nav center-block pull-right">
+								<li class="nav-item pull-left">
+								  <a class="nav-link" href="HomePageSeller.html"><span class="glyphicon glyphicon-home"></span> Home </a>
+								</li>
+								
+								<li class="nav-item pull-left">
+								  <a class="nav-link" href="BusinessPage.html"><span class="glyphicon glyphicon-user"></span> Account </a>
+								</li>
+								
+								 <li class="nav-item pull-left">
+								  <a class="nav-link" href="ManageAdvertisementSeller.html"><span class="glyphicon glyphicon-bullhorn"></span> Advertisements </a>
+								</li>
+								
+								<li class="nav-item pull-left">
+								<a class="nav-link" href="StatisticsCenter.html"><span class="glyphicon glyphicon-stats"></span> Statistics Center </a>
+								</li>	
+                                
+                                <li class="nav-item pull-left">
+								<a class="nav-link" href="LoginPageSeller.html"  onclick="exitSeller()"><span class="glyphicon glyphicon-log-out"></span> Logout </a>
+								</li>														
+							</ul>
+						</div> 
+					</div>
+				</nav>
+				
+				<div class="row center-block" style="width:650PX;">
+            
+				    <div class="col-md-2 col-sm-2 col-xs-2">
+						<img class="img-responsive" src="img/logo.png"/>
+					</div>
+					
+                    <h2><b></b></h2>     
+			     </div>
+			
+				<!-- message-->
+				<div class="row">
+					<div class="col-md-4 col-sm-3 col-xs-2">
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-8" id="message">
+					</p>
+				</div>
+			</div>
+		
+		
+<!-- ********************************* ^ here ^ ********************************* -->
+<br>
+
+	
+	            <div class="row center-block" style="width:650PX;">
+            
+				    <div class="col-md-3 col-sm-1 col-xs-1">
+						<img class="img-responsive" src="${seller_result.seller_Logo}"  style="width:140px;hight:79px;" />
+					</div>
+					
+                    <h3 style="color:#39F">${seller_result.seller_Name}</h3>     
+			     </div>
+				 <br>
+				 <br>
+				 <br>
+			<div class="row center-block" >
+			<div class="col-md-1 col-sm-1 col-xs-1"></div>
+		        <div class="col-md-10 col-sm-10 col-xs-10" style="background-color:#ECECEC"  >
+			    <h2>
+				Description:
+			    </h2>
+			   <p> ${seller_result.seller_Description}
+			   <br>
+			   </P>
+			   
+			  
+				<br>
+				<br>
+				<br>
+			   </p>
+			</div>
+			<div class="col-md-1 col-sm-1 col-xs-1"></div>
+		       </div>
+			   <br>
+			   <br>
+		
+			   
+			  
+			   
+			   <div class="row center-block" style="width:100PX;"  >
+			    <button type="button" class="btn btn-info btn-lg" onclick="jumpBack()">Back</button>
+				</div>
+			
+
+	</div>
+		
+
+	
+</div>
+			
+	
+	</body>
+</html>	

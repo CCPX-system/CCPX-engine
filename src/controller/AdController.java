@@ -12,6 +12,7 @@ import model.ad_present;
 import model.advertisement;
 import model.seller;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,13 +76,12 @@ public class AdController {
 
 @RequestMapping("addAd")
 @ResponseBody
-	public void addAd(HttpServletRequest req, HttpServletResponse res, String id, String title, MultipartFile image) {
+	public void addAd(HttpServletRequest req, HttpServletResponse res, String id, String title, MultipartFile Adimage) {
 	
 	int num = adServiceImp.getNumberOfAdBySellerID(id);
 	res.setCharacterEncoding("UTF-8"); 
     res.setContentType("text/json");
     PrintWriter out =null;
-    
 	if(num>=3){
 		String message = "more_than_three";
 		        try{
@@ -99,9 +99,9 @@ public class AdController {
 	}else{
 		    String path = null;
 	        String type = null;
-	        String fileName = image.getOriginalFilename();
+	        String fileName = Adimage.getOriginalFilename();
 	        type=fileName.indexOf(".")!=-1?fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()):null;
-		  if (image.getSize()<2000000) {
+		  if (Adimage.getSize()<2000000) {
          	 type=fileName.indexOf(".")!=-1?fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()):null;
          	 if (type!=null) {
          		 if ("PNG".equals(type.toUpperCase())||"JPG".equals(type.toUpperCase())) {//图片格式正确，执行添加广告操作
@@ -109,7 +109,7 @@ public class AdController {
 		                String trueFileName="ad"+id+"_"+String.valueOf(num+1)+"."+type;
 		                path=realPath+trueFileName;
 		                try{
-		                	image.transferTo(new File(path));}
+		                	Adimage.transferTo(new File(path));}
 		                catch (IOException e) {  
 	       		            e.printStackTrace();  
 	       		        } finally {  
@@ -190,7 +190,7 @@ public class AdController {
     		        out.flush();
     		        out.close();
     		        }catch (IOException e) {  
-    		            e.printStackTrace();  
+    		            e.printStackTrace(); 
     		        } finally {  
     		            if (out != null) {  
     		                out.close();  
@@ -339,5 +339,36 @@ public class AdController {
 	
 	
 	}
+
+
+@RequestMapping("deleteAd")
+@ResponseBody
+	public void deleteAd(HttpServletRequest req, HttpServletResponse res, String id, String sellerid) {
+    advertisement ad =  adServiceImp.getAdByAdID(id);
+    String realPath=req.getSession().getServletContext().getRealPath("/")+"/";
+	String oldimage = ad.getAdvertisement_Image();
+	File f = new File(realPath+oldimage);
+    f.delete();
+    boolean b = adServiceImp.deleteAdd(id);
+	List<advertisement> advertisement_list = adServiceImp.getAdBySellerID(sellerid);
+	JSONArray json = JSONArray.fromObject(advertisement_list);
+    System.out.print(json);
+    System.out.close();
+    PrintWriter out =null;
+    
+    try{
+    out = res.getWriter();
+    out.write(json.toString());
+    out.flush();
+    out.close();
+    }catch (IOException e) {  
+        e.printStackTrace();  
+    } finally {  
+        if (out != null) {  
+            out.close();  
+        } 
+    }
+    
+}
 
 }

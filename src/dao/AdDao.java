@@ -16,5 +16,7 @@ public interface AdDao {
 	public advertisement getAdByAdID(String id);
 	
 	public boolean editAdd(advertisement ad);
+	
+	public boolean deleteAdd(String id);
 
 }

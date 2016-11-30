@@ -42,5 +42,8 @@ public class InfoManagementServiceImp implements InfoManagementService {
 	public seller getCompanyDetail(String id){
 		return infoManagementDaoImp.getCompanyDetail(id);
 	}
-
+	@Override
+	public String getIndustryInfoByID(String id){
+		return infoManagementDaoImp.getIndustryInfoByID(id);
+	}
 }

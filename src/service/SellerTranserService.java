@@ -27,5 +27,6 @@ public interface SellerTranserService {
 		public SellerStatusInfo point(Seller_transferInfoBean transferbean);
 		public List<Object> querypointrecord(int sellerid,String time1,String time2,int timelen) throws ParseException;
 		public AmountPoint questamountPoint(int sellerid,String time1,String time2) throws ParseException;
+		public int addMembership(int u_id,int seller_id,int points,int point_blocked);
 
 }

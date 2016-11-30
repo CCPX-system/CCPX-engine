@@ -114,4 +114,11 @@ public class AdDaoImp implements AdDao{
 		}
 	}
 	
+	@Override
+	public boolean deleteAdd(String id){
+		Query query=getSession().createQuery("delete from advertisement where Advertisement_id =:Advertisement_id");
+		query.setString("Advertisement_id", id);
+		query.executeUpdate();
+		return true;
+	}
 }

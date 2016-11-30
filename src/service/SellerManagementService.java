@@ -10,12 +10,6 @@ public interface SellerManagementService {
 	
 	public boolean updateSellerinfo(seller seller);
 
-	public boolean updatePassword(int Seller_id, String Seller_Password);
-	
-	boolean updateEmail(int Seller_id, String Seller_Email);
-	
-	boolean updatePhone(int Seller_id, String Seller_Telephone);
-
 	public boolean regist(seller seller);
 	
 	public seller getSellerById(int Seller_id);
