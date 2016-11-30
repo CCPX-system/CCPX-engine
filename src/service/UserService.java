@@ -3,7 +3,10 @@ package service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -359,6 +362,8 @@ public class UserService {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/json");
 		OfferDaoImpl offerDaoImpl = new OfferDaoImpl();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String updateTime = dateFormat.format(new Date());
 
 		try {
 			int user_id = Integer.parseInt(request.getParameter("user_id"));
@@ -374,7 +379,7 @@ public class UserService {
 			System.out.println(user_id);
 			String status = "OPEN";
 			Offer offer1 = new Offer(user_id, seller_from, seller_to,
-					points_from, points_to_min, status);
+					points_from, points_to_min, status, updateTime);
 			System.out.println(offerDaoImpl.making_an_offer(offer1));
 
 		} catch (SQLException e) {

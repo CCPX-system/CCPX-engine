@@ -1,42 +1,8 @@
 package model;
 
-import java.sql.Timestamp;
-
 import javax.persistence.Transient;
 
 public class Request {
-	public String getUserNameFrom() {
-		return userNameFrom;
-	}
-
-	public void setUserNameFrom(String userNameFrom) {
-		this.userNameFrom = userNameFrom;
-	}
-
-	public String getUserNameTo() {
-		return userNameTo;
-	}
-
-	public void setUserNameTo(String userNameTo) {
-		this.userNameTo = userNameTo;
-	}
-
-	public String getSellerNameFrom() {
-		return sellerNameFrom;
-	}
-
-	public void setSellerNameFrom(String sellerNameFrom) {
-		this.sellerNameFrom = sellerNameFrom;
-	}
-
-	public String getSellerNameTo() {
-		return sellerNameTo;
-	}
-
-	public void setSellerNameTo(String sellerNameTo) {
-		this.sellerNameTo = sellerNameTo;
-	}
-
 	int Rid;
 	int userFrom;
 	int userTo;
@@ -54,7 +20,7 @@ public class Request {
 	String sellerNameFrom;
 	@Transient
 	String sellerNameTo;
-	Timestamp updateTime;
+	String updateTime;
 	String status;
 
 	public int getRid() {
@@ -129,11 +95,11 @@ public class Request {
 		this.offerTo = offerTo;
 	}
 
-	public Timestamp getUpdateTime() {
+	public String getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(Timestamp updateTime) {
+	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
 	}
 
@@ -144,6 +110,37 @@ public class Request {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
+	public String getUserNameFrom() {
+		return userNameFrom;
+	}
+
+	public void setUserNameFrom(String userNameFrom) {
+		this.userNameFrom = userNameFrom;
+	}
+
+	public String getUserNameTo() {
+		return userNameTo;
+	}
+
+	public void setUserNameTo(String userNameTo) {
+		this.userNameTo = userNameTo;
+	}
+
+	public String getSellerNameFrom() {
+		return sellerNameFrom;
+	}
+
+	public void setSellerNameFrom(String sellerNameFrom) {
+		this.sellerNameFrom = sellerNameFrom;
+	}
+
+	public String getSellerNameTo() {
+		return sellerNameTo;
+	}
+
+	public void setSellerNameTo(String sellerNameTo) {
+		this.sellerNameTo = sellerNameTo;
+	}
 
 }

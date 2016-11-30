@@ -41,7 +41,8 @@ public class PlatformServiceImp implements PlatformService {
 		List<Integer> requestList = PlatformDaoImp.listOfRequest(null, offer_id);
 		for (int i = 0; i < requestList.size(); i++) {
 			Integer r1 = requestList.get(i);
-			Integer userFrom1 = PlatformDaoImp.declineRequests(r1);
+			Boolean decline = PlatformDaoImp.declineRequests(r1);
+			Integer userFrom1 = PlatformDaoImp.selectUserFrom(r1);
 			Boolean createNotification = PlatformDaoImp.createNotification(userFrom1, 5, r1);
 		}
 		System.out.println("flag: " + flag);
@@ -86,6 +87,7 @@ public class PlatformServiceImp implements PlatformService {
 	public Boolean acceptRequest(Integer request_id) {
 		System.out.println("enter accept request in serviceImp");
 		Request request = new Request();
+		request = PlatformDaoImp.requestData(request_id);
 		Integer UserFrom = request.getUserFrom();
 		Integer UserTo = request.getUserTo();
 		Integer PointsFrom = request.getPointsFrom();
@@ -94,22 +96,23 @@ public class PlatformServiceImp implements PlatformService {
 		Integer SellerTo = request.getSellerTo();
 		Integer OfferFrom = request.getOfferFrom();
 		Integer OfferTo = request.getOfferTo();
-		request = PlatformDaoImp.requestData(request_id);
-		System.out.println("Succes read request data"+request);
-//		Boolean success = PlatformDaoImp.sendExchangeToBlockChain(request_id,
-//				UserFrom, UserTo, SellerFrom,
-//				SellerTo, PointsFrom, PointsTo);
-//		// call notification notifi(OfferFrom) notifi(OfferTo) notifi(UserFrom)
+		System.out.println("Succes read request data" + request.getOfferFrom()+" "+request.getOfferTo());
+		// Boolean success = PlatformDaoImp.sendExchangeToBlockChain(request_id,
+		// UserFrom, UserTo, SellerFrom,
+		// SellerTo, PointsFrom, PointsTo);
+		// // call notification notifi(OfferFrom) notifi(OfferTo)
+		// notifi(UserFrom)
 		// notifi(UserTo)
-		//System.out.println("Succes send to BC"+success);
+		// System.out.println("Succes send to BC"+success);
 		Boolean acc = PlatformDaoImp.acceptRequest(request_id, OfferFrom, OfferTo);
 		System.out.println("Succes accept request");
 		List<Integer> requestList = PlatformDaoImp.listOfRequest(OfferFrom, OfferTo);
-		System.out.println("Succes read request list"+requestList);
+		System.out.println("Succes read request list" + requestList);
 		requestList.remove(request_id);
 		for (int i = 0; i < requestList.size(); i++) {
 			Integer r1 = requestList.get(i);
-			Integer userFrom1 = PlatformDaoImp.declineRequests(r1);
+			Boolean decline = PlatformDaoImp.declineRequests(r1);
+			Integer userFrom1 = PlatformDaoImp.selectUserFrom(r1);
 			Boolean createNotification = PlatformDaoImp.createNotification(userFrom1, 5, r1);
 		}
 		Boolean succesToUserFrom = PlatformDaoImp.createNotification(UserFrom, 2, request_id);

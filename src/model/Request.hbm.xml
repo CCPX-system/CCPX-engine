@@ -29,7 +29,7 @@
   <property generated="never" lazy="false" name="offerTo" type="int">
    <column name="OFFER_TO"/>
   </property>
-  <property generated="never" lazy="false" name="updateTime" type="timestamp">
+  <property generated="never" lazy="false" name="updateTime" type="java.lang.String">
    <column name="UPDATE_TIME"/>
   </property>
   <property generated="never" lazy="false" name="status" type="java.lang.String">

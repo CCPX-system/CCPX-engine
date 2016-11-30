@@ -23,7 +23,7 @@ public interface PlatformDao {
  	
  	public Boolean updateOfferStatus(Integer offer_id);
  	public Boolean updateRequestStatus(Integer request_id); 
- 	public Integer declineRequests(Integer request_id);
+ 	public Boolean declineRequests(Integer request_id);
  	public Request requestData (Integer request_id); 
  	public List<Integer> listOfRequest(Integer OfferFrom, Integer OfferTo);
 	
@@ -34,6 +34,7 @@ public interface PlatformDao {
  	public List<Notification> NotifListsByUserId(Integer userId);
 	public List<Notification> getNotifUnRead(Integer userId);
 	boolean sendExchangeToBlockChain(Integer Request_id, Integer userFrom, Integer userTo, Integer sellerFrom,
-			Integer sellerTo, Integer pointFrom, Integer pointTo); 
+			Integer sellerTo, Integer pointFrom, Integer pointTo);
+	public Integer selectUserFrom(Integer request_id); 
 
 }

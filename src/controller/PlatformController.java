@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;		
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -122,9 +124,31 @@ public class PlatformController {
 		return new PlatformDaoImp().searchExcahnge(sellerFrom, sellerTo, pointsFrom, pointsToMin); 
 	 }
 	 
-	 public List<Offer> showRecommendationList(Integer sellerFrom, Integer sellerTo, Integer pointsFrom, Integer pointsToMin){
-		return new PlatformDaoImp().searchExcahnge(sellerFrom, sellerTo, pointsFrom, pointsToMin); 
-	 }
+	 @RequestMapping("/showRecommendationList")  
+		public void showRecommendationList(HttpServletRequest req, HttpServletResponse resp,String seller_from,String seller_to,String points_from,String points_to_min  ) throws ServletException, IOException {
+			
+			try{
+			int sellerfrom = Integer.valueOf(seller_from);
+			int sellerto = Integer.valueOf(seller_to);
+			int pointsfrom = Integer.valueOf(points_from);
+			int pointstoMin = Integer.valueOf(points_to_min);	
+			List<Offer> list=PlatformServiceImp.showRecommendationList(sellerfrom, sellerto,
+					pointsfrom, pointstoMin);		
+			req.getSession().setAttribute("list", list);
+			
+			RequestDispatcher dispatcher = req
+				    .getRequestDispatcher("/showRecommendationResultsList.jsp");
+				  dispatcher.forward(req, resp);}
+			catch(Exception e){
+				System.out.println(e.getStackTrace());
+				RequestDispatcher dispa = req
+					    .getRequestDispatcher("/wrongEmpty.jsp");
+				 dispa.forward(req, resp);
+				
+			}
+
+		}
+	 
 	 
 	 
 	 

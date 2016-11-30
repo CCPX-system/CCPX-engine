@@ -68,8 +68,8 @@ public class OfferDaoImpl implements OfferDao{
 			ResultSet rs = null;
 			List<Offer> list=new ArrayList<Offer>();
 			String sql = "select  * from Offer where seller_from=? and seller_to=? and status=?";
-//			System.out.println(seller_from);
-//			System.out.println(seller_to);
+			System.out.println(seller_from);
+			System.out.println(seller_to);
 			try {
 				conn = JdbcUtils_C3P0.getConnection();
 				ps = conn.prepareStatement(sql);
@@ -78,7 +78,7 @@ public class OfferDaoImpl implements OfferDao{
 				ps.setString(3, "avaliable");
 				rs = ps.executeQuery();
 				while(rs.next()){
-					//System.out.println("2查询开始");
+					System.out.println("2查询开始");
 					Offer offer=new Offer();
 					offer.setOffer_id( rs.getInt(1));
 					offer.setUser_id(rs.getInt(2));
@@ -89,10 +89,10 @@ public class OfferDaoImpl implements OfferDao{
 					offer.setStatus(rs.getString(7));
 					list.add(offer);
 				}
-//				for(Offer offer2:list){
-//					System.out.println(offer2.getOffer_id());
-//				}
-//				System.out.println("2查询完成");
+				for(Offer offer2:list){
+					System.out.println(offer2.getOffer_id());
+				}
+				System.out.println("2查询完成");
 							
 			} catch (SQLException e) {
 				e.printStackTrace();

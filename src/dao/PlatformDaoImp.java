@@ -125,19 +125,22 @@ public class PlatformDaoImp implements PlatformDao {
 	}
 
 	@Override
-	public List<Offer> showRecommendationList(Integer sellerFrom, Integer sellerTo, Integer pointsFrom,
-			Integer pointsToMin) {
+	public List<Offer> showRecommendationList(Integer seller_from, Integer seller_to, Integer points_from,
+			Integer points_to_min) {	
 		List<Offer> list = new ArrayList<Offer>();
-		String hql = "from Offer where pointsFrom>= :pointsToMin and pointsToMin<= :pointsFrom "
-				+ "and sellerFrom =:sellerTo and sellerTo =:sellerFrom and status= :status";
-		Query query = getSession().createQuery(hql);
-		query.setInteger("sellerFrom", sellerFrom);
-		query.setInteger("sellerTo", sellerTo);
-		query.setInteger("pointsFrom", pointsFrom);
-		query.setInteger("pointsToMin", pointsToMin);
-		query.setString("status", "OPEN");
-		Offer offer = (Offer) query.uniqueResult();
-		list.add(offer);
+		String hql = "from Offer where points_from>= :points_to_min and points_to_min<= :points_from "
+				+ "and seller_from =:seller_to and seller_to =:seller_from and status= :status order by points_to_min";
+		int m =0;int n =5;	  
+		Query query =  getSession().createQuery(hql);
+		query.setFirstResult(m); //å¼€å§‹è®°å½•
+		query.setMaxResults(n);//æŸ¥è¯¢å¤šå°‘æ�¡
+		query.setInteger("seller_from",seller_from );
+		query.setInteger("seller_to", seller_to);
+		query.setInteger("points_from", points_from);
+		query.setInteger("points_to_min",points_to_min );	
+		query.setString("status", "open");
+		Offer offer = new Offer();
+		list = query.list();		
 		return list;
 	}
 
@@ -236,24 +239,30 @@ public class PlatformDaoImp implements PlatformDao {
 	@Override
 	public Boolean acceptRequest(Integer request_id, Integer OfferFrom, Integer OfferTo) {
 		// Update 1 request and two offers status
-		String hql = "update Request set status=:status where Rid=:Rid";
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String updateTime = dateFormat.format(new Date());
+		String hql = "update Request set status=:status, updateTime=:UPDATE_DATE where Rid=:Rid";
+		System.out.println(hql);
 		Query query = getSession().createQuery(hql);
 		query.setString("status", "CLOSED");
 		query.setInteger("Rid", request_id);
+		query.setString("UPDATE_DATE", updateTime);
 		Boolean rr = null;
 		int a = query.executeUpdate();
 		int b = 0;
 		if (OfferFrom != null) {
-			String sql1 = "update Offer set  STATUS=:STATUS where OFFER_ID=:OFFER_ID1";
+			String sql1 = "update Offer set  status=:STATUS, update_time=:UPDATE_DATE where offer_id=:OFFER_ID1";
 			Query query1 = getSession().createQuery(sql1);
 			query1.setInteger("OFFER_ID1", OfferFrom);
 			query1.setString("STATUS", "CLOSED");
+			query1.setString("UPDATE_DATE", updateTime);
 			b = query1.executeUpdate();
 		}
-		String sql2 = "update Offer set  STATUS=:STATUS where OFFER_ID=:OFFER_ID2";
+		String sql2 = "update Offer set  status=:STATUS, update_time=:UPDATE_DATE where offer_id=:OFFER_ID2";
 		Query query2 = getSession().createQuery(sql2);
 		query2.setInteger("OFFER_ID2", OfferTo);
 		query2.setString("STATUS", "CLOSED");
+		query2.setString("UPDATE_DATE", updateTime);
 		int c = query2.executeUpdate();
 
 		if (OfferFrom != null) {
@@ -297,14 +306,15 @@ public class PlatformDaoImp implements PlatformDao {
 		// recommendation
 		// here we select all of exchange request sent to OfferTo and OfferFrom
 		if (OfferFrom != null) {
-			String sql = "SELECT E.Rid from Request E where "
-					+ "(offerTo =? OR offerTo =? OR offerFrom=? OR offerFrom=?)";
+			String sql = "SELECT Rid from Request where offerTo =:A1 OR offerFrom=:A2 OR offerTo =:A3 OR offerFrom=:A4";
 			Query query = getSession().createQuery(sql);
-			query.setInteger(0, OfferFrom);
-			query.setInteger(1, OfferTo);
-			query.setInteger(2, OfferFrom);
-			query.setInteger(3, OfferTo);
-			System.out.println(query.list());
+			query.setInteger("A1", OfferFrom);
+			query.setInteger("A2", OfferFrom);
+			query.setInteger("A3", OfferTo);
+			query.setInteger("A4", OfferTo);
+			System.out.println(sql);
+			System.out.println(OfferFrom); 
+			System.out.println("OFFERFROM!=NULL " + query.list());
 			requests = query.list();
 
 		} else {
@@ -321,22 +331,32 @@ public class PlatformDaoImp implements PlatformDao {
 		return requests;
 	}
 
-	public Integer declineRequests(Integer request_id) {
-		Integer user_from;
-		String sql = "update Request set  status=:status where Rid=:Rid";
+	@Override
+	public Boolean declineRequests(Integer request_id) {
+		boolean success;
+		String sql = "update Request set status=:status where Rid=:Rid";
 		Query query = getSession().createQuery(sql);
 		query.setInteger("Rid", request_id);
 		query.setString("status", "CLOSED");
 		int a = query.executeUpdate();
 		if (a > 0) {
 			System.out.println("Request_ID " + request_id + " has been declined! Successfully");
+			success = true;
 		} else {
 			System.out.println("Request_ID " + request_id + " has not been declined! Failed");
+			success = false;
 		}
-		String hql = "select E.userFrom Request E where Rid1=:Rid";
-		Query query1 = getSession().createQuery(hql);
+		return success;
+	}
+
+	@Override
+	public Integer selectUserFrom(Integer request_id) {
+		Integer user_from;
+		String hql = "select E.userFrom from Request E where Rid=:Rid1";
+		System.out.println("HQL:" + hql);
+		Query query = getSession().createQuery(hql);
 		query.setInteger("Rid1", request_id);
-		user_from = (Integer) query1.uniqueResult();
+		user_from = (Integer) query.uniqueResult();
 
 		return user_from;
 
@@ -387,7 +407,7 @@ public class PlatformDaoImp implements PlatformDao {
 		session.save(notif);
 		session.flush();
 		session.getTransaction().commit();
-		session.close();
+		session.close(); 
 		return true;
 	}
 
