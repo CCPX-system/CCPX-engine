@@ -29,15 +29,25 @@
         		success : function(result){
 							$("#companyLogo").attr("src",result.seller_Logo);
 							$("#sellerName").text(result.seller_Name);
-							$("#sellerType").text(result.industryType_id);
 							$("#Seller_userName").text(result.seller_Username);
 							$("#sellerEmail").text(result.seller_Email);
 							$("#sellerDescription").text(result.seller_Description);
+						    $.ajax({
+        		            type : "post",
+        		            dataType:"JSON",
+        		            data : { id: result.industryType_id
+                            },
+        		            async: false,
+        		            url	: "info/getIndustryInfoByID",
+        		            success : function(result){
+							$("#sellerType").text(result.industry_name);
+					}
+        		});
 					},
 					error:function(){
 						toastr.error("error", "error");
 					}
-        		})
+        		});
         		}
         		</script>
         
@@ -79,7 +89,7 @@
 								</li>
 								
 								 <li class="nav-item pull-left">
-								  <a class="nav-link" href="Advertisements.html"><span class="glyphicon glyphicon-bullhorn"></span> Advertisements </a>
+								  <a class="nav-link" href="ManageAdvertisementSeller.html"><span class="glyphicon glyphicon-bullhorn"></span> Advertisements </a>
 								</li>
 								
 								<li class="nav-item pull-left">
@@ -87,8 +97,8 @@
 								</li>	
                                 
                                 <li class="nav-item pull-left">
-								<a class="nav-link" href="MainPage.html"><span class="glyphicon glyphicon-log-out"></span> Logout </a>
-								</li>																				
+								<a class="nav-link" href="LoginPageSeller.html"  onclick="exitSeller()"><span class="glyphicon glyphicon-log-out"></span> Logout </a>
+								</li>																			
 							</ul>
 						</div> 
 					</div>

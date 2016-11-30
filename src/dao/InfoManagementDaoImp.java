@@ -76,5 +76,15 @@ public class InfoManagementDaoImp implements InfoManagementDao {
 		seller seller_result = (seller) query.uniqueResult();
 		return seller_result;
 	}
+	
+	@Override
+	public String getIndustryInfoByID(String id){
+		String hql = "from industry_type where Industry_id=:Industry_id";
+		Query query = getSession().createQuery(hql);
+		query.setString("Industry_id", id);
+		industry_type result = (industry_type) query.uniqueResult();
+		return result.getIndustry_Name();
+	}
+
 
 }

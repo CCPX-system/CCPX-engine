@@ -101,9 +101,10 @@ public class InfoManagementController {
 		
 		
 		seller seller_result = infoManagementServiceImp.getCompanyDetail(id);
-		
+		String industry_name = infoManagementServiceImp.getIndustryInfoByID(seller_result.getIndustryType_id());
 		if(seller_result!=null){
 		req.getSession().setAttribute("seller_result", seller_result);
+		req.getSession().setAttribute("industry_name", industry_name);
 		String message = "{'message':'success'}";
 		JSONObject json = JSONObject.fromObject(message);
         System.out.print(json);
@@ -121,25 +122,31 @@ public class InfoManagementController {
                 out.close();  
             } 
         } 
-		}else{
-			String message = "{'message':'false'}";
-			JSONObject json = JSONObject.fromObject(message);
-	        System.out.print(json);
-	        System.out.close();
-	        PrintWriter out =null;
-	        try{
-	        out = res.getWriter();
-	        out.write(json.toString());
-	        out.flush();
-	        out.close();
-	        }catch (IOException e) {  
-	            e.printStackTrace();  
-	        } finally {  
-	            if (out != null) {  
-	                out.close();  
-	            } 
-	        } 
 		}
+	}
+	
+	@RequestMapping("/getIndustryInfoByID")
+	@ResponseBody
+	public void getIndustryInfoByID(HttpServletRequest req,HttpServletResponse res, String id) {
+		
+		String industry_name = infoManagementServiceImp.getIndustryInfoByID(id);
+		String message = "{'industry_name':'"+industry_name+"'}";
+		JSONObject json = JSONObject.fromObject(message);
+        System.out.print(json);
+        System.out.close();
+        PrintWriter out =null;
+        try{
+        out = res.getWriter();
+        out.write(json.toString());
+        out.flush();
+        out.close();
+        }catch (IOException e) {  
+            e.printStackTrace();  
+        } finally {  
+            if (out != null) {  
+                out.close();  
+            } 
+        } 
 	}
 	
 	@RequestMapping("/getSellerProfile")
