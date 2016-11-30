@@ -23,5 +23,8 @@
   <property generated="never" lazy="false" name="status" type="java.lang.String">
    <column name="STATUS"/>
   </property>
+  <property name="update_time" type="java.lang.String">
+   <column name="UPDATE_TIME"/>
+  </property>
  </class>
 </hibernate-mapping>
