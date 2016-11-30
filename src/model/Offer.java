@@ -8,12 +8,13 @@ public class Offer {
 	int points_from;
 	int points_to_min;
 	String status;
+	String update_time;
 
 	public Offer() {
 		super();
 	}
 
-	public Offer(int user_id, int seller_from, int seller_to, int points_from, int points_to_min, String status) {
+	public Offer(int user_id, int seller_from, int seller_to, int points_from, int points_to_min, String status, String update_time) {
 		super();
 		this.user_id = user_id;
 		this.seller_from = seller_from;
@@ -21,6 +22,7 @@ public class Offer {
 		this.points_from = points_from;
 		this.points_to_min = points_to_min;
 		this.status = status;
+		this.update_time = update_time; 
 	}
 
 	public int getOffer_id() {
@@ -78,5 +80,14 @@ public class Offer {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
+	public String getUpdate_time() {
+		return update_time;
+	}
+
+	public void setUpdate_time(String update_time) {
+		this.update_time = update_time;
+	}
+
 
 }
