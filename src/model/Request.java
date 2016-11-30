@@ -1,5 +1,7 @@
 package model;
 
+import javax.persistence.Transient;
+
 public class Request {
 	int Rid;
 	int userFrom;
@@ -10,10 +12,15 @@ public class Request {
 	int pointsTo;
 	int offerFrom;
 	int offerTo;
+	@Transient
 	String userNameFrom;
+	@Transient
 	String userNameTo;
+	@Transient
 	String sellerNameFrom;
+	@Transient
 	String sellerNameTo;
+	
 	String updateTime;
 	String status;
 	public int getRid() {
