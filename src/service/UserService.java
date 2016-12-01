@@ -3,7 +3,10 @@ package service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -270,7 +273,7 @@ public class UserService {
 	         response.setContentType("text/json");
 	         PrintWriter out = response.getWriter();
 	         JSONObject json = new JSONObject();
-	         HashMap<String, Integer>mp=(HashMap<String, Integer>) request.getParameterMap();
+	         HashMap<String, String[]>mp=(HashMap<String, String[]>) request.getParameterMap();
 	         if (mp.containsKey("seller_from")&&mp.containsKey("seller_to")) {
 	        	 int seller_from=Integer.parseInt(request.getParameter("seller_from"));
 	             int seller_to =Integer.parseInt(request.getParameter("seller_to"));
@@ -327,7 +330,7 @@ public class UserService {
 	         JSONObject json=new JSONObject();
 	         
 	 
-	         HashMap<String, Integer>mp=(HashMap<String, Integer>) request.getParameterMap();
+	         HashMap<String, String[]>mp=(HashMap<String, String[]>) request.getParameterMap();
 	         if (mp.containsKey("seller_from")&&mp.containsKey("seller_to")) {
 	        	 if(mp.containsKey("points_from")&&mp.containsKey("points_to_min")){
 	        		 int seller_from=Integer.parseInt(request.getParameter("seller_from"));
@@ -390,7 +393,8 @@ public class UserService {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/json");
 		OfferDaoImpl offerDaoImpl = new OfferDaoImpl();
-
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String updateTime = dateFormat.format(new Date());
 			int user_id = Integer.parseInt(request.getParameter("u_id"));
 			String token = request.getParameter("u_token");
 			if(!check_token(user_id, token, response))
@@ -408,7 +412,7 @@ public class UserService {
 			System.out.println(user_id);
 			String status = "OPEN";
 			Offer offer1 = new Offer(user_id, seller_from, seller_to,
-					points_from, points_to_min, status);
+					points_from, points_to_min, status, updateTime);
 			System.out.println(offerDaoImpl.making_an_offer(offer1));
 			User_to_SellerDaoImpl impl = new User_to_SellerDaoImpl();
 			impl.lockPoints(user_id, seller_from, points_from);
@@ -560,7 +564,7 @@ public class UserService {
 	        JSONObject json = new JSONObject();
 	        JSONObject json1 = new JSONObject();
 	        boolean b=false;
-	        HashMap<String, Integer>mp=(HashMap<String, Integer>) request.getParameterMap();
+	        HashMap<String, String[]>mp=(HashMap<String, String[]>) request.getParameterMap();
 	        if (mp.containsKey("offer_from")&&mp.containsKey("offer_to")) {
 	       	    int offer_from=Integer.parseInt(request.getParameter("offer_from"));
 	       	    int offer_to=Integer.parseInt(request.getParameter("offer_to"));

@@ -12,7 +12,7 @@ import java.util.List;
 
 import javax.xml.crypto.Data;
 
-import org.apache.naming.java.javaURLContextFactory;
+
 import org.springframework.data.redis.connection.srp.SrpConnection;
 
 import model.Offer;

@@ -24,6 +24,6 @@
 
 	</bean>
 	
-	<bean id="SellerService" class="service.SellerManagementServiceImp"></bean>
+	
 	
 </beans>

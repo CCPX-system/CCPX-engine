@@ -9,7 +9,7 @@
 
      <!-- 本地配置    -->
      
-   <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
     <property name="user" value="temp_user_functi"></property>
     <property name="password" value="qwerty65536"></property>
     <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
