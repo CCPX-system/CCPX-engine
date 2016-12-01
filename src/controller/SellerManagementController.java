@@ -46,9 +46,7 @@ public class SellerManagementController {
 	        PrintWriter out =null;
 	        
 			if (Seller != null) {
-				//req.getSession().setAttribute("Seller", Seller);
-				//Cookie cookie=new Cookie("sellerid",String.valueOf(Seller.getSeller_id()));
-				//res.addCookie(cookie); {'message':'success','sellerid':'sellerid','sellername':'sellername'}
+				if(Seller.getSeller_Status().equals("1")){
 		        String sellerid = String.valueOf(Seller.getSeller_id());
 		        String sellername = Seller.getSeller_Name();
 		        String message = "{'message':'success','sellerid':'"+sellerid+"','sellername':'"+sellername+"'}";
@@ -66,7 +64,27 @@ public class SellerManagementController {
 		            if (out != null) {  
 		                out.close();  
 		            } 
-		        } 
+		        }
+				}else{
+					 String sellerid = String.valueOf(Seller.getSeller_id());
+				        String sellername = Seller.getSeller_Name();
+				        String message = "{'message':'have_not_payfee','sellerid':'"+sellerid+"','sellername':'"+sellername+"'}";
+				        JSONObject json = JSONObject.fromObject(message);      
+				        System.out.print(json);
+				        System.out.close();
+				        try{
+				        out = res.getWriter();
+				        out.write(json.toString());
+				        out.flush();
+				        out.close();
+				        }catch (IOException e) {  
+				            e.printStackTrace();  
+				        } finally {  
+				            if (out != null) {  
+				                out.close();  
+				            } 
+				        }
+				}
 
 				
 			} else {
@@ -120,7 +138,7 @@ public class SellerManagementController {
 		            } 
 		        } 
 				}else{
-					String message = "{'message':'You are already a member'}";  
+					String message = "{'message':'You_are_already_a_member'}";  
 			        JSONObject json = JSONObject.fromObject(message);
 			        System.out.print(json);
 			        System.out.close();
@@ -346,77 +364,159 @@ public class SellerManagementController {
 	}
 
 	@RequestMapping("/updateSellerinfo")
-	public String updateUserinfo(HttpServletRequest req, seller seller) {
-
-		seller s = (seller) req.getSession().getAttribute("seller");
-		s.setSeller_Name(seller.getSeller_Name());
-		s.setSeller_Address(seller.getSeller_Address());
-		s.setSeller_Telephone(seller.getSeller_Telephone());
-		s.setSeller_Email(seller.getSeller_Email());
-		s.setSeller_Username(seller.getSeller_Username());
-		s.setSeller_Password(seller.getSeller_Password());
-		s.setSeller_Status(seller.getSeller_Status());
-		s.setIndustryType_id(seller.getIndustryType_id());
-		s.setSeller_Logo(seller.getSeller_Logo());
-		s.setSeller_Description(seller.getSeller_Description());
-
-		boolean b = sellerManagementServiceImp.updateSellerinfo(s);
-
-		if (b) {
-			req.getSession().removeAttribute("seller");
-
-			return "login";
-		} else {
-			return "exit";
+	public void updateSellerinfo(HttpServletRequest req, HttpServletResponse res, String seller_Name,
+			String seller_Address, String seller_Telephone, String seller_Email,
+            String industryType_id, String seller_Description, String seller_id, MultipartFile updateLogo) {
+		
+		res.setCharacterEncoding("UTF-8"); 
+	    res.setContentType("text/json");
+	    PrintWriter out =null;
+		
+		if(updateLogo==null){//未上传图片  执行其它信息的Edit
+			seller s = sellerManagementServiceImp.getSellerById( Integer.parseInt(seller_id));
+	        s.setSeller_Name(seller_Name);
+	        s.setSeller_Address(seller_Address);
+	        s.setSeller_Telephone(seller_Telephone);
+	        s.setSeller_Email(seller_Email);
+	        s.setIndustryType_id(industryType_id);
+	        s.setSeller_Description(seller_Description);
+	        sellerManagementServiceImp.updateSellerinfo(s);
+	        String message = "success_nologo";
+			        try{
+			        out = res.getWriter();
+			        out.write(message);
+			        out.flush();
+			        out.close();
+			        }catch (IOException e) {  
+			            e.printStackTrace();  
+			        } finally {  
+			            if (out != null) {  
+			                out.close();  
+			            } 
+			        } 
+		}else{//上传了图片
+			    String path = null;
+		        String type = null;
+		        String fileName = updateLogo.getOriginalFilename();
+		        type=fileName.indexOf(".")!=-1?fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()):null;
+			  if (updateLogo.getSize()<2000000) {
+	         	 type=fileName.indexOf(".")!=-1?fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()):null;
+	         	 if (type!=null) {
+	         		 if ("PNG".equals(type.toUpperCase())||"JPG".equals(type.toUpperCase())) {//图片格式正确，执行Edit操作
+	         			   seller s = sellerManagementServiceImp.getSellerById( Integer.parseInt(seller_id));
+	         		        s.setSeller_Name(seller_Name);
+	         		        s.setSeller_Address(seller_Address);
+	         		        s.setSeller_Telephone(seller_Telephone);
+	         		        s.setSeller_Email(seller_Email);
+	         		        s.setIndustryType_id(industryType_id);
+	         		        s.setSeller_Description(seller_Description);
+	         		        
+	         		       String oldimage = s.getSeller_Logo(); 
+	         		       String realPath=req.getSession().getServletContext().getRealPath("/")+"/";
+	         			    File f = new File(realPath+oldimage);
+	         	            f.delete();
+			                String trueFileName=oldimage.substring(0, oldimage.indexOf("."))+"."+type;
+			                path=realPath+trueFileName;
+			                s.setSeller_Logo(trueFileName);
+			                try{
+			                	updateLogo.transferTo(new File(path));}
+			                catch (IOException e) {  
+		       		            e.printStackTrace();  
+		       		        } finally {  
+		       		        } 
+			                boolean b = sellerManagementServiceImp.updateSellerinfo(s);
+			               if (b) {
+	           			    String message = "success";
+	           		        try{
+	           		        out = res.getWriter();
+	           		        out.write(message);
+	           		        out.flush();
+	           		        out.close();
+	           		        }catch (IOException e) {  
+	           		            e.printStackTrace();  
+	           		        } finally {  
+	           		            if (out != null) {  
+	           		                out.close();  
+	           		            } 
+	           		        } 
+	           		        
+	           		} else {
+	           			    String message = "false_exception";  
+	           		        try{
+	           		        out = res.getWriter();
+	           		        out.write(message);
+	           		        out.flush();
+	           		        out.close();
+	           		        }catch (IOException e) {  
+	           		            e.printStackTrace();  
+	           		        } finally {  
+	           		            if (out != null) {  
+	           		                out.close();  
+	           		            }//if 
+	           		        } //finally
+	           		}//else
+	         		 }//图片格式正确，执行Edit操作
+	         		 else{//图片格式不正确
+	         			    String message = "false_format_not_correct";  
+		           		        try{
+		           		        out = res.getWriter();
+		           		        out.write(message);
+		           		        out.flush();
+		           		        out.close();
+		           		        }catch (IOException e) {  
+		           		            e.printStackTrace();  
+		           		        } finally {  
+		           		            if (out != null) {  
+		           		                out.close();  
+		           		            }//if 
+		           		        } //finally
+	         		 }//图片格式不正确
+	         	 }//type!=null
+	         	 else{//type==null
+	         		seller s = sellerManagementServiceImp.getSellerById( Integer.parseInt(seller_id));
+	    	        s.setSeller_Name(seller_Name);
+	    	        s.setSeller_Address(seller_Address);
+	    	        s.setSeller_Telephone(seller_Telephone);
+	    	        s.setSeller_Email(seller_Email);
+	    	        s.setIndustryType_id(industryType_id);
+	    	        s.setSeller_Description(seller_Description);
+	    	        sellerManagementServiceImp.updateSellerinfo(s);
+	    	        String message = "success_nologo";
+	    			        try{
+	    			        out = res.getWriter();
+	    			        out.write(message);
+	    			        out.flush();
+	    			        out.close();
+	    			        }catch (IOException e) {  
+	    			            e.printStackTrace();  
+	    			        } finally {  
+	    			            if (out != null) {  
+	    			                out.close();  
+	    			            } 
+	    			        } 
+	           		       
+	         	 }//type!==null
+	         }
+	         else{//Logo.getSize()>2000000
+	         	String message = "false_size_too_big";  
+	    		        try{
+	    		        out = res.getWriter();
+	    		        out.write(message);
+	    		        out.flush();
+	    		        out.close();
+	    		        }catch (IOException e) {  
+	    		            e.printStackTrace();  
+	    		        } finally {  
+	    		            if (out != null) {  
+	    		                out.close();  
+	    		            }//if 
+	    		        } //finally
+	         }//Logo.getSize()>2000000
 		}
+
 	}
 
-	@RequestMapping("/updateSellermail")
-	public String updateSelleremail(HttpServletRequest req, String Seller_Email) {
-
-		seller seller = (seller) req.getSession().getAttribute("seller");
-
-		boolean b = sellerManagementServiceImp.updateEmail(seller.getSeller_id(), Seller_Email);
-
-		if (b) {
-			req.getSession().removeAttribute("seller");
-
-			return "login";
-		} else {
-			return "exit";
-		}
-	}
-
-	@RequestMapping("/updateSellerphone")
-	public String updateSellerephone(HttpServletRequest req, String Seller_Telephone) {
-
-		seller seller = (seller) req.getSession().getAttribute("seller");
-		System.out.println("AAA Bakary：" + Seller_Telephone);
-		boolean b = sellerManagementServiceImp.updatePhone(seller.getSeller_id(), Seller_Telephone);
-
-		if (b) {
-			req.getSession().removeAttribute("seller");
-
-			return "login";
-		} else {
-			return "exit";
-		}
-	}
-
-	@RequestMapping("/updatePassword")
-	public String updatePassword(HttpServletRequest req, String Seller_Password) {
-
-		seller seller = (seller) req.getSession().getAttribute("seller");
-
-		boolean b = sellerManagementServiceImp.updatePassword(seller.getSeller_id(), MD5Util.MD5(Seller_Password));
-
-		if (b) {
-			req.getSession().removeAttribute("seller");
-			return "login";
-		} else {
-			return "exit";
-		}
-	}
+	
 
 
 }

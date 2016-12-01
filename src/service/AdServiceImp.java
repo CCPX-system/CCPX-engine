@@ -37,8 +37,12 @@ public class AdServiceImp implements AdService {
 	public advertisement getAdByAdID(String id){
 		return adDaoImp.getAdByAdID(id);
 	}
-	
+	@Override
 	public boolean editAdd(advertisement ad){
 		return adDaoImp.editAdd(ad);
+	}
+	@Override
+	public boolean deleteAdd(String id){
+		return adDaoImp.deleteAdd(id);
 	}
 }

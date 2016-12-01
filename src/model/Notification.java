@@ -8,6 +8,7 @@ public class Notification {
 	int seen;
 	String notiDate;
 	int exchId;
+	
 	public int getNotifiId() {
 		return notifiId;
 	}

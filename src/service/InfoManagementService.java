@@ -16,5 +16,7 @@ public interface InfoManagementService {
 	public List<seller> getSellerInfo();
 	
 	public seller getCompanyDetail(String id);
+	
+	public String getIndustryInfoByID(String id);
 
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-1-7 21:46:33 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="model.Notification" table="notification">
+  <id column="NOTIFI_ID" length="11" name="notifiId" type="int"/>
+  <property generated="never" lazy="false" name="content" type="java.lang.String">
+   <column name="CONTENT"/>
+  </property>
+  <property generated="never" lazy="false" name="userId" type="int">
+   <column name="USER_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="status" type="int">
+   <column name="STATUS"/>
+  </property>
+  <property generated="never" lazy="false" name="seen" type="int">
+   <column name="SEEN"/>
+  </property>
+  <property generated="never" lazy="false" name="notiDate" type="java.lang.String">
+   <column name="NOTI_DATE"/>
+  </property>
+  <property generated="never" lazy="false" name="exchId" type="int">
+   <column name="EXCH_ID"/>
+  </property>
+ </class>
+</hibernate-mapping>

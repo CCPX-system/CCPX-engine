@@ -8,15 +8,22 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;		
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.Notification;
 import model.Offer;
 import model.Request;
+import net.sf.json.JSONArray;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import dao.PlatformDaoImp;
 import service.PlatformService;
@@ -28,10 +35,10 @@ public class PlatformController {
 	Calendar c = java.util.Calendar.getInstance(); // yyyy年MM月dd日hh时mm分ss秒
 	SimpleDateFormat f = new java.text.SimpleDateFormat("yyyy.MM.dd");
 
-	static Logger log=Logger.getLogger(SellerManagementController.class);
-	static{
-		log.info("right");
-	}
+//	static Logger log=Logger.getLogger(SellerManagementController.class);
+//	static{
+//		log.info("right");
+//	}
 	 
 	@Resource(name = "PlatformServiceImp")
 	private PlatformService PlatformServiceImp;
@@ -48,10 +55,10 @@ public class PlatformController {
 
 	@RequestMapping("/declineExchange") 
 
-	public String declineExchange(HttpServletRequest req, Integer request_id, Integer user_to) {
+	public String declineExchange(HttpServletRequest req, Integer request_id, Integer user_to, Integer user_from) {
 
 
-		Boolean flag = PlatformServiceImp.declineExchange(request_id, user_to);
+		Boolean flag = PlatformServiceImp.declineExchange(request_id, user_to, user_from);
 		System.out.println("flag: " + flag);
 		return "index";
 	}
@@ -69,7 +76,7 @@ public class PlatformController {
 	}
 	
 	 @RequestMapping("/acceptRequest")
-	 public String acceptRequest(HttpServletRequest req, Integer request_id){
+	 public String acceptRequest(@RequestParam Integer request_id){
 		int requestID = request_id;
 		Boolean flag = PlatformServiceImp.acceptRequest(requestID);
 		System.out.println("flag: " + flag);
@@ -117,7 +124,79 @@ public class PlatformController {
 		return new PlatformDaoImp().searchExcahnge(sellerFrom, sellerTo, pointsFrom, pointsToMin); 
 	 }
 	 
-	 public List<Offer> showRecommendationList(Integer sellerFrom, Integer sellerTo, Integer pointsFrom, Integer pointsToMin){
-		return new PlatformDaoImp().searchExcahnge(sellerFrom, sellerTo, pointsFrom, pointsToMin); 
+	 @RequestMapping("/showRecommendationList")  
+		public void showRecommendationList(HttpServletRequest req, HttpServletResponse resp,String seller_from,String seller_to,String points_from,String points_to_min  ) throws ServletException, IOException {
+			
+			try{
+			int sellerfrom = Integer.valueOf(seller_from);
+			int sellerto = Integer.valueOf(seller_to);
+			int pointsfrom = Integer.valueOf(points_from);
+			int pointstoMin = Integer.valueOf(points_to_min);	
+			List<Offer> list=PlatformServiceImp.showRecommendationList(sellerfrom, sellerto,
+					pointsfrom, pointstoMin);		
+			req.getSession().setAttribute("list", list);
+			
+			RequestDispatcher dispatcher = req
+				    .getRequestDispatcher("/showRecommendationResultsList.jsp");
+				  dispatcher.forward(req, resp);}
+			catch(Exception e){
+				System.out.println(e.getStackTrace());
+				RequestDispatcher dispa = req
+					    .getRequestDispatcher("/wrongEmpty.jsp");
+				 dispa.forward(req, resp);
+				
+			}
+
+		}
+	 
+	 
+	 
+	 
+	 private void CreateNotifications(Integer UserId, Integer Status, Integer ER_ID){
+		 System.out.println(UserId+" "+Status);
+		 
+		 Boolean b = PlatformServiceImp.createNotification(UserId, Status, ER_ID);
+		 if(b){
+			 System.out.println("NotifFlag: " + b+" Success!");
+		 }else{
+			 System.out.println("NotifFlag: " + b+" Failed!");
+		 }
 	 }
+	 
+	 
+	 	 
+	 
+	 //------------NOTIFACTION TESTPAGE--------------
+	 @RequestMapping(value="/create_notification", method = RequestMethod.GET)
+	 public @ResponseBody String CreateNotification(@RequestParam Integer UserId, Integer Status, Integer ER_ID){
+		 System.out.print(UserId);
+		 String msg = null;
+		 Boolean flag = PlatformServiceImp.createNotification(UserId, Status, ER_ID);
+		 if(flag){
+			 System.out.println("NotifFlag: " + flag+" Success!");
+			 msg="success";
+		 }else{
+			 System.out.println("NotifFlag: " + flag+" Failed!");
+			 msg="failed";
+		 }
+		 return msg;
+	 }
+	 
+	 @RequestMapping(value="/notif_list_by_user_id", method = RequestMethod.GET)
+	 public @ResponseBody JSONArray NotifListsByUserId(@RequestParam Integer userId){
+		List<Notification> notiflitsList = PlatformServiceImp.NotifListsByUserId(userId);
+		JSONArray json = JSONArray.fromObject(notiflitsList);
+		System.out.print(json);
+		return json;
+	 }
+	 @RequestMapping(value="/notif_unread", method = RequestMethod.GET)
+	 public @ResponseBody int getNotifUnread(@RequestParam Integer userId){
+		 List<Notification> notif = PlatformServiceImp.getNotifUnread(userId);
+		 JSONArray jsonArray = JSONArray.fromObject(notif);
+		 System.out.print(jsonArray.size());
+		 int a = jsonArray.size();
+		 return a; 
+	 }
+	 
+	 
 }

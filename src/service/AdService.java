@@ -19,4 +19,6 @@ public interface AdService {
 	
 	public boolean editAdd(advertisement ad);
 
+	
+	public boolean deleteAdd(String id);
 }
