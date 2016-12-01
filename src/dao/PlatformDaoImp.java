@@ -5,11 +5,13 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import utils.JdbcUtils_C3P0;
 import org.apache.commons.io.IOUtils;
 
 import dao.PlatformDao;
@@ -26,6 +28,8 @@ import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSONObject;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 import javax.annotation.Resource;
 
@@ -391,7 +395,35 @@ public class PlatformDaoImp implements PlatformDao {
 		 * CLOSE_REQUEST ; 3 = REMOVE_OFFER 4 = REMOVE_REQUEST ; 5 =
 		 * DECLINE_REQUEST ; 6 = REQUEST_PENDING
 		 */
+		
+		/*
+		Connection conn = null;
+		PreparedStatement ps = null;
+		String sql = "insert into notification(USER_ID, EXCH_ID, CONTENT, STATUS, SEEN, NOTI_DATE) "
+				+ "values(?,?,?,?,?,?)";
+		try {
+			conn = JdbcUtils_C3P0.getConnection();
+			ps = conn.prepareStatement(sql);
 
+			ps.setInt(1, userId);
+			ps.setInt(2, eR_ID);
+			ps.setString(3, content);
+			ps.setInt(4, status);
+			ps.setInt(5, 0);
+			ps.setString(6, nDateString);
+			ps.executeUpdate();
+			
+			return true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+			//throw new SQLException("用户注册失败");
+			
+		} finally {
+			JdbcUtils_C3P0.release(conn, ps, null);
+		}
+		*/
 		// SET DATA TO NOTIFICATION MODEL
 		Notification notif = new Notification();
 		notif.setUserId(userId);
@@ -407,8 +439,9 @@ public class PlatformDaoImp implements PlatformDao {
 		session.save(notif);
 		session.flush();
 		session.getTransaction().commit();
-		session.close(); 
+		session.clear(); 
 		return true;
+		
 	}
 
 	@Override

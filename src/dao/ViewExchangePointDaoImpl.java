@@ -122,7 +122,7 @@ public class ViewExchangePointDaoImpl implements ViewExchangePointDao{
 	@Override
 	public String getUserNameByUserId(int userId) {
 		String hql="SELECT u_name FROM user WHERE u_id= :userId";
-		Query query=getSession().createQuery(hql);
+		Query query=getSession().createSQLQuery(hql);
 		query.setInteger("userId", userId);
 		String userName=(String) query.uniqueResult();
 		return userName;
