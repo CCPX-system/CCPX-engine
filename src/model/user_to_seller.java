@@ -3,6 +3,7 @@ package model;
 public class user_to_seller {
 	private int u_id;
 	private int seller_id;
+	private String seller_name;
 	private int points;
 	private int points_blocked;
 	
@@ -32,5 +33,11 @@ public class user_to_seller {
 	}
 	public void setpoints_blocked(int points_blocked) {
 		this.points_blocked = points_blocked;
+	}
+	public String getSeller_name() {
+		return seller_name;
+	}
+	public void setSeller_name(String seller_name) {
+		this.seller_name = seller_name;
 	}
 }
