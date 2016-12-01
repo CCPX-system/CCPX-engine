@@ -407,7 +407,7 @@ public class PlatformDaoImp implements PlatformDao {
 		session.save(notif);
 		session.flush();
 		session.getTransaction().commit();
-		session.close(); 
+		session.clear(); 
 		return true;
 	}
 
