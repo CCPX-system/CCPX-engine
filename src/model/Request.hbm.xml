@@ -3,49 +3,37 @@
                                    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2015-1-7 21:46:33 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
- <class name="model.Request" table="Request">
-  <id length="11" name="Rid" type="int"/>
-  <property name="userFrom" type="int">
-   <column name="userFrom"/>
-  </property>   
-  <property name="userTo" type="int">
-   <column name="userTo"/>
+ <class name="model.Request" table="request">
+  <id column="R_ID" length="11" name="Rid" type="int"/>
+  <property generated="never" lazy="false" name="userFrom" type="int">
+   <column name="U_ID_FROM"/>
   </property>
-    <property name="sellerFrom" type="int">
-   <column name="sellerFrom"/>
+  <property generated="never" lazy="false" name="userTo" type="int">
+   <column name="U_ID_TO"/>
   </property>
-    <property name="sellerTo" type="int">
-   <column name="sellerTo"/>
+  <property generated="never" lazy="false" name="sellerFrom" type="int">
+   <column name="SELLER_ID_FROM"/>
   </property>
-    <property name="pointsFrom" type="int">
-   <column name="pointsFrom"/>
+  <property generated="never" lazy="false" name="sellerTo" type="int">
+   <column name="SELLER_ID_TO"/>
   </property>
-    <property name="pointsTo" type="int">
-   <column name="pointsTo"/>
+  <property generated="never" lazy="false" name="pointsFrom" type="int">
+   <column name="POINTS_FROM"/>
   </property>
-  <property name="offerFrom" type="int">
-   <column name="offerFrom"/>
+  <property generated="never" lazy="false" name="pointsTo" type="int">
+   <column name="POINTS_TO"/>
   </property>
-   <property name="offerTo" type="int">
-   <column name="offerTo"/>
+  <property generated="never" lazy="false" name="offerFrom" type="int">
+   <column name="OFFER_FROM"/>
   </property>
-  <property generated="never" lazy="false" name="userNameFrom" type="java.lang.String">
-   <column name="userNameFrom"/>
-  </property>
-  <property generated="never" lazy="false" name="userNameTo" type="java.lang.String">
-   <column name="userNameTo"/>
-  </property>
-  <property generated="never" lazy="false" name="sellerNameFrom" type="java.lang.String">
-   <column name="sellerNameFrom"/>
-  </property>
-  <property generated="never" lazy="false" name="sellerNameTo" type="java.lang.String">
-   <column name="sellerNameTo"/>
+  <property generated="never" lazy="false" name="offerTo" type="int">
+   <column name="OFFER_TO"/>
   </property>
   <property generated="never" lazy="false" name="updateTime" type="java.lang.String">
-   <column name="updateTime"/>
+   <column name="UPDATE_TIME"/>
   </property>
   <property generated="never" lazy="false" name="status" type="java.lang.String">
-   <column name="status"/>
-  </property> 
+   <column name="STATUS"/>
+  </property>
  </class>
 </hibernate-mapping>

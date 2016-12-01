@@ -4,24 +4,27 @@
 <!-- Generated 2015-1-7 21:46:33 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
  <class name="model.Offer" table="Offer">
-  <id length="11" name="OFFER_ID" type="int"/>
-  <property name="userID" type="int">
+  <id length="11" name="offer_id" type="int"/>
+  <property generated="never" lazy="false" name="user_id" type="int">
    <column name="USER_ID"/>
   </property>
-  <property name="sellerFrom" type="int">
+  <property generated="never" lazy="false" name="seller_from" type="int">
    <column name="SELLER_FROM"/>
   </property>
-  <property name="sellerTo" type="int">
+  <property generated="never" lazy="false" name="seller_to" type="int">
    <column name="SELLER_TO"/>
   </property>
-  <property name="pointsFrom" type="int">
+  <property generated="never" lazy="false" name="points_from" type="int">
    <column name="POINTS_FROM"/>
   </property>
-  <property name="pointsToMin" type="int">
+  <property generated="never" lazy="false" name="points_to_min" type="int">
    <column name="POINTS_TO_MIN"/>
   </property>
-  <property name="status" type="java.lang.String">
+  <property generated="never" lazy="false" name="status" type="java.lang.String">
    <column name="STATUS"/>
- </property>
+  </property>
+  <property name="update_time" type="java.lang.String">
+   <column name="UPDATE_TIME"/>
+  </property>
  </class>
 </hibernate-mapping>

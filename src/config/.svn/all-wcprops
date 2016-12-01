@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/userccpx/!svn/ver/11/CCPX-application/src/config
+END
+hibernate.cfg.xml
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/userccpx/!svn/ver/1/CCPX-application/src/config/hibernate.cfg.xml
+END
+spring-data.xml
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/userccpx/!svn/ver/1/CCPX-application/src/config/spring-data.xml
+END
+spring-hibernate.xml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/userccpx/!svn/ver/1/CCPX-application/src/config/spring-hibernate.xml
+END
+spring-beans.xml
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/userccpx/!svn/ver/1/CCPX-application/src/config/spring-beans.xml
+END
+spring-servlet.xml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/userccpx/!svn/ver/11/CCPX-application/src/config/spring-servlet.xml
+END

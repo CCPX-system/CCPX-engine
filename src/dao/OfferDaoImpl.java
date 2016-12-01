@@ -8,10 +8,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Offer;
-import model.Record;
+//import model.Record;
 import utils.JdbcUtils_C3P0;
 
 public class OfferDaoImpl implements OfferDao{
+	
+	@Override
+	public Offer getOfferByID(int offer_id) throws SQLException {
+		Offer offer=new Offer();
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String sql = "select  * from Offer where offer_id=? ";
+		try {
+			conn = JdbcUtils_C3P0.getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1,offer_id);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				offer.setOffer_id( rs.getInt(1));
+				offer.setUser_id(rs.getInt(2));
+				offer.setSeller_from(rs.getInt(3));
+				offer.setSeller_to(rs.getInt(4));
+				offer.setPoints_from(rs.getInt(5));
+				offer.setPoints_to_min(rs.getInt(6));
+				offer.setStatus(rs.getString(7));
+			}				
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException("获取offer信息失败");
+		} finally {
+			JdbcUtils_C3P0.release(conn, ps, null);
+		}
+		return offer;
+
+	}
 
 	@Override
 	public ArrayList<Offer> getExchangeOffers( int seller_from, int seller_to,int points_from, int points_to_min)
@@ -59,6 +90,8 @@ public class OfferDaoImpl implements OfferDao{
 		return (ArrayList<Offer>) list;
 		
 	}
+	
+	
 
 	@Override
 		public ArrayList<Offer> getExchangeOffers( int seller_from, int seller_to)
@@ -75,7 +108,7 @@ public class OfferDaoImpl implements OfferDao{
 				ps = conn.prepareStatement(sql);
 				ps.setInt(1,seller_to);
 				ps.setInt(2,seller_from);
-				ps.setString(3, "avaliable");
+				ps.setString(3, "1");//available
 				rs = ps.executeQuery();
 				while(rs.next()){
 					//System.out.println("2查询开始");
@@ -134,7 +167,6 @@ public class OfferDaoImpl implements OfferDao{
 		}
 		
 	}
-
 	@Override
 	public String cancelOffers(int offer_id, int user_id) throws SQLException {
 		Connection conn = null;
@@ -154,6 +186,37 @@ public class OfferDaoImpl implements OfferDao{
 		} finally {
 			JdbcUtils_C3P0.release(conn, ps, null);
 		}
+	}
+
+	@Override
+	public boolean offerFinished(int offer_id, int points_from, int points_to) throws SQLException {
+		Offer offer=new OfferDaoImpl().getOfferByID(offer_id);
+		User_to_SellerDaoImpl user_to_SellerDaoImpl=new User_to_SellerDaoImpl();
+		if (user_to_SellerDaoImpl.substractLockedPoints(offer.getUser_id(), offer.getSeller_from(), offer.getPoints_from())) 
+			if (user_to_SellerDaoImpl.addPoints(offer.getUser_id(), offer.getSeller_to(), points_to))
+			 if (user_to_SellerDaoImpl.addPoints(offer.getUser_id(), offer.getSeller_from(),offer.getPoints_from()-points_from))
+		       return true;
+		return false;
+	}
+
+	@Override
+	public boolean setStatus(int offer_id, String status) throws SQLException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		String sql = "update Offer set status=? where offer_id=? ";
+		try {
+			conn = JdbcUtils_C3P0.getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, status);
+			ps.setInt(2, offer_id);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			JdbcUtils_C3P0.release(conn, ps, null);
+		}
+		return true;
 	}
 }
 
