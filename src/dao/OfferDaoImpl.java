@@ -190,8 +190,33 @@ public class OfferDaoImpl implements OfferDao{
 
 	@Override
 	public boolean offerFinished(int offer_id, int points_from, int points_to) throws SQLException {
-		// TODO Auto-generated method stub
+		Offer offer=new OfferDaoImpl().getOfferByID(offer_id);
+		User_to_SellerDaoImpl user_to_SellerDaoImpl=new User_to_SellerDaoImpl();
+		if (user_to_SellerDaoImpl.substractLockedPoints(offer.getUser_id(), offer.getSeller_from(), offer.getPoints_from())) 
+			if (user_to_SellerDaoImpl.addPoints(offer.getUser_id(), offer.getSeller_to(), points_to))
+			 if (user_to_SellerDaoImpl.addPoints(offer.getUser_id(), offer.getSeller_from(),offer.getPoints_from()-points_from))
+		       return true;
 		return false;
+	}
+
+	@Override
+	public boolean setStatus(int offer_id, String status) throws SQLException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		String sql = "update Offer set status=? where offer_id=? ";
+		try {
+			conn = JdbcUtils_C3P0.getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, status);
+			ps.setInt(2, offer_id);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			JdbcUtils_C3P0.release(conn, ps, null);
+		}
+		return true;
 	}
 }
 
