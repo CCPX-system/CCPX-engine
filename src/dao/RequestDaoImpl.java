@@ -190,9 +190,11 @@ public class RequestDaoImpl implements RequestDao{
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		String sql="update request set status='DECLINE' where r_id="+r_id+" and u_id_to="+user_to;
+		String sql="update request set status='DECLINE' where r_id=? and u_id_to=?";
 		try {
 			conn = JdbcUtils_C3P0.getConnection();
+			ps.setInt(1, r_id);	
+			ps.setInt(2, user_to);	
 			ps = conn.prepareStatement(sql);
 			ps.executeUpdate();
 
@@ -209,9 +211,13 @@ public class RequestDaoImpl implements RequestDao{
 		if (request.getOfferFrom()==0) {
 			if (user_to_SellerDaoImpl.addPoints(request.getUserFrom(), request.getSellerFrom(), request.getPointsFrom())) 
 				if (user_to_SellerDaoImpl.substractLockedPoints(request.getUserFrom(), request.getSellerFrom(), request.getPointsFrom()))
+					 if(new OfferDaoImpl().setStatus(request.getOfferTo(), "OPEN"))
 			return true;
 		}
-		else{	return true;
+		else{
+			if(new OfferDaoImpl().setStatus(request.getOfferFrom(), "OPEN"))
+				if(new OfferDaoImpl().setStatus(request.getOfferTo(), "OPEN"))
+			      return true;
 		}
 		
 		return false;
@@ -224,15 +230,16 @@ public class RequestDaoImpl implements RequestDao{
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		Request request=new RequestDaoImpl().getRequestById(r_id);
-		if (!request.getStatus().equals("PENDING")) {
+		if (!request.getStatus().equals("PENDING")||request.getUserTo()!=user_to) {
 			return false;
 		}
-		String sql="update request set status='CLOSED' where r_id="+r_id +" and u_id_to="+user_to;
+		String sql="update request set status='CLOSED' where r_id=? and u_id_to=?";
 		try {
 			conn = JdbcUtils_C3P0.getConnection();
 			ps = conn.prepareStatement(sql);
+			ps.setInt(1, r_id);	
+			ps.setInt(2, user_to);	
 			ps.executeUpdate();
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
