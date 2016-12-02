@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Pay Member Fee</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+        <script src="js/jquery-1.11.2.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/ljs.js"></script>
+        <script>
+        
+  function checkActivationCode(){
+  var code =document.getElementById("activationCode").value;
+  var sellerid = getCookie("sellerid");
+  $.ajax({
+	type: "POST",
+    dataType:"JSON",
+    url: "seller/checkActivationCode",
+    async: false,
+    data: {code: code,
+    sellerid: sellerid
+    },
+	success:function (data) {
+		if(data.message == "success") {
+		alert("Activation Success!!");
+		location.href="HomePageSeller.html";
+			return true;
+		}else if(data.message == "You_are_already_a_member"){
+		alert("You have Activated before.");
+		location.href="HomePageSeller.html";
+		return true;
+		}
+		else{
+		alert(data.message);
+			return false;
+		}
+	}
+});
+  }
+  </script>
+  
+  
+	</head>
+	
+	<body onload="getsellerInfo()">
+		<div class="container">
+		
+			<div class="header">
+
+				<!-- Form Name -->
+				<legend>Pay Member fee</legend>
+			
+				<!-- Navbar --> 
+				<nav class="navbar navbar-default" style="background-image: url('img/red.png'); background-position : 10% 10%;" role="navigation">
+					<div class="container-fluid">  
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+									data-target="#mynav">
+								<span class="sr-only">change nav</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+					   
+							</button>
+							<a class="navbar-brand" href="#">Exchange Platform</a>
+						</div>
+						<div class="collapse navbar-collapse" id="mynav">
+							<ul class="nav navbar-nav center-block pull-right">
+                                
+                                <li class="nav-item pull-left">
+								  <a class="nav-link" href="RegistrationSeller.html"><span class="glyphicon glyphicon-check"></span> Register</a>
+								</li>
+                                
+								<li class="nav-item pull-left">
+								  <a class="nav-link" href="LoginPageSeller.html"><span class="glyphicon glyphicon-user"></span> Login</a>
+								</li>												
+							</ul>
+						</div> 
+					</div>
+				</nav>
+			
+				<!-- Website Logo -->
+				<div class="row">
+					<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="Logo"></label>
+					<div class="col-md-2 col-sm-4 col-xs-6">
+						<img class="img-responsive center-block" src="img/logo.png" width="60%" />
+						<br>
+					</div>
+				</div>
+				
+				<!-- message-->
+				<div class="row">
+					<div class="col-md-3 col-sm-3 col-xs-1">
+					</div>
+					<p id="message"> You need to pay member fee! Please enter the activation code you received...
+					</p>
+				</div>
+			</div>
+		
+			
+			<form class="form-horizontal" action="" method="post">
+			<fieldset>
+<!-- 
+			
+			<!~~ Company~~>
+			<div class="form-group">
+				<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="seller"> Company
+				</label>  
+				<div class="col-md-2 col-sm-4 col-xs-6">
+					<div id="admin" name="admin" style="font-size:20px; color: blue; text-align: center;"><b>xxxxxx</b></div>
+				</div>
+			</div>
+ -->
+
+			<!-- code activation input-->
+			<div class="form-group">
+				<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="codeAct"> Activation code
+				</label>  
+				<div class="col-md-2 col-sm-4 col-xs-6">
+					<input id="activationCode" name="activationCode" type="text" placeholder="enter your activation code" class="form-control input-sm">
+				</div>
+			</div>
+
+
+				</div>
+			</div>
+
+			<!-- Button -->
+			<div class="form-group">
+				<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="loginbutton">
+				</label>
+				<div class="col-md-2 col-sm-4 col-xs-6">
+				<br>
+					<button type="button" id="activation" type="submit" class="btn btn-primary center-block" onClick="checkActivationCode()" >Submit</button>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 col-sm-2 col-xs-1 control-label" for="sellerarea">
+				</label>
+				
+			</div>
+
+		</fieldset>
+		</form>
+		
+		</div>
+	</body>
+  
+</html>
