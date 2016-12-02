@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Exchanges status</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="bootstrap/css/toastr.css" rel="stylesheet">
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+        <script src="scripts/jquery.min.js"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
+        <script src="bootstrap/js/jquery.md5.js"></script>
+        <script src="bootstrap/js/jquery.cookie.js"></script>
+        <script src="bootstrap/js/toastr.js"></script>
+		<script src="scripts/function.js"></script>
+        <script src="scripts/ljs.js"></script>
+        <script src="scripts/flo.js"></script>
+        <script src="bootstrap/js/toastr.min.js"></script>
+	</head>
+	
+	<body onload="getUserExchangeOffers();getUserExchangeRequests();">
+		<div class="container">
+		
+			<div class="header">
+
+				<!-- Form Name -->
+				<legend>Exchange Status</legend>
+			
+				<!-- Navbar --> 
+				<nav class="navbar navbar-default" style="background-image: url('img/blue.png'); background-position : 10% 10%;" role="navigation">
+					<div class="container-fluid">  
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+									data-target="#mynav">
+								<span class="sr-only">change nav</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+					   
+							</button>
+							<a class="navbar-brand" href="#">Exchange Platform</a>
+						</div>
+						<div class="collapse navbar-collapse" id="mynav">
+							<ul class="nav navbar-nav center-block pull-right">
+								<li class="nav-item pull-left">
+								  <a class="nav-link" href="HomePage.html"><span class="glyphicon glyphicon-home"></span> Home </a>
+								</li>
+								
+								<li class="nav-item pull-left">
+								  <a class="nav-link" href="MyAccount.html"><span class="glyphicon glyphicon-user"></span> My Account </a>
+								</li>
+								
+								 <li class="nav-item pull-left">
+								  <a class="nav-link" href="MyPointsPage.html"><span class="glyphicon glyphicon-yen"></span> My Points </a>
+								</li>
+								
+								<li class="nav-item pull-left">
+								<a class="nav-link" href="ListOfSellersPage2.html"><span class="glyphicon glyphicon-shopping-cart"></span> List Of Companies </a>
+								</li>	
+                                
+                                <li class="nav-item pull-left">
+								<a class="nav-link" href="ExchangeCenter.html"><span class="glyphicon glyphicon-transfer"></span><U> Exchange Center </U></a>
+  								</li>	
+  								
+  								 <li class="nav-item pull-left">
+								<a class="nav-link" href="Notification.html"><span class="glyphicon glyphicon-envelope"></span> Notifications </a>
+  								</li>	
+                                
+                                <li class="nav-item pull-left">
+								<a class="nav-link" href="#" onclick="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout </a>
+								</li>																				
+							</ul>
+						</div> 
+					</div>
+				</nav>
+			
+            <!-- Website Logo -->
+		        <div class="row">
+ 					<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="Logo"></label>
+ 					<div class="col-md-2 col-sm-4 col-xs-6">
+ 					<img class="img-responsive center-block" src="img/logo.png" width="60%" />
+  					</div>
+				</div>
+       </div>
+       
+       <!--offer sub & add-->
+       	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div class="panel-group" id="panel-682709">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						 <a class="panel-title" data-toggle="collapse" data-parent="#panel-682709" href="#panel-element-11947">My offers</a>
+					</div>
+					<div id="panel-element-11947" class="panel-collapse in">
+						<div class="panel-body" style="background-color:#ECECEC;">
+					    <div class="row clearfix">
+                        <div class="col-md-12 column">
+                        <div class="table-responsive">
+                                            <table class="table table-hover table-striped">
+                                                <tbody id="exchangeOffersList">
+                                                </tbody>
+                                            </table>
+<!-- 
+                                            <table class="table table-hover table-striped">
+                                                <tbody>
+               									<tr><td class='col-md-1'></td>
+               									<td class='col-md-2'><img class='img-rounded' src='img/blue.png' width='50' height='50' /><b>pointsFrom</b> pts</td>
+               									<td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td>
+               									<td class='col-md-2'><img class='img-rounded' src='img/blue.png' width='50' height='50' /><b>pointsTo+</b>pts</td>
+               									<td class='col-md-1'><br><p>Candidate:</p></td>
+                                                <td class='col-md-1'><img class='img-circle' src='img/bonus.png' width='50' height='50' /></td>
+                                                <td class='col-md-1'><br><a onclick='SeeUserProfile("+val.userFrom+")'>"+val.userNameFrom+"</a></td>
+               									<td class='col-md-1'><br><button type='button' class='btn btn-success' onclick='accept_Offer("+val.offer_id+")'><i class='glyphicon glyphicon-check'></i></button></td>
+               									<td class='col-md-1'><br><button type='button' class='btn btn-info' onclick='rejectOffer("+val.offer_id+")'><i class='glyphicon glyphicon-ban-circle'></i></button></td>
+               									<td class='col-md-1'><br><button type='button' class='btn btn-danger' onclick='deleteOffer("+val.offer_id+")'><i class='glyphicon glyphicon-trash'></i></button></td></tr>
+
+                                                </tbody>
+                                            </table>
+ -->
+                                            
+                                    </div>  
+                                    </div>
+                                    </div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						 <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-682709" href="#panel-element-230611">My requests</a>
+					</div>
+					<div id="panel-element-230611" class="panel-collapse collapse">
+						<div class="panel-body" style="background-color:#ECECEC;">
+							<div class="row clearfix">
+                            <div class="col-md-12 column">
+                            <br>
+                            <div class="table-responsive">
+                           				<table class="table table-hover table-striped">
+                                            <tbody id="exchangeRequestsList">
+                                            </tbody>
+                                        </table>
+<!-- 
+                                        <table class="table table-hover table-striped">
+                                                <tbody>
+                                                 <tr>
+                                                 <td class='col-md-1'></td>
+                                                 <td class='col-md-2'><img class='img-rounded' src="img/blue.png" width='50' height='50' /><b>+val.pointsFrom+</b>pts</td>
+                                                 <td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td>
+                                                 <td class='col-md-2'><img class='img-rounded' src="img/blue.png" width='50' height='50' /><b>"+val.pointsTo+"</b>pts</td>
+                                                 <td class='col-md-2'><img class='img-circle' src='img/bonus.png' width='50' height='50' /><a onclick='SeeUserProfile("+val.userFrom+")'>"+val.userNameFrom+"</a></td>
+                                                 <td class='col-md-1'>+val.status+</td><td class='col-md-1'><button type='button' class='btn btn-danger' onclick='deleteOffer("+val.offer_id+")' name='deleteofferbutton'><i class='glyphicon glyphicon-trash'></i></button></td>
+                                                 </tr>
+                                                </tbody>
+                                    	</table>
+ -->
+                                    
+                                </div> 
+                                </div>
+                                </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+         
+    
+     <!--button-->   
+            <br>  
+            <div class="row clearfix">
+            <div class="col-md-12 column">
+            <div class="col-md-5 col-sm-4 col-xs-4">
+            </div>
+           
+            <div class="col-md-4 col-sm-4 col-xs-2">
+            <a href="ExchangeCenter.html"><button style="margin-bottom:10px;" type="button" class="btn btn-default btn-info">Back</button></a>
+            </div>   
+            </div>
+            </div>
+            
+				
+		</div>
+	</body>
+  
+</html>
