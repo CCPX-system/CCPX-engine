@@ -56,7 +56,7 @@ function historyTable(){
         type : "get",
         data : {'u_id':id,'u_token':token},
         async: false,
-        url : "/ccpx/user/all_records",
+        url : "/user/all_records",
         success : function(result){
             if (result.errno==0) { 
 				var i;
@@ -171,7 +171,7 @@ function exchangesFound(){
         type : "post",
         data : {'u_id':id,'u_token':token,'seller_from':sellerfrom,'seller_to':sellerto,'points_from':pointsfrom,'points_to_min':pointsto},
         async: false,
-        url : "/ccpx/user/searchExchangeOffer",
+        url : "/user/searchExchangeOffer",
         success : function(result){
             if (result.errno==0) { // parameter in their response
 				$.cookie('u_id_from',result.rsm.user_from);
@@ -218,7 +218,7 @@ function makeRequest(user_id,offer_id){
         type : "post",
         data : data,
         async: false,
-        url : "/ccpx/user/make_request",
+        url : "/user/make_request",
         success : function(result){
             if (result.errno==0) { // parameter in their response
                 toastr.success(result.rsm.token, "Request sent");
@@ -275,7 +275,7 @@ function loadNotif(){
         type : "get",
         data : {'u_id':id,'u_token':token},
         async: false,
-        url : "/ccpx/user/Read_notification",
+        url : "/user/Read_notification",
         success : function(result){
             if (result.errno==0) { 
             	var color = "color";
@@ -315,7 +315,7 @@ function markedSeen(notificationId){
         type : "post",
         data : data,
         async: false,
-        url : "/ccpx/user/seen_notification",
+        url : "/user/seen_notification",
         success : function(result){
             if (result.errno==0) { // parameter in their response
                 toastr.success(result.rsm.token, "Marked as seen");
@@ -370,7 +370,7 @@ function ShowUserProfile(){
 					data : { id: id
 					},
 					async: false,
-					url	: "ccpx/user/userprofile",
+					url	: "/user/userprofile",
 					success : function(result){
 								if (result.errno==0) { 
 								$("#userPicture").attr("src",result.userPicture);
@@ -416,7 +416,7 @@ function getUserExchangeOffers(){
         type : "post",
         data : data,
         async: false,
-        url : "/ccpx/user/all_records ",
+        url : "/user/all_records ",
         success : function(result){
             if (result.errno==0) { // parameter in their response
             	var i;
@@ -480,7 +480,7 @@ function getUserExchangeRequests(){
         type : "post",
         data : data,
         async: false,
-        url : "/ccpx/user/seen_notification",
+        url : "/user/seen_notification",
         success : function(result){
             if (result.errno==0) { // parameter in their response
             	var i;
@@ -512,7 +512,7 @@ function deleteOffer(offer_id){
         type : "post",
         data : data,
         async: false,
-        url : "/ccpx/user/deleteOffer",
+        url : "/user/deleteOffer",
         success : function(result){
             if (result.errno==0) { // parameter in their response
                 toastr.success("Offer deleted!","succeed");
@@ -579,7 +579,7 @@ function deleteOffer(offer_id){
  			data : {'offer_id': offerId		
  			},		
  			async: false,		
- 			url	: "ccpx/user/showCandidate",		
+ 			url	: "/user/showCandidate",		
  			success : function(result){		
  						if (result.errno==0) { 		
  						 $("#PointsFrom").text(result.pointsFrom);		
@@ -615,7 +615,7 @@ function deleteOffer(offer_id){
          type : "post",		
          data : data,		
          async: false,		
-         url : "/ccpx/user/accept_request",		
+         url : "/user/accept_request",		
          success : function(result){		
              if (result.errno==0) { // parameter in their response		
                  toastr.success(result.rsm.token, "Request accepted! Transaction complete!");		
@@ -646,7 +646,7 @@ function deleteOffer(offer_id){
          type : "post",		
          data : data,		
          async: false,		
-         url : "/ccpx/user/reject_request",		
+         url : "/user/reject_request",		
          success : function(result){		
              if (result.errno==0) { // parameter in their response		
                  toastr.success(result.rsm.token, "User rejected!");		
