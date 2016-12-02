@@ -386,9 +386,8 @@ function ShowUserProfile(){
                                 $("#pointsTable").append("<tr><td class='col-md-1'></td><td class='col-md-2'><img class='img-rounded' src='"+logosellerfrom+"' width='50' height='50' /><b>"+val.seen+"</b>pts</td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><img class='img-rounded' src='"+logosellerto+"' width='50' height='50' /><b>"+val.seen+"</b>pts</td><td class='col-md-3'><img class='img-circle' src='img/bonus.png' width='50' height='50' /><a href='#' id='"+val.userId+"' onclick='SeeUserProfile(this.id)'>"+val.userId+"</a></td><td class='col-md-1'><button type='button'  id='"+val.userId+"' onclick='makeRequest(this.id)' class='btn btn-info btn-danger'><i class='glyphicon glyphicon-plus' style='color:black;'></i></button></td></tr>");
                 				});
 								
-                				$.cookie("otheruserid", null, { path: '/' });
+                				$.cookie("otheruserid", null, { path: '/' }); */
                 				}
-								*/
                 				else{
                					 toastr.warning(result.err, "Warning:CODE "+result.errno);
           						}
