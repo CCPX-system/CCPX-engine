@@ -64,7 +64,7 @@
 					type : "post",
 					data : data,
 					async: false,
-					url : "/ccpx/user/login",
+					url : "/user/login",
 					success : function(result){
 						if (result.errno==0) {
 							toastr.success(result.rsm.token, "info");
