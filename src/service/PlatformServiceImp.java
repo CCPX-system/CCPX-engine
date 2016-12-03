@@ -156,5 +156,35 @@ public class PlatformServiceImp implements PlatformService {
 	public List<Offer> showUserOfferList(Integer user_id, String status) {
 		return PlatformDaoImp.showUserOfferList(user_id, status);
 	}
+	
+	@Override
+	public boolean sendExchangeToBlockChain(Integer Request_id,
+			Integer userFrom, Integer userTo, Integer sellerFrom,
+			Integer sellerTo, Integer pointFrom, Integer pointTo) {
+		// TODO Auto-generated method stub
+		try {
+			// Configure and open a connection to the site you will send the
+			// request
+			URL url = new URL("http://148.100.5.138:9999/responseStore");
+			URLConnection urlConnection = url.openConnection();
+			urlConnection.setDoOutput(true);
+			urlConnection.setRequestProperty("content-type",
+					"application/x-www-form-urlencoded");
+			OutputStreamWriter out = new OutputStreamWriter(
+					urlConnection.getOutputStream());
+			out.write("Request_id=" + Request_id + "&user_A=" + userFrom + "&user_B=" + userTo + "&seller_A=" + sellerFrom + "&seller_B=" + sellerTo + "&point_A=" + pointFrom + "&point_B=" + pointTo);
+			out.flush();
+			out.close();
 
+			InputStream inputStream = urlConnection.getInputStream();
+			String encoding = urlConnection.getContentEncoding();
+			String msg = IOUtils.toString(inputStream, encoding);
+			
+			JSONObject isSuccess = JSON.parseObject(msg);
+			return isSuccess.getBoolean("respond");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
