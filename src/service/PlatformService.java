@@ -34,7 +34,8 @@ public interface PlatformService {
 	public Boolean acceptRequest(Integer request_id);
 	
 	public Boolean createNotification(Integer userId, Integer status, Integer eR_ID);
-	
+	//connection with blockchain
+	public boolean sendExchangeToBlockChain(Integer Request_id, Integer userFrom, Integer userTo, Integer sellerFrom, Integer sellerTo, Integer pointFrom, Integer pointTo);
 	
 	//NOTIFACTION TESTPAGE
 	public List<Notification> NotifListsByUserId(Integer userId);
