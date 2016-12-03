@@ -171,10 +171,10 @@ function get_recent_activity(){
 {
     $("makeoffer").attr({"disabled":"disabled"});
     var flag = false;
-    sellerA = $("#selectbasic1").val();
-    sellerB = $("#selectbasic2").val();
+    sellerIdA = $("#selectbasic1").val();
+    sellerIdB = $("#selectbasic2").val();
 
-    data = {'seller-from':sellerA,'seller_to':sellerB}; //creating json file
+    data = {'seller-from':sellerIdA,'seller_to':sellerIdB}; //creating json file
 
 	
 	/**** test ***
@@ -368,11 +368,11 @@ function get_profile(){
 		url: "info/getSellerInfo",
 		async: false,
 		success: function (data) {
-			var i;
+			// var i;
 			$.each(data, function (index, val) {
-				i=index+1;
-				$("#selectbasic1").append("<option value="+ i +">" + val.seller_Name + "</option>");
-				$("#selectbasic2").append("<option value="+ i +">" + val.seller_Name + "</option>");
+				// i=index+1;
+				$("#selectbasic1").append("<option value="+ val.seller_id +">" + val.seller_Name + "</option>");
+				$("#selectbasic2").append("<option value="+ val.seller_id +">" + val.seller_Name + "</option>");
 			});
 			return true;
 		}     
