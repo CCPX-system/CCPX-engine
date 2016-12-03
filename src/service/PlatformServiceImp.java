@@ -4,12 +4,22 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 
 import dao.PlatformDao;
 import model.Notification;
 import model.Offer;
 import model.Request;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
 
 @Service("PlatformServiceImp")
 public class PlatformServiceImp implements PlatformService {
