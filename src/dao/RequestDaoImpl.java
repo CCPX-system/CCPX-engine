@@ -24,13 +24,13 @@ public class RequestDaoImpl implements RequestDao{
 
 
 	@Override
-	public boolean makeRequestByOfferId(int offer_from, int offer_to) throws SQLException {
+	public Request makeRequestByOfferId(int offer_from, int offer_to) throws SQLException {
 		OfferDaoImpl offerDaoImpl=new OfferDaoImpl();
 		Offer offer1=offerDaoImpl.getOfferByID(offer_from);
 		Offer offer2=offerDaoImpl.getOfferByID(offer_to);
 		if (!offer1.getStatus().equals("OPEN")||!offer2.getStatus().equals("OPEN")) {
 
-			return false;
+			return null;
 		}
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -46,7 +46,7 @@ public class RequestDaoImpl implements RequestDao{
 			//ps.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		} finally {
 			JdbcUtils_C3P0.release(conn, ps, null);
 		}
@@ -71,21 +71,22 @@ public class RequestDaoImpl implements RequestDao{
 			ps.executeUpdate();			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		} finally {
 			JdbcUtils_C3P0.release(conn, ps, null);
 		}
 		//System.out.println(list.size());
-		return true;
+		Request request=getRequestByOfferId(offer_from, offer_to);
+		return request;
 	}
 
 	@Override
-	public boolean makeRequestByUserId(int user_from, int offer_to) throws SQLException {
+	public Request makeRequestByUserId(int user_from, int offer_to) throws SQLException {
 		OfferDaoImpl offerDaoImpl=new OfferDaoImpl();
 		Offer offer1=offerDaoImpl.getOfferByID(offer_to);
 		
 		if (!offer1.getStatus().equals("OPEN")) {
-			return false;
+			return null;
 		}
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -100,7 +101,7 @@ public class RequestDaoImpl implements RequestDao{
 			//ps.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		} finally {
 			JdbcUtils_C3P0.release(conn, ps, null);
 		}
@@ -123,13 +124,16 @@ public class RequestDaoImpl implements RequestDao{
 			ps.executeUpdate();				
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		} finally {
 			JdbcUtils_C3P0.release(conn, ps, null);
 		}
-		if (!new User_to_SellerDaoImpl().addPoints(user_from, offer1.getSeller_to(), 0-offer1.getPoints_to_min())) return false;
-		if(!new User_to_SellerDaoImpl().substractLockedPoints(user_from, offer1.getSeller_to(), 0-offer1.getPoints_to_min())) return false;
-		return true;
+		if (!new User_to_SellerDaoImpl().addPoints(user_from, offer1.getSeller_to(), 0-offer1.getPoints_to_min())) 
+			return null;
+		if(!new User_to_SellerDaoImpl().substractLockedPoints(user_from, offer1.getSeller_to(), 0-offer1.getPoints_to_min())) 
+			return null;
+		Request request=getRequestByOfferId(0, offer_to);
+		return request;
 	}
 
 	@Override
@@ -193,11 +197,53 @@ public class RequestDaoImpl implements RequestDao{
 		String sql="update request set status='DECLINE' where r_id=? and u_id_to=?";
 		try {
 			conn = JdbcUtils_C3P0.getConnection();
+			ps = conn.prepareStatement(sql);
 			ps.setInt(1, r_id);	
 			ps.setInt(2, user_to);	
-			ps = conn.prepareStatement(sql);
 			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+			
+		} finally {
+			JdbcUtils_C3P0.release(conn, ps, null);
+		}
 
+		Request request =getRequestById(r_id);
+		
+		if (request.getOfferFrom()==0) {
+			if (user_to_SellerDaoImpl.addPoints(request.getUserFrom(), request.getSellerFrom(), request.getPointsFrom())) 
+				if (user_to_SellerDaoImpl.substractLockedPoints(request.getUserFrom(), request.getSellerFrom(), request.getPointsFrom()))
+					 if(new OfferDaoImpl().setStatus(request.getOfferTo(), "OPEN"))
+			return true;
+		}
+		else{
+			if(new OfferDaoImpl().setStatus(request.getOfferFrom(), "OPEN"))
+				if(new OfferDaoImpl().setStatus(request.getOfferTo(), "OPEN"))
+			      return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean removeRequest(int r_id,int u_id, int s_id, int points) throws SQLException {
+		User_to_SellerDaoImpl user_to_SellerDaoImpl=new User_to_SellerDaoImpl();
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String sql1="update request set status='REMOVED' where r_id=? ;";
+		String sql2="update user_to_seller set POINTS = POINTS + ?,POINTS_BLOCKED =  POINTS_BLOCKED - ? where U_ID=? and SELLER_ID = ?;";
+		try {
+			conn = JdbcUtils_C3P0.getConnection();
+			ps = conn.prepareStatement(sql1);
+			ps.setInt(1, r_id);	
+			ps.executeUpdate();
+			PreparedStatement ps2 = conn.prepareStatement(sql2);
+			ps2.setInt(1, points);
+			ps2.setInt(2, points);
+			ps2.setInt(3, u_id);
+			ps2.setInt(4, s_id);
+			ps2.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -286,9 +332,45 @@ public class RequestDaoImpl implements RequestDao{
 				request.setOfferFrom(rs.getInt(8));
 				request.setOfferTo(rs.getInt(9));
 				request.setStatus(rs.getString(10));
-				request.setUpdateTime(rs.getString(11));
-				
-				
+				request.setUpdateTime(rs.getString(11));	
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+		} finally {
+			JdbcUtils_C3P0.release(conn, ps, null);
+		}
+		return request;
+	}
+
+
+
+	@Override
+	public Request getRequestByOfferId(int offer_from, int offer_to) throws SQLException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String sql1="select * from request where offer_from=? and offer_to=? ";
+		Request request=new Request();
+		try {
+			conn = JdbcUtils_C3P0.getConnection();
+			ps = conn.prepareStatement(sql1);
+			ps.setInt(1, offer_from);
+			ps.setInt(2, offer_to);
+			rs=ps.executeQuery();
+			while (rs.next()) {
+				request.setRid(rs.getInt(1));
+				request.setUserFrom(rs.getInt(2));
+				request.setUserTo(rs.getInt(3));
+				request.setSellerFrom(rs.getInt(4));
+				request.setSellerTo(rs.getInt(5));
+				request.setPointsFrom(rs.getInt(6));
+				request.setPointsTo(rs.getInt(7));
+				request.setOfferFrom(rs.getInt(8));
+				request.setOfferTo(rs.getInt(9));
+				request.setStatus(rs.getString(10));
+				request.setUpdateTime(rs.getString(11));	
 			}
 
 		} catch (SQLException e) {

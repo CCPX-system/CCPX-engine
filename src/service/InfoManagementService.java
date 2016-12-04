@@ -19,4 +19,5 @@ public interface InfoManagementService {
 	
 	public String getIndustryInfoByID(String id);
 
+	public List<seller> getAlltSellerInfo();
 }
