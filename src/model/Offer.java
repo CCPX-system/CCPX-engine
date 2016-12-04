@@ -1,5 +1,7 @@
 package model;
 
+import javax.persistence.Transient;
+
 public class Offer {
 	int offer_id;
 	int user_id;
@@ -9,6 +11,10 @@ public class Offer {
 	int points_to_min;
 	String status;
 	String update_time;
+	@Transient
+	String sellerNameFrom;
+	@Transient
+	String sellerNameTo;
 
 	public Offer() {
 		super();
@@ -89,5 +95,19 @@ public class Offer {
 		this.update_time = update_time;
 	}
 
+	public String getSellerNameTo() {
+		return sellerNameTo;
+	}
 
+	public void setSellerNameTo(String sellerNameTo) {
+		this.sellerNameTo = sellerNameTo;
+	}
+
+	public String getSellerNameFrom() {
+		return sellerNameFrom;
+	}
+
+	public void setSellerNameFrom(String sellerNameFrom) {
+		this.sellerNameFrom = sellerNameFrom;
+	}
 }

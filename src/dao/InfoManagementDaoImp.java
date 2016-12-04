@@ -58,12 +58,20 @@ public class InfoManagementDaoImp implements InfoManagementDao {
 		return seller_list;
 	}
 	
-	@Override
+	
 	public List<seller> getSellerInfo(){
 		String hql = "from seller";
 		Query query = getSession().createQuery(hql);
 		query.setFirstResult(0);
 		query.setMaxResults(5);
+		List<seller> seller_list = query.list();
+		return seller_list;
+	}
+	
+	@Override
+	public List<seller> getAllSellerInfo(){
+		String hql = "from seller";
+		Query query = getSession().createQuery(hql);
 		List<seller> seller_list = query.list();
 		return seller_list;
 	}
