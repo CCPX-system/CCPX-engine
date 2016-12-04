@@ -172,7 +172,7 @@
 		                    		badge_clr = "uk-badge-warning"; btnclr = "md-btn-flat-warning"; status_msg= "REMOVE_REQUEST";
 		                    	}else if(val.status == 5){
 		                    		badge_clr = "uk-badge-danger"; btnclr = "md-btn-flat-danger"; status_msg= "DECLINE_REQUEST";
-		                    	}else if(val.status == 6){
+		                    	}else if(val.status == 6 || val.status == 7){
 		                    		badge_clr = "uk-badge-warning"; btnclr = "md-btn-flat-warning"; status_msg= "REQUEST_PENDING";
 		                    	}else{
 		                    		badge_clr = '';
@@ -184,7 +184,7 @@
 		                    	}
 		                    	
 		                    	$("#notification_list_content").append(
-		                    		'<li id="'+val.notifiId+'" style="background-color:#fbfbfb" content="'+status_msg+'" class="'+bgcolor+'" date="'+ddate+'">'+
+		                    		'<li id="'+val.notifiId+'" content="'+status_msg+'" class="'+bgcolor+'" date="'+ddate+'">'+
 		                    			bgcolor+
 		                    			'<div class="uk-grid" data-uk-grid-margin>'+
 											'<div class="uk-width-medium-1-2">'+
