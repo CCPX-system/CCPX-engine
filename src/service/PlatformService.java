@@ -38,7 +38,8 @@ public interface PlatformService {
 	
 	//NOTIFACTION TESTPAGE
 	public List<Notification> NotifListsByUserId(Integer userId);
-	public List<Notification> getNotifUnread(Integer userId);
+	public int getNotifUnread(Integer userId);
+	public boolean setNotifUnread(Integer notifID);
 
 	
 }
