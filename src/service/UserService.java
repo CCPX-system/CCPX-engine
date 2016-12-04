@@ -619,4 +619,32 @@ public class UserService {
 	        out.close(); 
 			
 	    }
+	    @RequestMapping(value = "/removeRequest", method = RequestMethod.POST)  
+	    @ResponseBody
+	    public void removeRequest(HttpServletRequest request,HttpServletResponse response) throws IOException, SQLException{
+	    	response.setCharacterEncoding("UTF-8"); 
+	        response.setContentType("text/json");
+	        PrintWriter out = response.getWriter();
+	        JSONObject json = new JSONObject();
+	        JSONObject json1 = new JSONObject();
+	        int r_id=Integer.parseInt(request.getParameter("r_id"));
+	        int u_id=Integer.parseInt(request.getParameter("u_id"));
+	        int s_id=Integer.parseInt(request.getParameter("s_id"));
+	        int points=Integer.parseInt(request.getParameter("points"));
+	        //int user_to=Integer.parseInt(request.getParameter("user_to"));
+	        boolean b=new RequestDaoImpl().removeRequest(r_id,u_id,s_id,points);
+	        if(b){
+	        	json1.put("status", "ok");
+	            Response response2=new Response(0,"",json1);
+	            json=JSONObject.fromObject(response2);
+	        }
+	        else {
+	        	json1.put("status", "error");
+	            Response response2=new Response(5,"acceptRequest failed",json1);
+	            json=JSONObject.fromObject(response2);
+			}   
+	        out.print(json);
+	        out.close(); 
+			
+	    }
 }

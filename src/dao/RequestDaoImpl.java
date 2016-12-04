@@ -225,6 +225,49 @@ public class RequestDaoImpl implements RequestDao{
 		
 		return false;
 	}
+	
+	public boolean removeRequest(int r_id,int u_id, int s_id, int points) throws SQLException {
+		User_to_SellerDaoImpl user_to_SellerDaoImpl=new User_to_SellerDaoImpl();
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String sql1="update request set status='REMOVED' where r_id=? ;";
+		String sql2="update user_to_seller set POINTS = POINTS + ?,POINTS_BLOCKED =  POINTS_BLOCKED - ? where U_ID=? and SELLER_ID = ?;";
+		try {
+			conn = JdbcUtils_C3P0.getConnection();
+			ps = conn.prepareStatement(sql1);
+			ps.setInt(1, r_id);	
+			ps.executeUpdate();
+			PreparedStatement ps2 = conn.prepareStatement(sql2);
+			ps2.setInt(1, points);
+			ps2.setInt(2, points);
+			ps2.setInt(3, u_id);
+			ps2.setInt(4, s_id);
+			ps2.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+			
+		} finally {
+			JdbcUtils_C3P0.release(conn, ps, null);
+		}
+
+		Request request =getRequestById(r_id);
+		
+		if (request.getOfferFrom()==0) {
+			if (user_to_SellerDaoImpl.addPoints(request.getUserFrom(), request.getSellerFrom(), request.getPointsFrom())) 
+				if (user_to_SellerDaoImpl.substractLockedPoints(request.getUserFrom(), request.getSellerFrom(), request.getPointsFrom()))
+					 if(new OfferDaoImpl().setStatus(request.getOfferTo(), "OPEN"))
+			return true;
+		}
+		else{
+			if(new OfferDaoImpl().setStatus(request.getOfferFrom(), "OPEN"))
+				if(new OfferDaoImpl().setStatus(request.getOfferTo(), "OPEN"))
+			      return true;
+		}
+		
+		return false;
+	}
 
 	@Override
 	public boolean acceptRequest(int r_id, int user_to) throws SQLException {
