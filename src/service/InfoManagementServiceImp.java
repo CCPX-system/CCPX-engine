@@ -39,6 +39,11 @@ public class InfoManagementServiceImp implements InfoManagementService {
 	}
 	
 	@Override
+	public List<seller> getAlltSellerInfo(){
+		return infoManagementDaoImp.getAllSellerInfo();
+	}
+	
+	@Override
 	public seller getCompanyDetail(String id){
 		return infoManagementDaoImp.getCompanyDetail(id);
 	}

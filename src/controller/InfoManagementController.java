@@ -72,6 +72,29 @@ public class InfoManagementController {
         } 
 	}
 	
+	@RequestMapping("/getAllSellerInfo")
+	@ResponseBody
+	public void getAllSellerInfo(HttpServletRequest req, HttpServletResponse res) {
+		List<seller> seller_list = infoManagementServiceImp.getAlltSellerInfo();
+		JSONArray json = JSONArray.fromObject(seller_list);
+        System.out.print(json);
+        System.out.close();
+        PrintWriter out =null;
+        
+        try{
+        out = res.getWriter();
+        out.write(json.toString());
+        out.flush();
+        out.close();
+        }catch (IOException e) {  
+            e.printStackTrace();  
+        } finally {  
+            if (out != null) {  
+                out.close();  
+            } 
+        } 
+	}
+	
 	@RequestMapping("/getSellerInfoByIndustryID")
 	@ResponseBody
 	public void getSellerInfoByIndustryID(HttpServletRequest req, HttpServletResponse res, String id) {
