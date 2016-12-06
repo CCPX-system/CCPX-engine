@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Notifications center</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="bootstrap/css/toastr.css" rel="stylesheet">
+        
+        
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+        <script src="scripts/jquery.min.js"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
+        <script src="bootstrap/js/jquery.md5.js"></script>
+        <script src="bootstrap/js/jquery.cookie.js"></script>
+        <script src="bootstrap/js/toastr.js"></script>
+		<script src="scripts/function.js"></script>
+        <script src="scripts/ljs.js"></script>
+        <script src="scripts/flo.js"></script>
+        <script src="bootstrap/js/toastr.min.js"></script>
+		
+		
+		<!-- SHOULD INCLUDE TO RUN -->
+		<link rel="stylesheet" href="js/sweetalert.css"/>
+        <link rel="stylesheet" href="bootstrap/css/main.css"/>
+        <script src="js/jquery-1.8.2.min.js"></script>
+		<script src="js/underscore.js"></script>
+		<script src="js/sweetalert.min.js"></script>
+		<script src="js/notif.js"></script>
+		<script src="js/ion.sound.min.js"></script>	
+      
+        
+	</head>
+	
+	<body>
+		<div class="container">
+		
+			<div class="header">
+
+				<!-- Form Name -->
+				<legend>Notifications center</legend>
+			
+				<!-- Navbar --> 
+				<nav class="navbar navbar-default" style="background-image: url('img/blue.png'); background-position : 10% 10%;" role="navigation">
+					<div class="container-fluid">  
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+									data-target="#mynav">
+								<span class="sr-only">change nav</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>	
+                                <span class="icon-bar"></span>		   
+							</button>
+							<a class="navbar-brand" href="#">Exchange Platform</a>
+						</div>
+						<div class="collapse navbar-collapse" id="mynav">
+							<ul class="nav navbar-nav center-block pull-right">
+							<li class="nav-item pull-left">
+								  <a class="nav-link" href="HomePage.html"><span class="glyphicon glyphicon-home"></span> Home </a>
+								</li>
+								
+								<li class="nav-item pull-left">
+								  <a class="nav-link" href="MyAccount.html"><span class="glyphicon glyphicon-user"></span> My Account </a>
+								</li>
+								
+								 <li class="nav-item pull-left">
+								  <a class="nav-link" href="MyPointsPage.html"><span class="glyphicon glyphicon-yen"></span> My Points </a>
+								</li>
+								
+								<li class="nav-item pull-left">
+								<a class="nav-link" href="ListOfSellersPage2.html"><span class="glyphicon glyphicon-shopping-cart"></span> List Of Companies </a>
+								</li>	
+                                
+                                <li class="nav-item pull-left">
+								<a class="nav-link" href="ExchangeCenter.html"><span class="glyphicon glyphicon-transfer"></span> Exchange Center </a>
+  								</li>	
+  								
+  								 <li class="nav-item pull-left">
+								<a class="nav-link" href="Notification.html"><span class="glyphicon glyphicon-envelope"></span><U> Notifications </U></a>
+  								</li>	
+                                
+                                <li class="nav-item pull-left">
+								<a class="nav-link" href="#" onclick="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout </a>
+								</li>																	
+							</ul>
+						</div> 
+					</div>
+				</nav>
+			
+            <!-- Website Logo -->
+		        <div class="row">
+ 					<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="Logo"></label>
+ 					<div class="col-md-2 col-sm-4 col-xs-6">
+ 					<img class="img-responsive center-block" src="img/logo.png" width="60%" />
+  					</div>
+				</div>
+       </div>
+       
+  <!--stream-->
+        <br>
+        <br>
+        <div class="row clearfix">
+	        <div class="col-md-12 column">
+	        	<span class="uk-text" style="display:none" id="ctxt">You have <span id="notif_count" class="uk-badge uk-badge-warning"></span> new notifications</span>
+				<hr/> 
+	        </div>
+			<div class="col-md-12 column">			
+				<ul id="notification_list_content" class="md-list md-list-outside" data-uk-scrollspy-nav="{smoothscroll:true}"></ul>
+		    </div>
+		    <div class="col-md-12 column">
+		    	<hr/> 
+	        </div>
+        </div>
+ 
+            <div id="coincoin">
+            </div>
+            
+            
+				
+		</div>
+
+		<div class="play"></div>
+
+		<script type="text/javascript">
+			var getUrl = window.location;
+			var baseUrl = getUrl .protocol + "//" + getUrl.host  + "/" + getUrl.pathname.split('/')[1]+"/"+getUrl.pathname.split('/')[2];
+			
+			var UserId = 2;//getCookie("u_id"); // for test use 3;
+			
+		    jQuery(document).ready(function($) {
+		    	connect();
+		    	notifReload();
+		    	setInterval(notifReload, 60000);
+		    });
+
+		    function notifReload(){
+		    	generate_notificaion_list(UserId);
+		    	getNotifUnRead(UserId);
+		    }
+
+		    function generate_notificaion_list(userId){
+		    	$.ajax({
+			        url: 'notif_list_by_user_id/',
+			        data: ({userId : userId}),
+			        success: function(data) {      
+			        	$("#notification_list_content").empty();    	
+			          	if (_.isEmpty(data)==false){
+		                    $.each(data, function( key, val ){
+		                    	var ddate = new Date(val.notiDate).toGMTString();
+
+		                    	var button='', bgcolor = '', btnclr  = '',badge_clr = '';var badge_clr_ = '', status_msg = '';
+		                    	
+		            
+		                    	if(val.status == 0){
+		                    		badge_clr = "uk-badge-primary"; btnclr = "md-btn-flat-primary"; status_msg= "OFFER_OPEN";
+		                    	}else if(val.status == 1){
+		                    		badge_clr = "uk-badge-success"; btnclr = "md-btn-flat-success"; status_msg= "CLOSE_OFFER";
+		                    	}else if(val.status == 2){
+		                    		badge_clr = "uk-badge-success"; btnclr = "md-btn-flat-success"; status_msg= "CLOSE_REQUEST";
+		                    	}else if(val.status == 3){
+		                    		badge_clr = "uk-badge-warning"; btnclr = "md-btn-flat-warning"; status_msg= "REMOVE_OFFER";
+		                    	}else if(val.status == 4){
+		                    		badge_clr = "uk-badge-warning"; btnclr = "md-btn-flat-warning"; status_msg= "REMOVE_REQUEST";
+		                    	}else if(val.status == 5){
+		                    		badge_clr = "uk-badge-danger"; btnclr = "md-btn-flat-danger"; status_msg= "DECLINE_REQUEST";
+		                    	}else if(val.status == 6 || val.status == 7){
+		                    		badge_clr = "uk-badge-warning"; btnclr = "md-btn-flat-warning"; status_msg= "REQUEST_PENDING";
+		                    	}else{
+		                    		badge_clr = '';
+		                    	}
+		                    	
+		                    	if(val.seen == 0){
+		                    		bgcolor = '<strong>';badge_clr_='</strong>';
+		                    		button = '<button title="'+status_msg+'" class="md-btn '+btnclr+' md-btn-flat">SET SEEN</button>';
+		                    	}
+		                    	
+		                    	$("#notification_list_content").append(
+		                    		'<li id="'+val.notifiId+'" content="'+status_msg+'" class="'+bgcolor+'" date="'+ddate+'">'+
+		                    			bgcolor+
+		                    			'<div class="uk-grid" data-uk-grid-margin>'+
+											'<div class="uk-width-medium-1-2">'+
+												'<i><span class="uk-badge '+badge_clr+'">'+status_msg+'</span></i><br/> '+
+					                    		'Trans.No: '+val.exchId+
+					                    		' <i>'+val.content+'</i> on <i>'+ddate+'</i>'+
+					                    		
+			                    		    '</div>'+
+			                    		    '<div class="uk-width-medium-1-2" align="right" style="margin-top:-30px">'+
+			                    		    	button+
+			                    		    '</div>'+
+			                    		 '</div>'+ 
+			                    		 badge_clr_+ 		
+		                    		'</li>'
+		                    	);
+		                    });
+		                }else{
+		                	//console.log("data empty");
+		                	swal("EROR DATA NOT FOUND ");
+		                }
+			        },
+			        error:function(data){
+			        	swal("EROR DATA NOT FOUND ");
+			        }
+		     	});
+				
+			}
+
+			$("#notification_list_content").on('click','li',function (){
+				console.log($(this).attr("id")+" "+$(this).attr("content"));
+				$.ajax({
+			        url: 'set_unread_notif/',
+			        data: ({notifID : $(this).attr("id")}),
+			        success: function(data) {
+						if(data){
+							notifReload();
+							
+						}
+			        }
+			    });
+			});
+
+			function getNotifUnRead(UserId){
+				$.ajax({
+			        url: 'notif_unread/',
+			        data: ({userId : UserId}),
+			        success: function(data) {
+			        	$("#ctxt").show();
+			        	$("#notif_count").text(data);
+			        },error:function(data){
+			        	swal("EROR DATA NOT FOUND ");
+			        	$("#ctxt").hide();
+			        }
+			  	});
+			}
+
+
+
+			//WEBSOCKET PREPARATION
+			var Chat = {};
+	        Chat.socket = null;
+
+	        // connect()
+	        Chat.connect = (function(host) {
+	            if ('WebSocket' in window) {
+	                Chat.socket = new WebSocket(host);
+	            } else if ('MozWebSocket' in window) {
+	                Chat.socket = new MozWebSocket(host);
+	            } else {
+	                console.log('Error: WebSocket is not supported by this browser.');
+	                return;
+	            }
+
+
+	            Chat.socket.onopen = function () {
+					// globalid = document.getElementById('id_from').value;
+					console.log('Info: WebSocket connection opened. your GID:'+UserId);
+	                /*
+	                document.getElementById('chat').onkeydown = function(event) {
+	                    if (event.keyCode == 13) {
+	                        Chat.sendMessage();
+	                    }
+	                };
+	                */
+	            };
+				
+	            
+	            Chat.socket.onclose = function () {
+	                document.getElementById('chat').onkeydown = null;
+	                console.log('Info: WebSocket closed.');
+	            };
+
+
+	            Chat.socket.onmessage = function (message) {
+	            	var split = message.data.split("|");
+	                var status = '';
+	                
+	                if(split[2] == 0){
+						status = "YOUR EXCHANGE OFFER WAITING FOR RESPOND";
+					}else if(split[2] == 1 || split[2] == 2){
+						status = "YOUR EXCHANGE SUCCESFULLY DONE";
+					}else if(split[2] == 3){
+						status = "YOUR EXCHANGE OFFER HAS BEEN REMOVED";
+					}else if(split[2] == 4){
+						status = "YOUR EXCHANGE REQUEST HAS BEEN REMOVED";
+					}else if(split[2] == 5){
+						status = "YOUR EXCHANGE REQUEST HAS BEEN DECLINED";
+					}else if(split[2] == 6){
+						status = "YOUR EXCHANGE REQUEST IS PENDING";
+					}else{
+						status = "YOUR DECLINED EXCHANGE REQUEST";
+					}
+	
+	                
+	                if(split[0] == UserId){
+	                	console.log(message.data);
+	                	makeNotification("Trans.No: "+split[1]+" "+status); 
+	                }else if(split[1] == UserId){
+	                	console.log("Your Message Send");
+	                }
+	                console.log(split[0]+" -> "+split[1]+" -> "+split[2]);
+	                
+	            };
+	        });
+	     	// connect()
+	     	
+	        Chat.initialize = function() {
+	            if (window.location.protocol == 'http:') {
+	                Chat.connect('ws://' + window.location.host + '/ccpx/websocket/notification');
+	            } else {
+	                Chat.connect('wss://' + window.location.host + '/ccpx/websocket/notification');
+	            }
+	        };
+			
+			function makeNotification(message) {
+		        if(Notification.permission !== 'granted'){
+						Notification.requestPermission();
+				}
+				var notif_success = document.createElement('audio');
+        		notif_success.setAttribute('src', 'js/success.mp3');
+        		
+				console.log(window.location.host+'/SpringWebSocket/js/notif_icon.png');
+				n = new Notification( "a new notification", {
+						body: message, 
+						icon : 'js/notif_icon.png'
+				});
+				notif_success.play();
+				notifReload();
+				n.close();				
+		    }
+			
+			/*
+	        Chat.sendMessage = (function() {
+	            var message = document.getElementById('chat').value;
+	            var id_to = document.getElementById('id_to').value;
+	            var id_from = UserId;
+	            var splitmsg = id_from+"|"+id_to+"|"+message;
+	            //var ar = {'message':message, 'id_to':id_to, 'id_from':id_from}
+	            
+	            if (message != '') {
+	                Chat.socket.send(splitmsg);
+	                document.getElementById('chat').value = '';
+	            }
+	        });
+	
+	        
+	        var Console = {};
+	
+	        // log()
+	        Console.log = (function(message) {
+	            var console = document.getElementById('console');
+	            var p = document.createElement('p');
+	           
+	            p.style.wordWrap = 'break-word';
+	            p.innerHTML = message;
+	            console.appendChild(p); 
+
+	            while (console.childNodes.length > 25) {
+	                console.removeChild(console.firstChild);
+	            }
+
+	            console.scrollTop = console.scrollHeight;
+	        });
+			*/
+	        function connect() {
+				Chat.initialize();
+			}
+
+		</script>
+		
+		
+		
+
+	</body>
+  
+</html>

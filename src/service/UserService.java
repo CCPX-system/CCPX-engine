@@ -13,6 +13,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.AllRecords;
 import model.Notification;
 import model.Offer;
 //import model.Record;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import utils.MD5Util;
 import dao.OfferDaoImpl;
+import dao.PlatformDaoImp;
 import dao.RequestDaoImpl;
 //import dao.RecordDaoImpl;
 import dao.UserDaoImpl;
@@ -203,9 +205,11 @@ public class UserService {
 			return;
 		UserDaoImpl impl = new UserDaoImpl();
 		ArrayList<Request> requestList = impl.findRequests(id, "");
+		ArrayList<Offer> offerList = impl.findOffers(id, "");
+		AllRecords resultList = new AllRecords(requestList,offerList);
 
 		PrintWriter out = response.getWriter();
-		JSONArray result = JSONArray.fromObject(requestList);
+		JSONObject result = JSONObject.fromObject(resultList);
 		Response rs = new Response(0, "", result);
 		JSONObject json = JSONObject.fromObject(rs);
 		out.print(json);
@@ -267,125 +271,87 @@ public class UserService {
 	}
 
 	 @RequestMapping(value = "/getReference", method = RequestMethod.GET)  
-	    @ResponseBody
-	    public void getReference(HttpServletRequest request,HttpServletResponse response) throws IOException{
-	    	 response.setCharacterEncoding("UTF-8"); 
-	         response.setContentType("text/json");
-	         PrintWriter out = response.getWriter();
-	         JSONObject json = new JSONObject();
-	         HashMap<String, String[]>mp=(HashMap<String, String[]>) request.getParameterMap();
-	         if (mp.containsKey("seller_from")&&mp.containsKey("seller_to")) {
-	        	 int seller_from=Integer.parseInt(request.getParameter("seller_from"));
-	             int seller_to =Integer.parseInt(request.getParameter("seller_to"));
-	             //RecordDaoImpl recordDaoImpl=new RecordDaoImpl();
-	             RequestDaoImpl requestDaoImpl=new RequestDaoImpl();
-	             List<Request>requests=new ArrayList<Request>();
-	             
-	             try {
-	    			requests=requestDaoImpl.getReferenceRecords(seller_from, seller_to);
-	    		} catch (SQLException e) {
-	    			// TODO Auto-generated catch block
-	    			e.printStackTrace();
-	    		}
-	             JSONArray jsonArr = new JSONArray();//json格式的数组  
-	             JSONObject jsonObjArr = new JSONObject(); 
-	             Request request1=new Request();
-	              for(int i=0;i<requests.size();i++){
-	            	  request1=requests.get(i);
-	            	// System.out.println(""+record.getR_id()+record.getU_id_from()+record.getU_id_to()+record.getSeller_id_from()+record.getSeller_id_to());
-	            	  jsonObjArr=new JSONObject(); 
-	            	  jsonObjArr.put("r_id", request1.getRid());
-	            	  jsonObjArr.put("user_from",request1.getUserFrom());
-	            	  jsonObjArr.put("user_to",	 request1.getUserTo());
-	            	  jsonObjArr.put("seller_from",	 request1.getSellerFrom());
-	            	  jsonObjArr.put("seller_to",	 request1.getSellerTo());
-	            	  jsonObjArr.put("points_from",	 request1.getPointsFrom());
-	            	  jsonObjArr.put("ponits_to",	 request1.getPointsTo());
-	            	  jsonObjArr.put("status",	 request1.getStatus());
-	            	  jsonArr.add(jsonObjArr);   //??
-	            	  jsonObjArr=null;
-	              }
-	              Response response2=new Response(0,"",jsonArr);
-	              json=JSONObject.fromObject(response2);
-	              
-	         }
-	         else{
-	         	Response response3=new Response(4,"wrong parameters",new Object());
-	         	json=JSONObject.fromObject(response3);
-	          }
-	          out.print(json);
-	          System.out.println(json.toString());
-	          out.close();
-	    }
-	    
-	    @RequestMapping(value = "/searchExchangeOffer", method = RequestMethod.GET)  
-	    @ResponseBody
-	    public void searchExchangeOffer(HttpServletRequest request,HttpServletResponse response) throws IOException{
-	    	 response.setCharacterEncoding("UTF-8"); 
-	         response.setContentType("text/json");
-	         int size=request.getParameterMap().size();
-	         OfferDaoImpl offerDaoImpl=new OfferDaoImpl();
-	         List<Offer>offers=new ArrayList<Offer>();
-	         PrintWriter out = response.getWriter();
-	         JSONObject json=new JSONObject();
-	         
-	 
-	         HashMap<String, String[]>mp=(HashMap<String, String[]>) request.getParameterMap();
-	         if (mp.containsKey("seller_from")&&mp.containsKey("seller_to")) {
-	        	 if(mp.containsKey("points_from")&&mp.containsKey("points_to_min")){
-	        		 int seller_from=Integer.parseInt(request.getParameter("seller_from"));
-	                 int seller_to =Integer.parseInt(request.getParameter("seller_to"));
-	                 int points_from=Integer.parseInt(request.getParameter("points_from"));
-	                 int points_to_min=Integer.parseInt(request.getParameter("points_to_min"));
-	        		 try {
-						offers=offerDaoImpl.getExchangeOffers(seller_from, seller_to,points_from,points_to_min);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	        	 }
-	        	 else{
-	        		 int seller_from=Integer.parseInt(request.getParameter("seller_from"));
-	                 int seller_to =Integer.parseInt(request.getParameter("seller_to"));
-	        		 try {
-						offers=offerDaoImpl.getExchangeOffers(seller_from, seller_to);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	        	 }
-	             JSONArray jsonArr = new JSONArray();//json格式的数组  
-	             JSONObject jsonObjArr = new JSONObject(); 
-	             //JSONObject json1 = new JSONObject();
-	             //System.out.println(offers.size());
-	             Offer offer=new Offer();         
-	              for(int i=0;i<offers.size();i++){
-	            	  offer=offers.get(i);
-	            	  jsonObjArr=new JSONObject(); 
-	            	  jsonObjArr.put("offer_id",offer.getOffer_id());
-	            	  jsonObjArr.put("user_id",offer.getUser_id());
-	            	  jsonObjArr.put("seller_from",	 offer.getSeller_from());
-	            	  jsonObjArr.put("seller_to",	 offer.getSeller_to());
-	            	  jsonObjArr.put("points_from",	  offer.getPoints_from());
-	            	  jsonObjArr.put("ponits_to_min",	 offer.getPoints_to_min());
-	            	  jsonObjArr.put("status",	offer.getStatus());
-	            	  jsonArr.add(jsonObjArr);   
-	            	  jsonObjArr=null;
-	              }
-	              
-	              //json1.put("exchange_offer", jsonArr);
-	              Response response2=new Response(0,"",jsonArr);
-	              json=JSONObject.fromObject(response2);
-			}
-	         else{
-	        	Response response3=new Response(4,"wrong parameters",new Object());
-	        	json=JSONObject.fromObject(response3);
-	         }
-	         
-	          out.print(json);
-	          System.out.println(json.toString());
-	          out.close();
-	    }
+	 @ResponseBody
+	 public void getReference(HttpServletRequest request,HttpServletResponse response) throws IOException, SQLException{
+    	 response.setCharacterEncoding("UTF-8"); 
+         response.setContentType("text/json");
+         PrintWriter out = response.getWriter();
+         JSONObject json = new JSONObject();
+         
+        	 int seller_from=Integer.parseInt(request.getParameter("seller_from"));
+             int seller_to =Integer.parseInt(request.getParameter("seller_to"));
+             PlatformDaoImp platformDaoImp=new PlatformDaoImp();
+             List<Request>requests=new ArrayList<Request>();
+             
+             requests=platformDaoImp.showLatestTransaction(seller_from, seller_to);
+             
+             JSONArray jsonArr = new JSONArray();//json格式的数组  
+             JSONObject jsonObjArr = new JSONObject(); 
+             Request request1=new Request();
+              for(int i=0;i<requests.size();i++){
+            	  request1=requests.get(i);
+            	// System.out.println(""+record.getR_id()+record.getU_id_from()+record.getU_id_to()+record.getSeller_id_from()+record.getSeller_id_to());
+            	  jsonObjArr=new JSONObject(); 
+            	  jsonObjArr.put("r_id", request1.getRid());
+            	  jsonObjArr.put("user_from",request1.getUserFrom());
+            	  jsonObjArr.put("user_to",	 request1.getUserTo());
+            	  jsonObjArr.put("seller_from",	 request1.getSellerFrom());
+            	  jsonObjArr.put("seller_to",	 request1.getSellerTo());
+            	  jsonObjArr.put("points_from",	 request1.getPointsFrom());
+            	  jsonObjArr.put("ponits_to",	 request1.getPointsTo());
+            	  jsonObjArr.put("status",	 request1.getStatus());
+            	  jsonArr.add(jsonObjArr);   //??
+            	  jsonObjArr=null;
+              }
+          Response response2=new Response(0,"",jsonArr);
+          json=JSONObject.fromObject(response2);
+          out.print(json);
+          System.out.println(json.toString());
+          out.close();
+    }
+    
+    @RequestMapping(value = "/searchExchangeOffer", method = RequestMethod.GET)  
+    @ResponseBody
+    public void searchExchangeOffer(HttpServletRequest request,HttpServletResponse response) throws IOException{
+    	 response.setCharacterEncoding("UTF-8"); 
+         response.setContentType("text/json");
+         int size=request.getParameterMap().size();
+         PlatformDaoImp platformDaoImp=new PlatformDaoImp();
+         List<Offer>offers=new ArrayList<Offer>();
+         PrintWriter out = response.getWriter();
+         JSONObject json=new JSONObject();
+          int seller_from=Integer.parseInt(request.getParameter("seller_from"));
+          int seller_to =Integer.parseInt(request.getParameter("seller_to"));
+          int points_from=Integer.parseInt(request.getParameter("points_from"));
+          int points_to_min=Integer.parseInt(request.getParameter("points_to_min"));
+         offers=platformDaoImp.showRecommendationList(seller_from, seller_to,points_from,points_to_min);
+				
+             JSONArray jsonArr = new JSONArray();//json格式的数组  
+             JSONObject jsonObjArr = new JSONObject(); 
+             //JSONObject json1 = new JSONObject();
+             //System.out.println(offers.size());
+             Offer offer=new Offer();         
+              for(int i=0;i<offers.size();i++){
+            	  offer=offers.get(i);
+            	  jsonObjArr=new JSONObject(); 
+            	  jsonObjArr.put("offer_id",offer.getOffer_id());
+            	  jsonObjArr.put("user_id",offer.getUser_id());
+            	  jsonObjArr.put("seller_from",	 offer.getSeller_from());
+            	  jsonObjArr.put("seller_to",	 offer.getSeller_to());
+            	  jsonObjArr.put("points_from",	  offer.getPoints_from());
+            	  jsonObjArr.put("ponits_to_min",	 offer.getPoints_to_min());
+            	  jsonObjArr.put("status",	offer.getStatus());
+            	  jsonArr.add(jsonObjArr);   
+            	  jsonObjArr=null;
+              }
+              
+              //json1.put("exchange_offer", jsonArr);
+          Response response2=new Response(0,"",jsonArr);
+          json=JSONObject.fromObject(response2);
+          out.print(json);
+          System.out.println(json.toString());
+          out.close();
+    }
 	@RequestMapping(value = "/makingoffer", method = RequestMethod.GET)
 	@ResponseBody
 	public void makingOffer(HttpServletRequest request,
@@ -399,8 +365,7 @@ public class UserService {
 			String token = request.getParameter("u_token");
 			if(!check_token(user_id, token, response))
 				return;
-			int seller_from = Integer.parseInt(request
-					.getParameter("seller_from"));
+			int seller_from = Integer.parseInt(request.getParameter("seller_from"));
 			int seller_to = Integer.parseInt(request.getParameter("seller_to"));
 			int points_from = Integer.parseInt(request
 					.getParameter("points_from"));
@@ -563,13 +528,13 @@ public class UserService {
 	        PrintWriter out = response.getWriter();
 	        JSONObject json = new JSONObject();
 	        JSONObject json1 = new JSONObject();
-	        boolean b=false;
+	        Request request1=null;
 	        HashMap<String, String[]>mp=(HashMap<String, String[]>) request.getParameterMap();
 	        if (mp.containsKey("offer_from")&&mp.containsKey("offer_to")) {
 	       	    int offer_from=Integer.parseInt(request.getParameter("offer_from"));
 	       	    int offer_to=Integer.parseInt(request.getParameter("offer_to"));
 	       		 try {
-						b=new RequestDaoImpl().makeRequestByOfferId(offer_from, offer_to);
+	       			request1=new RequestDaoImpl().makeRequestByOfferId(offer_from, offer_to);
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -579,7 +544,7 @@ public class UserService {
 	       		 int user_from=Integer.parseInt(request.getParameter("user_from"));
 	             int offer_to =Integer.parseInt(request.getParameter("offer_to"));
 	       		 try {
-						b=new RequestDaoImpl().makeRequestByUserId(user_from, offer_to);
+	       			request1=new RequestDaoImpl().makeRequestByUserId(user_from, offer_to);
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -591,8 +556,9 @@ public class UserService {
 	            out.close(); 
 	        	return ;
 			}
-	        if (b) {
-	        	json1.put("status", "ok");
+	        if (request1!=null) {
+	        	//json1.put("status", "ok");
+	        	json1.put("request_id", request1.getRid());
 	        	Response response3=new Response(0,"",json1);
 	        	json=JSONObject.fromObject(response3);
 			}
@@ -639,6 +605,34 @@ public class UserService {
 	        int r_id=Integer.parseInt(request.getParameter("r_id"));
 	        int user_to=Integer.parseInt(request.getParameter("user_to"));
 	        boolean b=new RequestDaoImpl().acceptRequest(r_id, user_to);
+	        if(b){
+	        	json1.put("status", "ok");
+	            Response response2=new Response(0,"",json1);
+	            json=JSONObject.fromObject(response2);
+	        }
+	        else {
+	        	json1.put("status", "error");
+	            Response response2=new Response(5,"acceptRequest failed",json1);
+	            json=JSONObject.fromObject(response2);
+			}   
+	        out.print(json);
+	        out.close(); 
+			
+	    }
+	    @RequestMapping(value = "/removeRequest", method = RequestMethod.POST)  
+	    @ResponseBody
+	    public void removeRequest(HttpServletRequest request,HttpServletResponse response) throws IOException, SQLException{
+	    	response.setCharacterEncoding("UTF-8"); 
+	        response.setContentType("text/json");
+	        PrintWriter out = response.getWriter();
+	        JSONObject json = new JSONObject();
+	        JSONObject json1 = new JSONObject();
+	        int r_id=Integer.parseInt(request.getParameter("r_id"));
+	        int u_id=Integer.parseInt(request.getParameter("u_id"));
+	        int s_id=Integer.parseInt(request.getParameter("s_id"));
+	        int points=Integer.parseInt(request.getParameter("points"));
+	        //int user_to=Integer.parseInt(request.getParameter("user_to"));
+	        boolean b=new RequestDaoImpl().removeRequest(r_id,u_id,s_id,points);
 	        if(b){
 	        	json1.put("status", "ok");
 	            Response response2=new Response(0,"",json1);

@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -10,6 +11,7 @@ import dao.PlatformDao;
 import model.Notification;
 import model.Offer;
 import model.Request;
+import model.user_to_seller;
 
 @Service("PlatformServiceImp")
 public class PlatformServiceImp implements PlatformService {
@@ -96,7 +98,7 @@ public class PlatformServiceImp implements PlatformService {
 		Integer SellerTo = request.getSellerTo();
 		Integer OfferFrom = request.getOfferFrom();
 		Integer OfferTo = request.getOfferTo();
-		System.out.println("Succes read request data" + request.getOfferFrom()+" "+request.getOfferTo());
+		System.out.println("Succes read request data" + request.getOfferFrom() + " " + request.getOfferTo());
 		// Boolean success = PlatformDaoImp.sendExchangeToBlockChain(request_id,
 		// UserFrom, UserTo, SellerFrom,
 		// SellerTo, PointsFrom, PointsTo);
@@ -105,6 +107,36 @@ public class PlatformServiceImp implements PlatformService {
 		// notifi(UserTo)
 		// System.out.println("Succes send to BC"+success);
 		Boolean acc = PlatformDaoImp.acceptRequest(request_id, OfferFrom, OfferTo);
+		List<user_to_seller> list_points = new ArrayList<user_to_seller>();
+		list_points = PlatformDaoImp.selectPoints1(UserFrom, UserTo, SellerFrom, SellerTo);
+		user_to_seller userFromPoint = new user_to_seller();
+		user_to_seller userToPoint = new user_to_seller();
+		if (list_points.get(0).getu_id() == UserFrom) {
+			userFromPoint = list_points.get(0);
+			userToPoint = list_points.get(1);
+		} else {
+			userFromPoint = list_points.get(1);
+			userToPoint = list_points.get(0);
+		}
+		Integer uFromBlock = userFromPoint.getpoints_blocked();
+		Integer uToBlock = userToPoint.getpoints_blocked();
+
+		List<Integer> list_points_to_change = new ArrayList<Integer>();
+		list_points_to_change = PlatformDaoImp.selectPoints2(UserFrom, UserTo, SellerFrom, SellerTo);
+		Integer from_points_to_change;
+		Integer to_points_to_change;
+		System.out.println("uFROMBLOCK" + uFromBlock);
+		System.out.println("uTOBLOCK" + uToBlock);
+		from_points_to_change = list_points_to_change.get(0);
+		to_points_to_change = list_points_to_change.get(1);
+
+		System.out.println("FROM POINTS TO CHANGE: " + from_points_to_change);
+		System.out.println("TO POINTS TO CHANGE: " + to_points_to_change);
+		Integer uFromNewPoint = from_points_to_change + uToBlock;
+		Integer uToNewPoint = to_points_to_change + uFromBlock;
+
+		Boolean change = PlatformDaoImp.updatePoints(UserFrom, UserTo, SellerFrom, SellerTo, uFromNewPoint,
+				uToNewPoint);
 		System.out.println("Succes accept request");
 		List<Integer> requestList = PlatformDaoImp.listOfRequest(OfferFrom, OfferTo);
 		System.out.println("Succes read request list" + requestList);
@@ -137,7 +169,7 @@ public class PlatformServiceImp implements PlatformService {
 	}
 
 	@Override
-	public List<Notification> getNotifUnread(Integer userId) {
+	public int getNotifUnread(Integer userId) {
 		return PlatformDaoImp.getNotifUnRead(userId);
 	}
 
@@ -155,6 +187,11 @@ public class PlatformServiceImp implements PlatformService {
 	@Override
 	public List<Offer> showUserOfferList(Integer user_id, String status) {
 		return PlatformDaoImp.showUserOfferList(user_id, status);
+	}
+
+	@Override
+	public boolean setNotifUnread(Integer notifID) {
+		return PlatformDaoImp.setNotifUnread(notifID);
 	}
 
 }

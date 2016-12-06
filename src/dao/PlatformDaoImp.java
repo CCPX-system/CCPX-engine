@@ -21,6 +21,8 @@ import javax.annotation.Resource;
 import model.Notification;
 import model.Offer;
 import model.Request;
+import model.user_to_seller;
+import service.NotificationWebSocket;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -34,8 +36,6 @@ import java.sql.PreparedStatement;
 import javax.annotation.Resource;
 
 import org.hibernate.Query;
-
-import model.Request;
 
 @Repository("PlatformDaoImp")
 public class PlatformDaoImp implements PlatformDao {
@@ -130,21 +130,22 @@ public class PlatformDaoImp implements PlatformDao {
 
 	@Override
 	public List<Offer> showRecommendationList(Integer seller_from, Integer seller_to, Integer points_from,
-			Integer points_to_min) {	
+			Integer points_to_min) {
 		List<Offer> list = new ArrayList<Offer>();
 		String hql = "from Offer where points_from>= :points_to_min and points_to_min<= :points_from "
 				+ "and seller_from =:seller_to and seller_to =:seller_from and status= :status order by points_to_min";
-		int m =0;int n =5;	  
-		Query query =  getSession().createQuery(hql);
-		query.setFirstResult(m); //å¼€å§‹è®°å½•
-		query.setMaxResults(n);//æŸ¥è¯¢å¤šå°‘æ�¡
-		query.setInteger("seller_from",seller_from );
+		int m = 0;
+		int n = 5;
+		Query query = getSession().createQuery(hql);
+		query.setFirstResult(m); // å¼€å§‹è®°å½•
+		query.setMaxResults(n);// æŸ¥è¯¢å¤šå°‘æ ¡
+		query.setInteger("seller_from", seller_from);
 		query.setInteger("seller_to", seller_to);
 		query.setInteger("points_from", points_from);
-		query.setInteger("points_to_min",points_to_min );	
+		query.setInteger("points_to_min", points_to_min);
 		query.setString("status", "open");
 		Offer offer = new Offer();
-		list = query.list();		
+		list = query.list();
 		return list;
 	}
 
@@ -317,7 +318,7 @@ public class PlatformDaoImp implements PlatformDao {
 			query.setInteger("A3", OfferTo);
 			query.setInteger("A4", OfferTo);
 			System.out.println(sql);
-			System.out.println(OfferFrom); 
+			System.out.println(OfferFrom);
 			System.out.println("OFFERFROM!=NULL " + query.list());
 			requests = query.list();
 
@@ -390,40 +391,6 @@ public class PlatformDaoImp implements PlatformDao {
 			content = "YOUR DECLINED EXCHANGE REQUEST";
 		}
 
-		/*
-		 * STATUS EXPLANTION 0 = OFFER_OPEN ; 1 = CLOSE_OFFER ; 2 =
-		 * CLOSE_REQUEST ; 3 = REMOVE_OFFER 4 = REMOVE_REQUEST ; 5 =
-		 * DECLINE_REQUEST ; 6 = REQUEST_PENDING
-		 */
-		
-		/*
-		Connection conn = null;
-		PreparedStatement ps = null;
-		String sql = "insert into notification(USER_ID, EXCH_ID, CONTENT, STATUS, SEEN, NOTI_DATE) "
-				+ "values(?,?,?,?,?,?)";
-		try {
-			conn = JdbcUtils_C3P0.getConnection();
-			ps = conn.prepareStatement(sql);
-
-			ps.setInt(1, userId);
-			ps.setInt(2, eR_ID);
-			ps.setString(3, content);
-			ps.setInt(4, status);
-			ps.setInt(5, 0);
-			ps.setString(6, nDateString);
-			ps.executeUpdate();
-			
-			return true;
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-			//throw new SQLException("用户注册失败");
-			
-		} finally {
-			JdbcUtils_C3P0.release(conn, ps, null);
-		}
-		*/
 		// SET DATA TO NOTIFICATION MODEL
 		Notification notif = new Notification();
 		notif.setUserId(userId);
@@ -439,9 +406,11 @@ public class PlatformDaoImp implements PlatformDao {
 		session.save(notif);
 		session.flush();
 		session.getTransaction().commit();
-		session.clear(); 
+		session.clear();
+		NotificationWebSocket ws = new NotificationWebSocket();
+		ws.broadcast(userId + "|" + eR_ID + "|" + status);
 		return true;
-		
+
 	}
 
 	@Override
@@ -454,13 +423,13 @@ public class PlatformDaoImp implements PlatformDao {
 	}
 
 	@Override
-	public List<Notification> getNotifUnRead(Integer userId) {
+	public int getNotifUnRead(Integer userId) {
 		String hql = "from Notification where USER_ID=:USER_ID and SEEN=:SEEN";
 		Query query = getSession().createQuery(hql);
 		query.setInteger("USER_ID", userId);
 		query.setInteger("SEEN", 0);
 		List<Notification> notif_list = query.list();
-		return notif_list;
+		return notif_list.size();
 	}
 
 	@Override
@@ -506,6 +475,97 @@ public class PlatformDaoImp implements PlatformDao {
 		}
 		return true;
 
+	}
+
+	@Override
+	public boolean setNotifUnread(Integer notifID) {
+		String hql = "update Notification set SEEN=:SEEN where NOTIFI_ID=:NOTIFI_ID";
+		Query query = getSession().createQuery(hql);
+		query.setInteger("NOTIFI_ID", notifID);
+		query.setInteger("SEEN", 1);
+
+		int a = query.executeUpdate();
+		if (a > 0) {
+			System.out.println("Request_ID " + notifID + " has been declined! Successfully");
+			return true;
+		} else {
+			System.out.println("Request_ID " + notifID + " has not been declined! Failed");
+			return false;
+		}
+
+	}
+
+	@Override
+	public List<user_to_seller> selectPoints1(Integer userFrom, Integer userTo, Integer sellerFrom, Integer sellerTo) {
+		List<user_to_seller> list = new ArrayList<user_to_seller>();
+		String sql = "from user_to_seller where (u_id =:A1 and seller_id=:A2) OR (u_id =:A3 and seller_id=:A4)";
+		Query query = getSession().createQuery(sql);
+		query.setInteger("A1", userFrom);
+		query.setInteger("A2", sellerFrom);
+		query.setInteger("A3", userTo);
+		query.setInteger("A4", sellerTo);
+		list = query.list();
+		return list;
+
+	}
+
+	@Override
+	public List<Integer> selectPoints2(Integer userFrom, Integer userTo, Integer sellerFrom, Integer sellerTo) {
+		List<Integer> list = new ArrayList<Integer>();
+		System.out.println("userFrom" + userFrom);
+		System.out.println("userTo" + userTo);
+		System.out.println("sellerFrom" + sellerFrom);
+		System.out.println("sellerTo" + sellerTo);
+		String sql1 = "SELECT POINTS from user_to_seller WHERE (u_id =? and seller_id=?) OR (u_id =? and seller_id=?)";
+		Query query1 = getSession().createSQLQuery(sql1);
+		query1.setInteger(0, userFrom);
+		query1.setInteger(1, sellerTo);
+		query1.setInteger(2, userTo);
+		query1.setInteger(3, sellerFrom);
+		list = query1.list();
+		System.out.println("LIST: " + list);
+		return list;
+	}
+
+	@Override
+	public Boolean updatePoints(Integer userFrom, Integer userTo, Integer sellerFrom, Integer sellerTo,
+			Integer newPointsFrom, Integer newPointsTo) {
+
+		boolean r1 = false;
+
+		String sql2 = "update user_to_seller set  points_blocked=:set1 where u_id=:userFrom1 and seller_id=:sellerFrom1";
+		Query query2 = getSession().createQuery(sql2);
+		query2.setInteger("set1", 0);
+		query2.setInteger("userFrom1", userFrom);
+		query2.setInteger("sellerFrom1", sellerFrom);
+		int b = query2.executeUpdate();
+
+		String sql3 = "update user_to_seller set  points_blocked=:set1 where u_id=:userTo1 and seller_id=:sellerTo1";
+		Query query3 = getSession().createQuery(sql3);
+		query3.setInteger("set1", 0);
+		query3.setInteger("userTo1", userTo);
+		query3.setInteger("sellerTo1", sellerTo);
+		int c = query3.executeUpdate();
+
+		String sql4 = "update user_to_seller set  points=:set1 where u_id=:userFrom2 and seller_id=:sellerTo2";
+		Query query4 = getSession().createQuery(sql4);
+		query4.setInteger("set1", newPointsFrom);
+		query4.setInteger("userFrom2", userFrom);
+		query4.setInteger("sellerTo2", sellerTo);
+		int d = query4.executeUpdate();
+
+		String sql5 = "update user_to_seller set  points=:set1 where u_id=:userFrom2 and seller_id=:sellerTo2";
+		Query query5 = getSession().createQuery(sql5);
+		query5.setInteger("set1", newPointsTo);
+		query5.setInteger("userFrom2", userTo);
+		query5.setInteger("sellerTo2", sellerFrom);
+		int f = query5.executeUpdate();
+
+		if (b > 0 & c > 0 & d > 0 & f > 0) {
+			r1 = true;
+			System.out.println("Updated user_to_seller");
+		}
+		return r1;
 	}
 
 }

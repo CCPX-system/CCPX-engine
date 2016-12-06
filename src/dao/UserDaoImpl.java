@@ -13,6 +13,7 @@ import javax.print.DocFlavor.STRING;
 import com.alibaba.fastjson.parser.ParseContext;
 
 import model.Notification;
+import model.Offer;
 import model.Request;
 import model.User;
 import utils.JdbcUtils_C3P0;
@@ -292,9 +293,12 @@ public class UserDaoImpl implements UserDao{
 					+"LEFT JOIN user b on request.U_ID_TO = b.u_id "
 					+"LEFT JOIN seller sa on request.SELLER_ID_FROM = sa.Seller_id "
 					+"LEFT JOIN seller sb on request.SELLER_ID_TO = sb.Seller_id "
-					+"WHERE request.U_ID_FROM = ? OR request.U_ID_TO = ?;";
+					+"WHERE request.U_ID_TO = ? or request.U_ID_FROM = ?;";
+					;
+		
 		try {
 			conn = JdbcUtils_C3P0.getConnection();
+			//System.out.println(sql);
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, uId);
 			ps.setInt(2, uId);
@@ -327,6 +331,49 @@ public class UserDaoImpl implements UserDao{
 			JdbcUtils_C3P0.release(conn, ps, rs);
 		}
 	}
+	
+	//zhuyifan
+		public ArrayList<Offer> findOffers(int uId, String condition) throws SQLException{
+			Connection conn = null;
+			PreparedStatement ps = null;
+			ResultSet rs = null;
+			String sql = "SELECT Offer.OFFER_ID,Offer.USER_ID,Offer.SELLER_FROM,Offer.SELLER_TO,Offer.POINTS_FROM,Offer.POINTS_TO_MIN,Offer.STATUS,Offer.UPDATE_TIME,"
+						+"sa.Seller_Name AS sellerNameFrom,sb.Seller_Name AS sellerNameTo FROM `Offer` " 
+						+"LEFT JOIN seller sa on Offer.SELLER_FROM = sa.Seller_id "
+						+"LEFT JOIN seller sb on Offer.SELLER_TO = sb.Seller_id "
+						+"WHERE Offer.USER_ID = " + String.valueOf(uId);
+			
+			try {
+				conn = JdbcUtils_C3P0.getConnection();
+				//System.out.println(sql);
+				ps = conn.prepareStatement(sql);
+				//ps.setInt(1, uId);
+				System.out.println(sql);
+				ArrayList<Offer> result = new ArrayList<Offer>();
+				rs = ps.executeQuery();
+				while(rs.next()){
+					Offer tempOne = new Offer();
+					tempOne.setOffer_id(rs.getInt(1));
+					tempOne.setUser_id(rs.getInt(2));
+					tempOne.setSeller_from(rs.getInt(3));
+					tempOne.setSeller_to(rs.getInt(4));
+					tempOne.setPoints_from(rs.getInt(5));
+					tempOne.setPoints_to_min(rs.getInt(6));
+					tempOne.setStatus(rs.getString(7));
+					tempOne.setUpdate_time(rs.getString(8));
+					tempOne.setSellerNameFrom(rs.getString(9));
+					tempOne.setSellerNameTo(rs.getString(10));
+					result.add(tempOne);
+			    }
+				return result;
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new SQLException("故障");
+			} finally {
+				JdbcUtils_C3P0.release(conn, ps, rs);
+			}
+		}
 	
 	//zhuyifan
 		//@Override

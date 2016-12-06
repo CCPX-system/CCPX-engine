@@ -18,6 +18,8 @@ public interface InfoManagementDao {
 	public seller getCompanyDetail(String id);
 	
 	public String getIndustryInfoByID(String id);
+	
+	public List<seller> getAllSellerInfo();
 
 }
 

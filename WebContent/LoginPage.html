@@ -2,26 +2,95 @@
 <html lang="en">
 
 	<head>
-		<title>Bootstrap template</title>
+		<title>Login</title>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		
 		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
-		<link href="bootstrap/css/toastr.css" rel="stylesheet">
+        <link href="bootstrap/css/toastr.css" rel="stylesheet">
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
 		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
-        <script src="js/jquery-1.11.2.js"></script>
-        <script src="js/jquery.md5.js"></script>
-        <script src="js/jquery.cookie.js"></script>
-        <script src="js/bootstrap.js"></script>
-        <script src="js/toastr.js"></script>
-        <script src="js/toastr.min.js"></script>
-        <script src="js/function.js"></script>
+        <script src="scripts/jquery.min.js"></script>
+        <script src="bootstrap/js/jquery.md5.js"></script>
+        <script src="bootstrap/js/jquery.cookie.js"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
+        <script src="bootstrap/js/toastr.js"></script>
+        <script src="bootstrap/js/toastr.min.js"></script>
+        <script src="scripts/function.js"></script>
+        <script>
+		
+	/*	var result ={
+			"err":"",
+			"errno":0,
+			"rsm":{
+				"id":11,
+				"u_email":"sss@qwe.cn",
+				"u_name":"sb789",
+				"u_token":"d76a4fc0de324ef0fa5fde0a1eecf336",
+				"u_wechat_id":"123",
+			}
+		}*/
+		
+		
+
+		function check_login_form()
+			{
+				$("#loginbutton").attr({"disabled":"disabled"});
+				//var flag = false;
+				username = $("#uname").val();
+				pwd = $("#password").val();
+				
+				var reg = new RegExp("^\\w*$");
+			
+				if (!reg.test(username)) 
+				{
+					toastr.warning("username contains illegal characters", "Warning");
+					$("#uname").focus();
+					return false;
+				}
+				if (!reg.test(pwd)) 
+				{
+					toastr.warning("password contains illegal characters", "Warning");
+					$("#password").focus();
+					return false;
+				}
+			
+				data = {'u_name':username,'u_pw_hash':$.md5(pwd)};
+				$.ajax({
+					type : "post",
+					data : data,
+					async: false,
+					url : "/user/login",
+					success : function(result){
+						if (result.errno==0) {
+							toastr.success(result.rsm.token, "info");
+							$.cookie('u_id',result.rsm.id);
+							$.cookie('u_token',result.rsm.token);
+							location.href="HomePage.html";
+						//	var i = $.cookie('u_id');
+						//	var t = $.cookie('u_token');
+						//	alert(i);
+						//	alert(t);
+						}else{
+							toastr.warning(result.err, "Warning:CODE "+result.errno);
+						}
+					},
+					error:function(){
+						toastr.error("error", "error");
+					}
+				});
+				//return false;
+				
+				//toastr.warning(flag.toString(), "DEBUG");
+				$("#loginbutton").removeAttr("disabled");
+			   // return flag;
+			}
+
+		</script>
 	</head>
 	
 	<body>
@@ -30,7 +99,7 @@
 			<div class="header">
 
 				<!-- Form Name -->
-				<legend>Login page</legend>
+				<legend>Login</legend>
 			
 				<!-- Navbar --> 
 				<nav class="navbar navbar-default" style="background-image: url('img/blue.png'); background-position : 10% 10%;" role="navigation">
@@ -50,20 +119,24 @@
 						<div class="collapse navbar-collapse" id="mynav">
 							<ul class="nav navbar-nav center-block pull-right">
 								<li class="nav-item pull-left">
-								  <a class="nav-link" href="MainPage.html"><span class="glyphicon glyphicon-home"></span> Home</a>
+								  <a class="nav-link" href="MainPage.html"><span class="glyphicon glyphicon-home"></span> Home </a>
 								</li>
 								
-								<li class="nav-item pull-left">
-								  <a class="nav-link" href="LoginPage.html"><span class="glyphicon glyphicon-user"></span> <U>Login</U></a>
+                                <li class="nav-item pull-left">
+								<a class="nav-link" href="ListOfSellersPage.html"><span class="glyphicon glyphicon-shopping-cart"></span> List of Companies</a>
+								</li>	
+                                
+                                 <li class="nav-item pull-left">
+								  <a class="nav-link" href="OfferStreaming.html"><span class="glyphicon glyphicon-time"></span> Offers Streaming</a>
 								</li>
-								
-								 <li class="nav-item pull-left">
+                                
+                                <li class="nav-item pull-left">
 								  <a class="nav-link" href="RegistrationPage.html"><span class="glyphicon glyphicon-check"></span> Register</a>
 								</li>
-								
+                                
 								<li class="nav-item pull-left">
-								<a class="nav-link" href="ListOfSellersPage.html"><span class="glyphicon glyphicon-shopping-cart"></span> List of Sellers</a>
-								</li>															
+								  <a class="nav-link" href="LoginPage.html"><span class="glyphicon glyphicon-user"></span><U> Login </U></a>
+								</li>											
 							</ul>
 						</div> 
 					</div>
@@ -88,15 +161,15 @@
 		
 <!-- ********************************* ^ here ^ ********************************* -->		
 	
-		<form class="form-horizontal" >
+		<form class="form-horizontal" action="" method="post">
 		<fieldset>
 		
-			<!-- Usernane input-->
+			<!-- ID input-->
 			<div class="form-group">
-				<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="Username"> Username
+				<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="uname"> UserName
 				</label>  
 				<div class="col-md-2 col-sm-4 col-xs-6">
-					<input id="Usernane" name="Usernane" type="text" placeholder="enter your username" class="form-control input-sm">
+					<input id="uname" name="uname" type="text" placeholder="enter your name" class="form-control input-sm">
 				</div>
 			</div>
 
@@ -122,11 +195,11 @@
 			</div>
 
 			<!-- Button -->
-			<div class="form-group" >
+			<div class="form-group">
 				<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="loginbutton">
 				</label>
 				<div class="col-md-2 col-sm-4 col-xs-6">
-					<button id="loginbutton" name="loginbutton" type="button" class="btn btn-primary center-block" onclick="check_login_form()" ><span class="glyphicon glyphicon-user"></span> Login</button>
+					<button id="loginbutton" name="loginbutton" type="submit" class="btn btn-primary center-block" onClick="check_login_form()"><span class="glyphicon glyphicon-user"></span> Login</button>
 				</div>
 			</div>
 			<div class="form-group">
@@ -136,6 +209,7 @@
 					<a class="nav-link" href="LoginPageSeller.html"><U>If you are a seller, click here to be redirected to the sellers' area</U></a> 
 				</div>
 			</div>
+
 		</fieldset>
 		</form>
 		

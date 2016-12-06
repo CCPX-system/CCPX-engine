@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>History Page</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="bootstrap/css/toastr.css" rel="stylesheet">
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+        <script src="scripts/jquery.min.js"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
+        <script src="scripts/flo.js"></script>
+        <script src="scripts/ljs.js"></script>
+		<script src="scripts/function.js"></script>
+        <script src="bootstrap/js/jquery.md5.js"></script>
+        <script src="bootstrap/js/jquery.cookie.js"></script>
+        <script src="bootstrap/js/toastr.js"></script>
+        <script src="bootstrap/js/toastr.min.js"></script>
+	</head>
+	
+	<body onload="historyTable()">
+		<div class="container">
+		
+			<div class="header">
+
+				<!-- Form Name -->
+				<legend>History page</legend>
+			
+				<!-- Navbar --> 
+				<nav class="navbar navbar-default" style="background-image: url('img/blue.png'); background-position : 10% 10%;" role="navigation">
+					<div class="container-fluid">  
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+									data-target="#mynav">
+								<span class="sr-only">change nav</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+					   
+							</button>
+							<a class="navbar-brand" href="#">Exchange Platform</a>
+						</div>
+						<div class="collapse navbar-collapse" id="mynav">
+							<ul class="nav navbar-nav center-block pull-right">
+								<li class="nav-item pull-left">
+								  <a class="nav-link" href="HomePage.html"><span class="glyphicon glyphicon-home"></span> Home </a>
+								</li>
+								
+								<li class="nav-item pull-left">
+								  <a class="nav-link" href="MyAccount.html"><span class="glyphicon glyphicon-user"></span> My Account </a>
+								</li>
+								
+								 <li class="nav-item pull-left">
+								  <a class="nav-link" href="MyPointsPage.html"><span class="glyphicon glyphicon-yen"></span> My Points </a>
+								</li>
+								
+								<li class="nav-item pull-left">
+								<a class="nav-link" href="ListOfSellersPage2.html"><span class="glyphicon glyphicon-shopping-cart"></span> List Of Companies </a>
+								</li>	
+                                
+                                <li class="nav-item pull-left">
+								<a class="nav-link" href="ExchangeCenter.html"><span class="glyphicon glyphicon-transfer"></span><U> Exchange Center </U></a>
+  								</li>	
+  								
+  								 <li class="nav-item pull-left">
+								<a class="nav-link" href="Notification.html"><span class="glyphicon glyphicon-envelope"></span> Notifications </a>
+  								</li>	
+                                
+                                <li class="nav-item pull-left">
+								<a class="nav-link" href="#" onclick="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout </a>
+								</li>															
+							</ul>
+						</div> 
+					</div>
+				</nav>
+			
+				<!-- Website Logo -->
+				<div class="row">
+					<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="Logo"></label>
+					<div class="col-md-2 col-sm-4 col-xs-6">
+						<img class="img-responsive center-block" src="img/logo.png" width="60%" />
+					</div>
+				</div>
+				
+				<!-- message-->
+				<div class="row">
+					<div class="col-md-4 col-sm-3 col-xs-2">
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-8" id="message">
+					</p>
+				</div>
+			</div>
+		
+		
+<!-- ********************************* ^ here ^ ********************************* -->
+			
+<!-- 
+			<form class="form-horizontal">
+			<fieldset>
+				<!~~ company input~~>
+				<div class="form-group">
+					<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="CompanysName"> Company's name
+					</label>  
+					<div class="col-md-2 col-sm-4 col-xs-6">
+						<input id="CompanysName" name="CompanysName" type="text" placeholder="enter a Company's name" class="form-control input-sm">
+					</div>
+				</div>
+				<!~~ date input~~>
+				<div class="form-group">
+					<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="CompanysName"> Date
+					</label>  
+					<div class="col-md-2 col-sm-4 col-xs-6">
+						<div class='input-group date' id='datetimepicker1'>
+							<input type='text' class="form-control" />
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-calendar"></span>
+							</span>
+						</div>
+						<script type="text/javascript">
+							$(function () {
+								$('#datetimepicker1').datetimepicker();
+							});
+						</script>
+					</div>
+				</div>
+			</fieldset>
+			</form>
+ -->
+			
+			<div class="table-responsive">
+				<table class="table">
+				  <thead class="thead-inverse">
+					<tr>
+					  <th>Transaction ID</th>
+					  <th>Date</th>
+					  <th>Company's Name</th>
+					  <th>Points given</th>
+					  <th>Points received</th>
+					  <th>Company's Name</th>
+					  <th>Partner</th>
+					</tr>
+				  </thead>
+				  <tbody id="history">
+				  </tbody>
+				 <!-- <tbody>
+				  <tr>
+				  <td>"+val.recordId+"</td>
+				  <td>"+val.timeStamp+"</td>
+				  <td>"+val.SellerNameFrom+"</td>
+				  <td>"+val.pointsFrom+"</td>
+				  <td>"+val.pointsTo+"</td>
+				  <td>"+val.SellerNameTo+"</td>
+				  <td class='col-md-3'><img class='img-circle' src='img/bonus.png' width='50' height='50' /><a href='#'>"+val.user_from+"</a></td>
+				  </tr>
+				  </tbody>-->
+				</table>
+			</div> 
+			<div class="row center-block" style="width:100px;">
+        <a href="ExchangeCenter.html"><button type="button" class="btn btn-default btn-info">Back</button></a>
+        </div>
+		</div>
+	</body>
+  
+</html>
