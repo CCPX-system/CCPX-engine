@@ -16,5 +16,9 @@ public interface SellerManagementDao {
 	
 	public boolean checkActivationCode(String code, String sellerid);
 	
+	public seller retrievePassword(String uname, String email);
+	
 	public boolean updateSellerStatus(String sellerid);
+	
+	public void sentEmails(String email,String subject,String text);
 }

@@ -36,7 +36,7 @@ public class ViewExchangePointServiceImpl implements ViewExchangePointService{
 		try{
 			List<ExchangeRecord> records=intelligentAnalysisDaoImpl.getIAExRec(sellerId, startTime, endTime);
 			//sort by exchange time
-			ListSortUtil<ExchangeRecord> listSort= new ListSortUtil<ExchangeRecord>();  	
+			ListSortUtil<ExchangeRecord> listSort= new ListSortUtil<>();  	
 	        listSort.Sort(records, "getEx_time", "asc");  
 	        
 	        double totalPoint=0;
@@ -75,9 +75,9 @@ public class ViewExchangePointServiceImpl implements ViewExchangePointService{
 		ExchangePointVO epvo=new ExchangePointVO();
 		
 		try{
-			List<ExchangeRecord> records=viewExchangePointDaoImpl.getLatExRec(sellerId, 10);
+			List<ExchangeRecord> records=viewExchangePointDaoImpl.getLatExRec(sellerId, 5);
 			//sort by exchange time
-			ListSortUtil<ExchangeRecord> listSort= new ListSortUtil<ExchangeRecord>();  	
+			ListSortUtil<ExchangeRecord> listSort= new ListSortUtil<>();  	
 	        listSort.Sort(records, "getEx_time", "desc");  
 	        
 	        List<ExchangePoint> exchangePoints=new ArrayList<ExchangePoint>();

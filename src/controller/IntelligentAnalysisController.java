@@ -1,16 +1,11 @@
 package controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import model.AllDiagramsData;
-import model.ExchangeRateVO;
-
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import service.IntelligentAnalysisService;
-import utils.HttpUtil;
 
 @Controller
 @RequestMapping("/")
@@ -36,7 +30,7 @@ public class IntelligentAnalysisController {
 	@ResponseBody
 	public AllDiagramsData doIntelligentAnalysis(HttpServletRequest req) {
 		
-		System.out.println("----------------------------------------------------");
+		System.out.println("--------------------------IntelligentAnalysis start--------------------------");
 		AllDiagramsData datas=new AllDiagramsData();
 		String sellerIdStr=null;
 		String startTime=null;

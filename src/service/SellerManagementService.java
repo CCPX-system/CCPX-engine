@@ -17,4 +17,6 @@ public interface SellerManagementService {
 	public boolean checkActivationCode(String code, String sellerid);
 	
 	public boolean updateSellerStatus(String sellerid);
+	
+	public boolean retrievePassword(String uname, String email);
 }

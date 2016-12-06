@@ -12,8 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Repository;
@@ -25,7 +23,6 @@ import model.ExchangeRecord;
 import model.HistogramData;
 import model.LineGraphData;
 import model.PieChartData;
-import model.Point;
 
 @Repository("IntelligentAnalysisServiceImpl")
 public class IntelligentAnalysisServiceImpl implements IntelligentAnalysisService{
@@ -37,24 +34,24 @@ public class IntelligentAnalysisServiceImpl implements IntelligentAnalysisServic
 	public AllDiagramsData getTradePointDiagramsData(int sellerId, String startTime, String endTime) {
 		
 		//store seller,trade points in same industry with sellerId
-		Map<Integer, Double> sellersInSameIndustry=new HashMap<Integer, Double>();
+		Map<Integer, Double> sellersInSameIndustry=new HashMap<>();
 		//store seller, trade points in different industry with sellerId
-		Map<Integer, Double> sellersInDiffIndustry=new HashMap<Integer, Double>();
+		Map<Integer, Double> sellersInDiffIndustry=new HashMap<>();
 		//store industryType, trade points
-		Map<String, Double> tradePointsForIndustry=new HashMap<String, Double>();
+		Map<String, Double> tradePointsForIndustry=new HashMap<>();
 		//store time stamp, trade points' average
-		Map<String, Double> tradePointTimeSequence=new LinkedHashMap<String, Double>();
+		Map<String, Double> tradePointTimeSequence=new LinkedHashMap<>();
 		
 		//get records
 		List<ExchangeRecord> records=intelligentAnalysisDaoImpl.getIAExRec(sellerId, startTime, endTime);
 		
 		//sort by exchange time
-		ListSortUtil<ExchangeRecord> listSort= new ListSortUtil<ExchangeRecord>();  	
+		ListSortUtil<ExchangeRecord> listSort= new ListSortUtil<>();  	
         listSort.Sort(records, "getEx_time", "asc");  
         
         //ensure how long of a period time for time sequence diagram
         String timeUnit=getCalTimeUnit(records.get(0).getEx_time(),records.get(records.size()-1).getEx_time());
-        System.out.print("---------------------------"+timeUnit) ;
+        //System.out.print("---------------------------"+timeUnit) ;
         
 		//get industry type of the sellerId
 		String industryTypeOfSellerId=intelligentAnalysisDaoImpl.getIndustryTypeBySellerId(sellerId);
@@ -111,12 +108,7 @@ public class IntelligentAnalysisServiceImpl implements IntelligentAnalysisServic
 			double avg=(double)tradePointInUnit/(double)count;
 			tradePointTimeSequence.put(firstTime, avg);
 		}
-		
-//		for (Entry<String, Double> s : tradePointTimeSequence.entrySet()) {
-//			System.out.println("键值对:" + s);
-//		}
-			
-		
+				
 		//get all data of allDiagramData class
 		String tradeType="Trading Points";
 		AllDiagramsData datas=new AllDiagramsData();
@@ -225,7 +217,7 @@ public class IntelligentAnalysisServiceImpl implements IntelligentAnalysisServic
 			String industryType=entry.getKey();
 			double percentage=entry.getValue()/sum;
 			BigDecimal bg = new BigDecimal(percentage);  
-            double perFormat = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            double perFormat = bg.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
             Object[] pt=new Object[2];
             pt[0]=industryType;
             pt[1]=perFormat;
@@ -244,8 +236,8 @@ public class IntelligentAnalysisServiceImpl implements IntelligentAnalysisServic
 	 * @return
 	 */
 	private LineGraphData getLineGraphData(Map<String, Double> tradePointTimeSequence, String tradeType){
-		ArrayList<String> times=new ArrayList<String>();
-		ArrayList<Double> tradePoints=new ArrayList<Double>();
+		ArrayList<String> times=new ArrayList<>();
+		ArrayList<Double> tradePoints=new ArrayList<>();
 		
 		for (Entry<String, Double> entry : tradePointTimeSequence.entrySet()) {  
 			String time=entry.getKey();
@@ -296,7 +288,7 @@ public class IntelligentAnalysisServiceImpl implements IntelligentAnalysisServic
 			e.printStackTrace();
 		}
 		
-		return null;
+		return "second";
 	}
 	
 	/**
@@ -337,24 +329,24 @@ public class IntelligentAnalysisServiceImpl implements IntelligentAnalysisServic
 	@Override
 	public AllDiagramsData getTradeCountDiagramsData(int sellerId, String startTime, String endTime) {
 		//store seller,trade points in same industry with sellerId
-		Map<Integer, Double> sellersInSameIndustry=new HashMap<Integer, Double>();
+		Map<Integer, Double> sellersInSameIndustry=new HashMap<>();
 		//store seller, trade points in different industry with sellerId
-		Map<Integer, Double> sellersInDiffIndustry=new HashMap<Integer, Double>();
+		Map<Integer, Double> sellersInDiffIndustry=new HashMap<>();
 		//store industryType, trade points
-		Map<String, Double> tradePointsForIndustry=new HashMap<String, Double>();
+		Map<String, Double> tradePointsForIndustry=new HashMap<>();
 		//store time stamp, trade points' average
-		Map<String, Double> tradePointTimeSequence=new LinkedHashMap<String, Double>();
+		Map<String, Double> tradePointTimeSequence=new LinkedHashMap<>();
 		
 		//get records
 		List<ExchangeRecord> records=intelligentAnalysisDaoImpl.getIAExRec(sellerId, startTime, endTime);
 		
 		//sort by exchange time
-		ListSortUtil<ExchangeRecord> listSort= new ListSortUtil<ExchangeRecord>();  	
+		ListSortUtil<ExchangeRecord> listSort= new ListSortUtil<>();  	
         listSort.Sort(records, "getEx_time", "asc");  
         
         //ensure how long of a period time for time sequence diagram
         String timeUnit=getCalTimeUnit(records.get(0).getEx_time(),records.get(records.size()-1).getEx_time());
-        System.out.print("---------------------------"+timeUnit) ;
+        //System.out.print("---------------------------"+timeUnit) ;
         
 		//get industry type of the sellerId
 		String industryTypeOfSellerId=intelligentAnalysisDaoImpl.getIndustryTypeBySellerId(sellerId);
@@ -403,12 +395,7 @@ public class IntelligentAnalysisServiceImpl implements IntelligentAnalysisServic
 				firstTime=er.getEx_time();
 			}
 			tradePointTimeSequence.put(firstTime, tradeCountInUnit);
-		}
-		
-//				for (Entry<String, Double> s : tradePointTimeSequence.entrySet()) {
-//					System.out.println("键值对:" + s);
-//				}
-			
+		}		
 		
 		//get all data of allDiagramData class
 		String tradeType="Trading Count";

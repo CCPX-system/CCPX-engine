@@ -26,6 +26,7 @@ public class InfoManagementController {
 	@Resource(name = "infoManagementServiceImp")
 	private InfoManagementService infoManagementServiceImp;
 	
+	
 	@RequestMapping("/getIndustryInfo")
 	@ResponseBody
 	public void getIndustryInfo(HttpServletRequest req, HttpServletResponse res) {
@@ -75,6 +76,7 @@ public class InfoManagementController {
 	@RequestMapping("/getAllSellerInfo")
 	@ResponseBody
 	public void getAllSellerInfo(HttpServletRequest req, HttpServletResponse res) {
+		
 		List<seller> seller_list = infoManagementServiceImp.getAlltSellerInfo();
 		JSONArray json = JSONArray.fromObject(seller_list);
         System.out.print(json);

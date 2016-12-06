@@ -26,7 +26,7 @@
 			<div class="header">
 
 				<!-- Form Name -->
-				<legend>Exchange Points</legend>
+				<legend>Exchange Rates</legend>
 			
 				<!-- Navbar --> 
 				<nav class="navbar navbar-default" style="background-image: url('img/red.png'); background-position : 10% 10%;" role="navigation">
@@ -47,7 +47,7 @@
 						</div>
 						<div class="collapse navbar-collapse" id="mynav">
 							<ul class="nav navbar-nav center-block pull-right">
-                                  <li class="nav-item pull-left">
+								 <li class="nav-item pull-left">
 								  <a class="nav-link" href="HomePageSeller.html"><span class="glyphicon glyphicon-home"></span> Home </a>
 								</li>
 								
@@ -65,7 +65,7 @@
                                 
                                 <li class="nav-item pull-left">
 								<a class="nav-link" href="LoginPageSeller.html"  onclick="exitSeller()"><span class="glyphicon glyphicon-log-out"></span> Logout </a>
-								</li>														
+								</li>																
 							</ul>
 						</div> 
 					</div>
@@ -118,28 +118,10 @@
 			</form>
          
          <!--total points-->  
-          <br> 
-          <div class="row clearfix">
-		  <div class="col-md-2 column">
-		  </div>
-		  <div class="col-md-8 column">
-          <p><b>total points: </b><b><font id="totalPointsLabel" size="5"></font></b><span></span></p>
           <hr class="col-md-12">
-  		  </div>
-		  <div class="col-md-3 column">
-		  </div>
-	      </div>
+
           
           <!--table name-->
-          <div class="row clearfix">
-          <div class="col-md-1 col-sm-1 col-xs-0 column">
-		  </div>
-		  <div class="col-md-8 col-sm-9 col-xs-9 column">
-			<h4 class="muted" id="resultLable">
-				
-			</h4>
-		  </div>
-	      </div>
           
           <div class="row clearfix">
           <div class="col-md-1 column">
@@ -149,12 +131,10 @@
 				<table class="table table-bordered">
 				  <thead class="thead-inverse">
 					<tr>
-					  <th>User Name</th>
-                      <th>business of gainning points</th>
-					  <th>gain points</th>
-					  <th>business of losing points</th>
-                      <th>lose points</th>
-					  <th>Timestamp</th>
+					  <th></th>
+					  <th>Seller</th>
+                      <th>Industry</th>
+					  <th>Rate</th>
 					</tr>
 				  </thead>
 				  <tbody id="result">
@@ -169,59 +149,16 @@
 		
 		</div>
 	</body>
-	<script type="text/javascript">
-	$(function(){
-		//获取cookie中的sellerId
-		//setCookie("sellerid",5);
-		var sellerId=getCookie("sellerid");
-	    var url = "viewLatestExchangePoint?sellerId="+sellerId;
-	    $.ajax({
-	        type:'POST',
-	        dataType: 'json',
-	        url: url,//请求数据的地址
-	        success:function(data){
-	           if (data.errno == 0) {
-                    var exchangePoints=new Array();
-                    exchangePoints=data.exchangePoints;
-                    if(exchangePoints.length>0){
-                        var i = 0;
-                        var stringhtml = '';
-                        for (i = 0; i < exchangePoints.length; i++) {
-                            stringhtml += ' <tr >' +
-                                ' <td>' + exchangePoints[i].userName + '</td>' +
-                                ' <td>' + exchangePoints[i].gainPointSeller+ '</td>' +
-                                ' <td>' + exchangePoints[i].gainPoint + '</td>' +
-                                ' <td>' + exchangePoints[i].losePointSeller + '</td>' +
-                                ' <td>' + exchangePoints[i].losePoint + '</td>' +
-                                ' <td>' + exchangePoints[i].timestamp + '</td>' +
-                                ' </tr>';
-                        }
-                       
-                        $('#result').html(stringhtml);
-						$('#resultLable').html("Latest Exchange Records");
-                    }else{
-                    	$('#result').html("no records");
-                    }
-					
-                }
-	        },
-	        error:function(e){
-	        	alert("Something wrong! Please try again!");
-	        } 
-	    });
-	});
-	</script>
 	
 	<script type="text/javascript">
 	$("#searchBtn").click(function(){
 		$('#result').html("");
-		$('#totalPointsLabel').html("");			
 		//获取cookie中的sellerId
 		//setCookie("sellerid",5);
 		var sellerId=getCookie("sellerid");
 		var startTime=document.getElementById("datetimepicker1").value;		
 		var endTime=document.getElementById("datetimepicker2").value;
-	    var url = "viewExchangePoint?sellerId="+sellerId+"&startTime="+startTime+"&endTime="+endTime;
+	    var url = "viewExchangeRate?sellerId="+sellerId+"&startTime="+startTime+"&endTime="+endTime;
 
 	    $.ajax({
 	        type:'POST',
@@ -230,28 +167,22 @@
 	        success:function(data){
 	           if (data.errno == 0) {
                     var exchangePoints=new Array();
-                    exchangePoints=data.exchangePoints;
-                    if(exchangePoints.length>0){
+                    exchangeRates=data.exchangeRates;
+                    if(exchangeRates.length>0){
                         var i = 0;
                         var stringhtml = '';
-                        for (i = 0; i < exchangePoints.length; i++) {
+                        for (i = 0; i < exchangeRates.length; i++) {
                             stringhtml += ' <tr >' +
-                                ' <td>' + exchangePoints[i].userName + '</td>' +
-                                ' <td>' + exchangePoints[i].gainPointSeller+ '</td>' +
-                                ' <td>' + exchangePoints[i].gainPoint + '</td>' +
-                                ' <td>' + exchangePoints[i].losePointSeller + '</td>' +
-                                ' <td>' + exchangePoints[i].losePoint + '</td>' +
-                                ' <td>' + exchangePoints[i].timestamp + '</td>' +
+                            	'<td scope="row">'+(i+1)+'</th></td>' +
+                                ' <td>' + exchangeRates[i].sellerName + '</td>' +
+                                ' <td>' + exchangeRates[i].industryType+ '</td>' +
+                                ' <td>' + exchangeRates[i].rate + '</td>' +
                                 ' </tr>';
                         }
-                       	$('#totalPointsLabel').html(data.totalPoint);
                         $('#result').html(stringhtml);
-						$('#resultLable').html("Search Results");
                     }else{
                     	$('#result').html("no records");
-                    	$('#resultLable').html("Search Results");
-                    }
-					
+                    }				
                 }else{
                 	alert(data.err);
                 }

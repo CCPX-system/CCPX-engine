@@ -1,35 +1,21 @@
 package service;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import controller.IntelligentAnalysisController;
-import utils.ListSortUtil;
 import dao.IntelligentAnalysisDao;
-import model.AllDiagramsData;
 import model.ExchangeRate;
 import model.ExchangeRateVO;
 import model.ExchangeRecord;
-import model.HistogramData;
-import model.LineGraphData;
-import model.PieChartData;
-import model.Point;
 
 @Repository("ViewExchangeRateServiceImpl")
 public class ViewExchangeRateServiceImpl implements ViewExchangeRateService{
@@ -47,9 +33,9 @@ public class ViewExchangeRateServiceImpl implements ViewExchangeRateService{
 		try{
 			
 			//store seller id, sum of exchange rate
-			Map<Integer, Double> exchangeRateSum=new LinkedHashMap<Integer, Double>();
+			Map<Integer, Double> exchangeRateSum=new LinkedHashMap<>();
 			//store seller id, sum of record count 
-			Map<Integer, Integer> exchangeCountSum=new LinkedHashMap<Integer, Integer>();
+			Map<Integer, Integer> exchangeCountSum=new LinkedHashMap<>();
 			
 			//get records by invoke intelligent analysis's dao 
 			List<ExchangeRecord> records=intelligentAnalysisDaoImpl.getIAExRec(sellerId, startTime, endTime);

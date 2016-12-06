@@ -1,3 +1,25 @@
+﻿function retrievePassword(){
+	 var uname=document.getElementById("username").value;
+	 var email=document.getElementById("Email").value;
+	 $.ajax({
+	        type: "POST",
+	        dataType:"JSON",
+	        url: "seller/retrievePassword",
+	        async: false,
+	        data: { uname: uname,
+	        	    email: email
+	        },
+	        success: function (data) {
+	       	 if(data.message=="success"){
+	       		 alert('The password has been sent to your registered email, please check it.');
+	       		 location.href="LoginPageSeller.html";
+	       	 }
+	       	 else{
+	       		toastr.error('The information you provided is incorrect!', 'Error');
+	       	 }
+	        }     
+	    });
+}
 function getCompanyDetail(id) {
     $.ajax({
         type: "POST",

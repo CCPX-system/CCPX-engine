@@ -7,19 +7,19 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="bootstrap/css/jquery.datetimepicker.css"/>
+		<link rel="stylesheet" type="text/css" href="scripts/jquery.datetimepicker.css"/>
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
 		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
-        <script src="js/jquery-1.11.2.js"></script>
-        <script src="js/bootstrap.js"></script>
 		<script src="js/highcharts.js"></script>
 		<script src="js/exporting.js"></script>
-		<script src="js/jquery.datetimepicker.js"></script>
-		<script src="js/ljs.js"></script>
+		<script src="js/jquery-1.11.2.js"></script>
+		<script src="js/bootstrap.js"></script>
+        <script src="js/jquery.datetimepicker.js"></script>
+        <script src="js/ljs.js"></script>
 	</head>
 	
 	<body>
@@ -48,7 +48,7 @@
 						</div>
 						<div class="collapse navbar-collapse" id="mynav">
 							<ul class="nav navbar-nav center-block pull-right">
-<li class="nav-item pull-left">
+ <li class="nav-item pull-left">
 								  <a class="nav-link" href="HomePageSeller.html"><span class="glyphicon glyphicon-home"></span> Home </a>
 								</li>
 								
@@ -66,7 +66,7 @@
                                 
                                 <li class="nav-item pull-left">
 								<a class="nav-link" href="LoginPageSeller.html"  onclick="exitSeller()"><span class="glyphicon glyphicon-log-out"></span> Logout </a>
-								</li>		
+								</li>					
 							</ul>
 						</div> 
 					</div>
@@ -104,7 +104,7 @@
 					</div>
                     <script type="text/javascript">
 							$(".form_datetime").datetimepicker( {  
-									format: 'Y/m/d h:m:s',
+									format: 'Y/m/d H:m:s',
 									autoclose: true
 							});
 						
@@ -332,31 +332,37 @@
 								tradeType=document.getElementById("tradeType1").value;
 							}
 									
-									
 							$.ajax({
 								url:"intelligentAnalysis?sellerId="+sellerId+"&startTime="+startTime+"&endTime="+endTime+"&tradeType="+tradeType,
 								type: 'POST',
 								dataType: 'json',
 								success: function(AllDiagramsData){
-									if(AllDiagramsData.errno!="0"){
-										alert("Something wrong! Please try again!");
+									if(AllDiagramsData.errno!="0"){									
+										alert(AllDiagramsData.err);
 									}else{
-										options1.series[0].data=AllDiagramsData.topSameIndustry.seriesData;
-										options1.yAxis.title.text=AllDiagramsData.topSameIndustry.yAxisTitleText;
-										//alert(AllDiagramsData.topSameIndustry.yAxisTitleText);
+										if(AllDiagramsData.topSameIndustry!=null){
+											options1.series[0].data=AllDiagramsData.topSameIndustry.seriesData;
+											options1.yAxis.title.text=AllDiagramsData.topSameIndustry.yAxisTitleText;
+										}
 										
-										options2.series[0].data=AllDiagramsData.topDiffIndustry.seriesData;
-										options2.yAxis.title.text=AllDiagramsData.topDiffIndustry.yAxisTitleText;
+										if(AllDiagramsData.topDiffIndustry!=null){
+											options2.series[0].data=AllDiagramsData.topDiffIndustry.seriesData;
+											options2.yAxis.title.text=AllDiagramsData.topDiffIndustry.yAxisTitleText;
+										}
 										
-										options3.series[0].data=AllDiagramsData.industryRatio.seriesData;
-										options3.title.text="Industry ratio of "+AllDiagramsData.industryRatio.titleText;
+										if(AllDiagramsData.industryRatio!=null){
+											options3.series[0].data=AllDiagramsData.industryRatio.seriesData;
+											options3.title.text="Industry ratio of "+AllDiagramsData.industryRatio.titleText;
+										}
 										
-										options4.series[0].data=AllDiagramsData.timeSequence.seriesData;
-										options4.xAxis.categories=AllDiagramsData.timeSequence.xAxisCategories;
-										options4.title.text="Trend of "+AllDiagramsData.timeSequence.yAxisTitleText;
-										options4.yAxis.title.text=AllDiagramsData.timeSequence.yAxisTitleText;
-										options4.series[0].name=AllDiagramsData.timeSequence.yAxisTitleText;
-										
+										if(AllDiagramsData.timeSequence!=null){
+											options4.series[0].data=AllDiagramsData.timeSequence.seriesData;
+											options4.xAxis.categories=AllDiagramsData.timeSequence.xAxisCategories;
+											options4.title.text="Trend of "+AllDiagramsData.timeSequence.yAxisTitleText;
+											options4.yAxis.title.text=AllDiagramsData.timeSequence.yAxisTitleText;
+											options4.series[0].name=AllDiagramsData.timeSequence.yAxisTitleText;
+										}
+																			
 										var chart1 = new Highcharts.Chart(options1);
 										var chart2 = new Highcharts.Chart(options2);
 										var chart3 = new Highcharts.Chart(options3);

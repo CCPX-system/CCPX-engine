@@ -69,7 +69,7 @@ public class HttpUtil {
                 }
             }
             catch(IOException ex){
-            	log.error("关闭流操作出现异常！"+ex.toString());
+            	log.error(ex.toString());
                 ex.printStackTrace();
             }
         }

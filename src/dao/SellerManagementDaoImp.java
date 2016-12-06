@@ -10,6 +10,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.context.ApplicationContext;   
+import org.springframework.context.support.ClassPathXmlApplicationContext;   
+import org.springframework.mail.SimpleMailMessage;   
+import org.springframework.mail.javamail.JavaMailSender;  
+
+
 
 @Repository("sellerManagementDaoImp")
 public class SellerManagementDaoImp implements SellerManagementDao {
@@ -106,6 +112,16 @@ public class SellerManagementDaoImp implements SellerManagementDao {
 		}
 	}
 	
+	@Override
+	public seller retrievePassword(String uname, String email){
+		String hql = "from seller where Seller_Username= :username and Seller_Email= :Seller_Email";
+		Query query = getSession().createQuery(hql);
+		query.setString("username", uname);
+		query.setString("Seller_Email", email);
+		seller Seller = (seller) query.uniqueResult();
+		return Seller;
+	}
+	
 	public boolean updateSellerStatus(String sellerid){
 		String hql = "from seller where Seller_id=:Seller_id";
 		Query query = getSession().createQuery(hql);
@@ -124,4 +140,26 @@ public class SellerManagementDaoImp implements SellerManagementDao {
 		return true;
 		}
 	}
+	
+	
+    public void sentEmails(String email,String subject,String text)   
+    {        
+    	ApplicationContext ctx = new ClassPathXmlApplicationContext("config/spring-application-mail.xml");
+        //获取JavaMailSender bean      
+        JavaMailSender sender = (JavaMailSender) ctx.getBean("mailSender");      
+        //SimpleMailMessage只能用来发送text格式的邮件     
+        SimpleMailMessage mail = new SimpleMailMessage();     
+            try {      
+                mail.setTo(email);//接受者   
+                mail.setFrom("17701314685@163.com");    
+                mail.setSubject(subject);//主题      
+                mail.setText(text);//邮件内容      
+                sender.send(mail);      
+            } catch (Exception e) {      
+                e.printStackTrace();     
+            }    
+    }
+	
+	
+	
 }

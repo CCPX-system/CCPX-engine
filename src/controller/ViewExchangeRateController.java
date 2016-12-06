@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import service.ViewExchangeRateService;
-import service.ViewExchangeRateServiceImpl;
 
 @Controller
 @RequestMapping("/")

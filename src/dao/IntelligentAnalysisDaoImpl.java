@@ -13,8 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSON;
 
-import controller.IntelligentAnalysisController;
-import test.TestInterfaceOfBlockChain;
 import utils.HttpUtil;
 import model.ExchangeRecord;
 
@@ -45,14 +43,13 @@ public class IntelligentAnalysisDaoImpl implements IntelligentAnalysisDao{
 		
 		try{
 			// send request to blockchain then get data
-			String url="http://ccpx-blockchain.mybluemix.net/getIAExRec";
+			String url="http://148.100.5.138:9999/getToExPo";
 			String param="SELLER_ID="+sellerId+"&START_TIME="+startTime+"&END_TIME="+endTime;
 			String result=HttpUtil.sendPost(url, param);		
-			System.out.println(result);
-			//just for test
-			//String result=TestInterfaceOfBlockChain.getIAExRec();
+			//System.out.println(result);
+
 			String respond=JSON.parseObject(result).get("respond").toString();
-			if(respond.equals("100")){
+			if(respond.equals("300")){
 				String content=JSON.parseObject(result).get("content").toString();
 				recs=JSON.parseArray(content, ExchangeRecord.class);
 			}else{

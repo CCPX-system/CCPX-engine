@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import service.SellerManagementService;
 import utils.MD5Util;
 
+
 @Controller
 @RequestMapping(value ="/seller")
 public class SellerManagementController {
@@ -35,6 +37,7 @@ public class SellerManagementController {
 	 
 	@Resource(name = "sellerManagementServiceImp")
 	private SellerManagementService sellerManagementServiceImp;
+	
 
 	@RequestMapping("checkSeller")
 	@ResponseBody
@@ -176,6 +179,56 @@ public class SellerManagementController {
 			}
 
 	}
+	
+	@RequestMapping("retrievePassword")
+	@ResponseBody
+	public void retrievePassword(HttpServletRequest req, HttpServletResponse res,
+			String uname, String email){
+			boolean b = sellerManagementServiceImp.retrievePassword(uname,email);
+			res.setCharacterEncoding("UTF-8"); 
+	        res.setContentType("text/json");
+	        PrintWriter out =null;
+			if (b) {//信息正确，发送email到注册邮箱
+		            		
+				    String message = "{'message':'success'}"; 
+			        JSONObject json = JSONObject.fromObject(message);
+			        System.out.print(json);
+			        System.out.close();
+			        try{
+			        out = res.getWriter();
+			        out.write(json.toString());
+			        out.flush();
+			        out.close();
+			        }catch (IOException e) {  
+			            e.printStackTrace();  
+			        } finally {  
+			            if (out != null) {  
+			                out.close();  
+			            } 
+			        } 	
+				
+			}else {//信息不正确
+				 String message = "{'message':'wrong'}";  
+			        JSONObject json = JSONObject.fromObject(message);
+			        System.out.print(json);
+			        System.out.close();
+			        try{
+			        out = res.getWriter();
+			        out.write(json.toString());
+			        out.flush();
+			        out.close();
+			        }catch (IOException e) {  
+			            e.printStackTrace();  
+			        } finally {  
+			            if (out != null) {  
+			                out.close();  
+			            } 
+			        } 		
+			}
+
+	}
+	
+	
 
 	@RequestMapping("/validateSeller_Username")
 	@ResponseBody
