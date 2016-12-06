@@ -171,10 +171,10 @@ function get_recent_activity(){
 {
     $("makeoffer").attr({"disabled":"disabled"});
     var flag = false;
-    sellerIdA = $("#selectbasic1").val();
-    sellerIdB = $("#selectbasic2").val();
+    sellerA = $("#selectbasic1").val();
+    sellerB = $("#selectbasic2").val();
 
-    data = {'seller-from':sellerIdA,'seller_to':sellerIdB}; //creating json file
+    data = {'seller_from':sellerA,'seller_to':sellerB}; //creating json file
 
 	
 	/**** test ***
@@ -247,8 +247,8 @@ function get_recent_activity(){
                 toastr.success(result.rsm.token, "info");
 				var rate_value = [];
 				$.each(result.rsm, function (index, val){
-					$("#recentActivityTable").append("<tr><td class='col-md-1'></td><td class='col-md-2'><img class='img-rounded' src='img/blue.png' width='50' height='50' /><b>" + val.points_from + "</b> pts</td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><img class='img-rounded' src='img/blue.png' width='50' height='50'/><b>" + val.points_to + "</b> pts</td><td class='col-md-3'><img class='img-circle' src='img/bonus.png' width='50' height='50' /><a href='#'>" + val.user_from + "</a></td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-3'><img class='img-circle' src='img/bonus.png' width='50' height='50'/><a href='#'>" + val.user_to + "</a></td><td class='col-md-2'>time stamp</td></tr>");
-					var a = (val.points_from)/(val.points_to);
+					$("#recentActivityTable").append("<tr><td class='col-md-1'></td><td class='col-md-2'><b>" + val.pointsFrom + "</b> pts</td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><b>" + val.pointsTo + "</b> pts</td><td class='col-md-3'><img class='img-circle' src='img/bonus.png' width='50' height='50' /><a href='#'>" + val.userFrom + "</a></td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-3'><img class='img-circle' src='img/bonus.png' width='50' height='50'/><a href='#'>" + val.userTo + "</a></td><td class='col-md-2'>"+val.updateTime+"</td></tr>");
+					var a = (val.pointsFrom)/(val.pointsTo);
 					rate_value.push(a);
 					return true;
 				});
@@ -328,6 +328,25 @@ function get_profile(){
 	})
 }
 
+function getAllSellerInfo() {
+$.ajax({
+		type: "POST",
+		dataType:"JSON",
+		url: "info/getAllSellerInfo",
+		async: false,
+		success: function (data) {
+			var i;
+			$.each(data, function (index, val) {
+				i=index+1;
+				$("#selectbasic1").append("<option value="+ val.seller_id +">" + val.seller_Name + "</option>");
+				$("#selectbasic2").append("<option value="+ val.seller_id +">" + val.seller_Name + "</option>");
+			});
+			return true;
+		}     
+	});
+}
+
+
  function getSellerInfo() {
 {
 	
@@ -368,11 +387,11 @@ function get_profile(){
 		url: "info/getSellerInfo",
 		async: false,
 		success: function (data) {
-			// var i;
+			var i;
 			$.each(data, function (index, val) {
-				// i=index+1;
-				$("#selectbasic1").append("<option value="+ val.seller_id +">" + val.seller_Name + "</option>");
-				$("#selectbasic2").append("<option value="+ val.seller_id +">" + val.seller_Name + "</option>");
+				i=index+1;
+				$("#selectbasic1").append("<option value="+ i +">" + val.seller_Name + "</option>");
+				$("#selectbasic2").append("<option value="+ i +">" + val.seller_Name + "</option>");
 			});
 			return true;
 		}     
@@ -391,13 +410,13 @@ function find_an_offer(){
 	u_id = getCookie("u_id");
 	u_token = getCookie("u_token");
     
-    data = {'seller_from':seller_from,'seller_to':seller_to, 'points_from':points_from, 'points_to':points_to, 'u_id': u_id, 'u_token':u_token}; //creating json file
+    data = {'seller_from':seller_from,'seller_to':seller_to, 'points_from':points_from, 'points_to_min':points_to, 'u_id': u_id, 'u_token':u_token}; //creating json file
         
     $.ajax({
-        type : "post",
+        type : "get",
         data : data,
         async: false,
-        url : "/ccpx/user/find_an_offer", ///////////////////////// won't work because of this file
+        url : "/ccpx/user/searchExchangeOffer", 
         success : function(result){
             if (result.errno==0) { // parameter in their response
 				toastr.success(result.rsm.token, "info");
@@ -405,8 +424,8 @@ function find_an_offer(){
 				$.cookie('INPUTsellerto',seller_to);
 				$.cookie('INPUTpointsfrom',points_from);
                 $.cookie('INPUTpointsto',points_to);
-				location.href="ExchangesFound.html"
 				$.cookie('ExchangesFoundType',1);
+				location.href="ExchangesFound.html"
 				
 
             }else{
@@ -436,19 +455,23 @@ function make_an_offer(){
 	u_id = getCookie("u_id");
 	u_token = getCookie("u_token");
     
-    data = {'seller_from':seller_from,'seller_to':seller_to, 'points_from':points_from, 'points_to':points_to, 'u_id': u_id, 'u_token':u_token}; //creating json file
+    data = {'seller_from':seller_from,'seller_to':seller_to, 'points_from':points_from, 'points_to_min':points_to, 'u_id': u_id, 'u_token':u_token}; //creating json file
         
     $.ajax({
-        type : "post",
+        type : "get",
         data : data,
         async: false,
-        url : "/ccpx/user/making_an_offer", 
+        url : "/ccpx/user/makingoffer", 
         success : function(result){
             if (result.errno==0) { // parameter in their response
-				toastr.success(result.rsm.token, "info");
-				location.href="ExchangesFound.html";
+				toastr.info("ok","ok");
 				$.cookie('ExchangesFoundType',0);
 				$.cookie('MakeOfferId',result.rsm.offer_id);
+				$.cookie('INPUTsellerfrom',seller_from);
+				$.cookie('INPUTsellerto',seller_to);
+				$.cookie('INPUTpointsfrom',points_from);
+				$.cookie('INPUTpointsto',points_to);
+				location.href="ExchangesFound.html?";
 
             }else{
                 toastr.warning(result.err, "Warning:CODE "+result.errno); //pop up

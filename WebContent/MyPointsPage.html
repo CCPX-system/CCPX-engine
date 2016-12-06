@@ -95,17 +95,17 @@
 		   $.each(result.rsm, function (index, val) {
 		   var logoseller = getSellerLogo(val.seller_id);
 		   i = index + 1;
-		   $("#CompanyPoints").append("<tr><th scope='row'>"+i+"</th><td>"+val.points+"</td><td><a href='#' id='"+val.seller_id+"' onclick='getCompanyDetail(this.id)'>"+val.seller_name+"</a></td><td><img class='media-object' src='"+logoseller+"' alt='...' width='50px'></td><td><a href='#Transfer_Points_In"+i+"' role='button' class='btn' data-toggle='modal'>Transfer_In</a><div class='modal fade' id='Transfer_Points_In"+i+"' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button><h4 class='modal-title' id='myModalLabel' style='color:#C3C'>Transfer In Points</h4></div><div class='modal-body' style='height:300px;'><form><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_name_in'>Company's Name : </label><font style='background-color:#ECECEC' class='form-control' id='seller_name_in'>"+val.seller_name+"</font></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_pwd_in"+i+"'>Company's password : </label><input class='form-control' id='seller_pwd_in"+i+"' type='password' placeholder='company password'/></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='points_in"+i+"'>Points : </label><input class='form-control' id='points_in"+i+"' type='text' placeholder='points you want to transfer in' onblur='CheckNumber(this.id)'/></div></form></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button> <button type='button' class='btn btn-primary' onClick='Confirm_Transfer_In("+val.seller_id+",&quot;"+val.seller_name+"&quot;,&quot;"+"seller_pwd_in"+i+"&quot;,&quot;"+"points_in"+i+"&quot;)'>Submit</button></div></div></div></div><a href='#Transfer_Points_Out"+i+"' role='button' class='btn' data-toggle='modal'>Transfer_Out</a><div class='modal fade' id='Transfer_Points_Out"+i+"' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button><h4 class='modal-title' id='myModalLabel' style='color:#C3C'>Transfer Out Points</h4></div><div class='modal-body' style='height:300px;'><form><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_name_out'>Company's Name : </label><font style='background-color:#ECECEC' class='form-control' id='seller_name_out'>"+val.seller_name+"</font></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_pwd_out"+i+"'>Company's password : </label><input class='form-control' id='seller_pwd_out"+i+"' type='password' placeholder='company password'/></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='points_out"+i+"'>Points : </label><input class='form-control' id='points_out"+i+"' type='text' placeholder='points you want to transfer out' onblur='CheckNumber(this.id)'/></div></form></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button> <button type='button' class='btn btn-primary' onClick='Confirm_Transfer_Out("+val.seller_id+",&quot;"+val.seller_name+"&quot;,&quot;"+"seller_pwd_out"+i+"&quot;,&quot;"+"points_out"+i+"&quot;)'>Submit</button></div></div></div></div></td></tr>");
+		   $("#CompanyPoints").append("<tr><th scope='row'>"+i+"</th><td>"+val.points+"</td><td><a href='#' id='"+val.seller_id+"' onclick='getCompanyDetail(this.id)'>"+val.seller_name+"</a></td><td><img class='media-object' src='"+logoseller+"' alt='...' width='50px'></td><td><a href='#Transfer_Points_In"+i+"' role='button' class='btn' data-toggle='modal'>Transfer_In</a><div class='modal fade' id='Transfer_Points_In"+i+"' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button><h4 class='modal-title' id='myModalLabel' style='color:#C3C'>Transfer In Points</h4></div><div class='modal-body' style='height:300px;'><form><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_name_in"+i+"'>Account in Company : </label><input class='form-control' id='seller_name_in"+i+"' placeholder='name to login company'/></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_pwd_in"+i+"'>Company's password : </label><input class='form-control' id='seller_pwd_in"+i+"' type='password' placeholder='account password'/></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='points_in"+i+"'>Points : </label><input class='form-control' id='points_in"+i+"' type='text' placeholder='points you want to transfer in' onblur='CheckNumber(this.id)'/></div></form></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button> <button type='button' class='btn btn-primary' onClick='Confirm_Transfer_In("+val.seller_id+",&quot;"+"seller_name_in"+i+"&quot;,&quot;"+"seller_pwd_in"+i+"&quot;,&quot;"+"points_in"+i+"&quot;)'>Submit</button></div></div></div></div><a href='#Transfer_Points_Out"+i+"' role='button' class='btn' data-toggle='modal'>Transfer_Out</a><div class='modal fade' id='Transfer_Points_Out"+i+"' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button><h4 class='modal-title' id='myModalLabel' style='color:#C3C'>Transfer Out Points</h4></div><div class='modal-body' style='height:300px;'><form><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_name_out"+i+"'>Account in Company : </label><input class='form-control' id='seller_name_out"+i+"' placeholder='name to login company'/></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_pwd_out"+i+"'>Company's password : </label><input class='form-control' id='seller_pwd_out"+i+"' type='password' placeholder='account password'/></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='points_out"+i+"'>Points : </label><input class='form-control' id='points_out"+i+"' type='text' placeholder='points you want to transfer out' onblur='CheckNumber(this.id)'/></div></form></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button> <button type='button' class='btn btn-primary' onClick='Confirm_Transfer_Out("+val.seller_id+",&quot;"+"seller_name_out"+i+"&quot;,&quot;"+"seller_pwd_out"+i+"&quot;,&quot;"+"points_out"+i+"&quot;)'>Submit</button></div></div></div></div></td></tr>");
 		  // alert(val.seller_name);
 		});	
-	 
-*/
+	 */
+
              $("#CompanysName").val("");
 			 data = { 'u_id': $.cookie('u_id'), 'u_token': $.cookie('u_token')};
 			 $.ajax({
 					type: "GET",
 					dataType:"JSON",
-					url: "/user/view_points",
+					url: "user/view_points",
 					async: false,
 					data: data,
 				    success : function(result){
@@ -115,9 +115,9 @@
 						   $.each(result.rsm, function (index, val) {
 						   var logoseller = getSellerLogo(val.seller_id);
 						   i = index + 1;
-						   $("#CompanyPoints").append("<tr><th scope='row'>"+i+"</th><td>"+val.points+"</td><td><a href='#' id='"+val.seller_id+"' onclick='getCompanyDetail(this.id)'>"+val.seller_name+"</a></td><td><img class='media-object' src='"+logoseller+"' alt='...' width='50px'></td><td><a href='#Transfer_Points_In"+i+"' role='button' class='btn' data-toggle='modal'>Transfer_In</a><div class='modal fade' id='Transfer_Points_In"+i+"' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button><h4 class='modal-title' id='myModalLabel' style='color:#C3C'>Transfer In Points</h4></div><div class='modal-body' style='height:300px;'><form><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_name_in'>Company's Name : </label><font style='background-color:#ECECEC' class='form-control' id='seller_name_in'>"+val.seller_name+"</font></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_pwd_in"+i+"'>Company's password : </label><input class='form-control' id='seller_pwd_in"+i+"' type='password' placeholder='company password'/></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='points_in"+i+"'>Points : </label><input class='form-control' id='points_in"+i+"' type='text' placeholder='points you want to transfer in' onblur='CheckNumber(this.id)'/></div></form></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button> <button type='button' class='btn btn-primary' onClick='Confirm_Transfer_In("+val.seller_id+",&quot;"+val.seller_name+"&quot;,&quot;"+"seller_pwd_in"+i+"&quot;,&quot;"+"points_in"+i+"&quot;)'>Submit</button></div></div></div></div><a href='#Transfer_Points_Out"+i+"' role='button' class='btn' data-toggle='modal'>Transfer_Out</a><div class='modal fade' id='Transfer_Points_Out"+i+"' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button><h4 class='modal-title' id='myModalLabel' style='color:#C3C'>Transfer Out Points</h4></div><div class='modal-body' style='height:300px;'><form><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_name_out'>Company's Name : </label><font style='background-color:#ECECEC' class='form-control' id='seller_name_out'>"+val.seller_name+"</font></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_pwd_out"+i+"'>Company's password : </label><input class='form-control' id='seller_pwd_out"+i+"' type='password' placeholder='company password'/></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='points_out"+i+"'>Points : </label><input class='form-control' id='points_out"+i+"' type='text' placeholder='points you want to transfer out' onblur='CheckNumber(this.id)'/></div></form></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button> <button type='button' class='btn btn-primary' onClick='Confirm_Transfer_Out("+val.seller_id+",&quot;"+val.seller_name+"&quot;,&quot;"+"seller_pwd_out"+i+"&quot;,&quot;"+"points_out"+i+"&quot;)'>Submit</button></div></div></div></div></td></tr>");
-						  // alert(val.seller_name);
-						});	
+						   $("#CompanyPoints").append("<tr><th scope='row'>"+i+"</th><td>"+val.points+"</td><td><a href='#' id='"+val.seller_id+"' onclick='getCompanyDetail(this.id)'>"+val.seller_name+"</a></td><td><img class='media-object' src='"+logoseller+"' alt='...' width='50px'></td><td><a href='#Transfer_Points_In"+i+"' role='button' class='btn' data-toggle='modal'>Transfer_In</a><div class='modal fade' id='Transfer_Points_In"+i+"' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button><h4 class='modal-title' id='myModalLabel' style='color:#C3C'>Transfer In Points</h4></div><div class='modal-body' style='height:300px;'><form><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_name_in"+i+"'>Account in Company : </label><input class='form-control' id='seller_name_in"+i+"' placeholder='name to login company'/></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_pwd_in"+i+"'>Company's password : </label><input class='form-control' id='seller_pwd_in"+i+"' type='password' placeholder='account password'/></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='points_in"+i+"'>Points : </label><input class='form-control' id='points_in"+i+"' type='text' placeholder='points you want to transfer in' onblur='CheckNumber(this.id)'/></div></form></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button> <button type='button' class='btn btn-primary' onClick='Confirm_Transfer_In("+val.seller_id+",&quot;"+"seller_name_in"+i+"&quot;,&quot;"+"seller_pwd_in"+i+"&quot;,&quot;"+"points_in"+i+"&quot;)'>Submit</button></div></div></div></div><a href='#Transfer_Points_Out"+i+"' role='button' class='btn' data-toggle='modal'>Transfer_Out</a><div class='modal fade' id='Transfer_Points_Out"+i+"' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button><h4 class='modal-title' id='myModalLabel' style='color:#C3C'>Transfer Out Points</h4></div><div class='modal-body' style='height:300px;'><form><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_name_out"+i+"'>Account in Company : </label><input class='form-control' id='seller_name_out"+i+"' placeholder='name to login company'/></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='seller_pwd_out"+i+"'>Company's password : </label><input class='form-control' id='seller_pwd_out"+i+"' type='password' placeholder='account password'/></div><div class='form-group col-md-7 col-sm-9 col-xs-7'><label for='points_out"+i+"'>Points : </label><input class='form-control' id='points_out"+i+"' type='text' placeholder='points you want to transfer out' onblur='CheckNumber(this.id)'/></div></form></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button> <button type='button' class='btn btn-primary' onClick='Confirm_Transfer_Out("+val.seller_id+",&quot;"+"seller_name_out"+i+"&quot;,&quot;"+"seller_pwd_out"+i+"&quot;,&quot;"+"points_out"+i+"&quot;)'>Submit</button></div></div></div></div></td></tr>");
+		  // alert(val.seller_name);
+		});		
 						}
 						else{
 							toastr.warning(result.err, "Warning:CODE "+result.errno); //pop up
@@ -172,12 +172,13 @@
 		
 		function Confirm_Transfer_In(SellerId,SellerName,SellerPwd,PointsIn)
 		{ 
-		    //alert(SellerId);
+		   // alert(SellerId);
+			var SellerAccount = $("#"+SellerName).val();
 			var SellerPassword = $("#"+SellerPwd).val();
-			//alert(SellerName);
-			//alert(SellerPassword);
+		//	alert(SellerAccount);
+		//	alert(SellerPassword);
 			var Points = $("#"+PointsIn).val();
-			//alert(Points);
+		//	alert(Points);
 			
 			if(Points=="")
 			 {
@@ -189,7 +190,7 @@
 				dataType:"JSON",
 				url: "seller/transfer",
 				async: false,
-				data: { name: SellerName, password: SellerPassword, trade_type:1,
+				data: { name: SellerAccount, password: SellerPassword, trade_type:1,
 				points: Points, seller_id: SellerId, userid: $.cookie('u_id')
 				},
 				success: function (data) {
@@ -209,8 +210,9 @@
 		function Confirm_Transfer_Out(SellerId,SellerName,SellerPwd,PointsOut)
 		{
 			//alert(SellerId);
+			var SellerAccount = $("#"+SellerName).val();
 			var SellerPassword = $("#"+SellerPwd).val();
-			//alert(SellerName);
+			//alert(SellerAccount);
 			//alert(SellerPassword);
 			var Points = $("#"+PointsOut).val();
 			//alert(Points);
@@ -225,7 +227,7 @@
 				dataType:"JSON",
 				url: "seller/transfer",
 				async: false,
-				data: { name: SellerName, password: SellerPassword, trade_type:0,
+				data: { name: SellerAccount, password: SellerPassword, trade_type:0,
 				points: Points, seller_id: SellerId, userid: $.cookie('u_id')
 				},
 				success: function (data) {

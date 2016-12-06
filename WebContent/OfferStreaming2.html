@@ -14,18 +14,20 @@
 		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
         <script src="scripts/jquery.min.js"></script>
-		<script src="scripts/function.js"></script>
         <script src="bootstrap/js/bootstrap.js"></script>
+		<script src="scripts/flo.js"></script>
+		<script src="bootstrap/js/toastr.min.js"></script>
         <script>
 		function getuserdetail(id){
-					$.ajax({
-                type: "POST",
+			    $.ajax({
+                type: "GET",
                 dataType:"JSON",
-                url: "info/getSellerInfoByIndustryID",
+                url: "user/userprofile?u_id="+id,
                 async: false,
+				data: {},
                 success: function (data) {
-				if(data.message=="success"){
-				location.href="UserProfilePage.html";}
+				if(data.errno==0){
+				location.href="UserProfilePage.html?u_id="+id;}
 				}
 				});
 		}
@@ -35,7 +37,7 @@
 			$.ajax({
                 type: "POST",
                 dataType:"JSON",
-                url: "info/getSellerInfoByIndustryID",
+                url: "info/getSellerInfo",
                 async: false,
                 success: function (data) {
                 var i;
@@ -56,29 +58,55 @@
                 }     
             });
 		}
-function reloadinfo(){
-		var interval = setInterval(function(){
-		getsellerName();
-					}
-				,5000);
-}				
-		function searchOffer()
-{            var cpy1 = $("#selectbasic option:selected").text();
-             var cpy2= $("#selectbasic1 option:selected").text();
+		function ShowOffer()
+{    
 			 
             $.ajax({
                 type: "POST",
                 dataType:"JSON",
-                url: "",
+                url: "user/all_records",
+                async: false,
+                success: function (data){
+               var i;
+                $("#offerinfo").empty();
+                $.each(data, function (index, val) {
+                i = index + 1;
+                //console.log(val);
+                $("#offerinfo").append("<tr><td class='col-md-1'></td><td class='col-md-2'><img class='img-rounded' src='"+pic1+"' width='50' height='50' /><b>"+val.sellerFrom+"</b>pts	</td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><img class='img-rounded' src='"+pic2+"' width='50' height='50' /><b>"+val.sellerTo+"</b>pts</td><td class='col-md-3'><img class='img-rounded' src='"+val.upic1+"' width='50' height='50' /><a href='javascript:getuserdetail(this.id)' id ='"+val.userFrom+"'>"+val.userNameFrom+"</a></td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-3'><img class='img-rounded' src='"+val.upic2+"' width='50' height='50' /><a href='javascript:getuserdetail(this.id)' id ='"+val.userTo+"'>"+val.userNameTo+"</a></td></tr>");
+					});
+                return true;
+                }   
+            });
+}
+function reloadinfo(){
+		var interval = 
+		(function(){
+		ShowOffer();
+					}
+				,5000);
+		 searchOffer();
+}				
+		function searchOffer()
+{            var cpy1 = $("#selectbasic option:selected").text();
+             var cpy2= $("#selectbasic1 option:selected").text();
+			 var pic1=getSellerLogo(cpy1);
+			 var pic2=getSellerLogo(cpy2);
+			 
+            $.ajax({
+                type: "GET",
+                dataType:"JSON",
+                url: "user/exchange_streaming",
                 async: false,
                 data: { company1:cpy1,company2:cpy2 
                 },
                 success: function (data) {
                var i;
                 $("#offerinfo").empty();
-                $.each(data, function (index, val) {
+                $.each(data.rsm, function (index, val) {
                 i = index + 1;
-                $("#offerinfo").append("<tr><td class='col-md-1'></td><td class='col-md-2'><img class='img-rounded' src='"+val.pic1+"' width='50' height='50' /><b>"+val.points1+"</b>pts	</td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><img class='img-rounded' src='"+val.pic2+"' width='50' height='50' /><b>"+val.pts2+"</b>pts</td><td class='col-md-3'><img class='img-rounded' src='"+val.upic1+"' width='50' height='50' /><a href='#' id ='"+val.uid1+"' onclick='getuserdetail(this.id)'>"+val.uN1+"</a></td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-3'><img class='img-rounded' src='"+val.upic2+"' width='50' height='50' /><a href='#' id ='"+val.uid2+"' onclick='getuserdetail(this.id)'>"+val.uN2+"</a></td></tr>");
+                //console.log(val);
+                $("#offerinfo").append(
+                "<tr><td class='col-md-1'>"+val.sellerNameFrom+"</td><td class='col-md-1'><b>"+val.pointsFrom+"</b>pts	</td>  <td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><b>"+val.pointsTo+"</b>pts</td><td class='col-md-1'>"+val.sellerNameTo+"</td><td class='col-md-3'><img class='img-rounded' src='img/user.png' width='50' height='50' /><a href='#' id ='"+val.userFrom+"' onclick='getuserdetail(this.id)'>"+val.userNameFrom+"</a></td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-3'><img class='img-rounded' src='img/user.png' width='50' height='50' /><a href='#' id ='"+val.userTo+"' onclick='getuserdetail(this.id)'>"+val.userNameTo+"</a></td></tr>");
 					});
                 return true;
                 }   
@@ -113,35 +141,26 @@ function reloadinfo(){
 						<div class="collapse navbar-collapse" id="mynav">
 							<ul class="nav navbar-nav center-block pull-right">
 								<li class="nav-item pull-left">
-								  <a class="nav-link" href="HomePage.html"><span class="glyphicon glyphicon-home"></span> Home </a>
+								  <a class="nav-link" href="MainPage.html"><span class="glyphicon glyphicon-home"></span> Home </a>
 								</li>
 								
-								<li class="nav-item pull-left">
-								  <a class="nav-link" href="MyAccount.html"><span class="glyphicon glyphicon-user"></span> My Account </a>
-								</li>
-								
-								 <li class="nav-item pull-left">
-								  <a class="nav-link" href="MyPointsPage.html"><span class="glyphicon glyphicon-yen"></span> My Points </a>
-								</li>
-								
-								<li class="nav-item pull-left">
-								<a class="nav-link" href="ListOfSellersPage2.html"><span class="glyphicon glyphicon-shopping-cart"></span> List Of Companies </a>
+                                <li class="nav-item pull-left">
+								<a class="nav-link" href="ListOfSellersPage.html"><span class="glyphicon glyphicon-shopping-cart"></span> List of Companies</a>
 								</li>	
                                 
-                                <li class="nav-item pull-left">
-								<a class="nav-link" href="ExchangeCenter.html"><span class="glyphicon glyphicon-transfer"></span><U> Exchange Center </U></a>
-  								</li>	
-  								
-  								 <li class="nav-item pull-left">
-								<a class="nav-link" href="Notification.html"><span class="glyphicon glyphicon-envelope"></span> Notifications </a>
-  								</li>	
+                                 <li class="nav-item pull-left">
+								  <a class="nav-link" href="OfferStreaming.html"><span class="glyphicon glyphicon-time"></span><U> Offers Streaming</U></a>
+								</li>
                                 
                                 <li class="nav-item pull-left">
-								<a class="nav-link" href="#" onclick="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout </a>
-								</li>																				
+								  <a class="nav-link" href="RegistrationPage.html"><span class="glyphicon glyphicon-check"></span> Register</a>
+								</li>
+                                
+								<li class="nav-item pull-left">
+								  <a class="nav-link" href="LoginPage.html"><span class="glyphicon glyphicon-user"></span> Login</a>
+								</li>																	
 							</ul>
 						</div> 
-					</div>
 					</div>
 				</nav>
 			
@@ -341,11 +360,6 @@ function reloadinfo(){
 		</div>
 	    </div>
         
-        <!--button-->
-        <br>
-        <div class="row center-block" style="width:100px;">
-        <a href="ExchangeCenter.html"><button type="button" class="btn btn-default btn-info">Back</button></a>
-        </div>
        
         </div>
  

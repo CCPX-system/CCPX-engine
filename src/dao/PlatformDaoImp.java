@@ -41,16 +41,24 @@ import org.hibernate.Query;
 public class PlatformDaoImp implements PlatformDao {
 	// 声明sessionFactory
 
-	@Resource(name = "sessionFactory")
 	private SessionFactory sessionFactory;
 
 	private Session session;
+	
+	private SessionFactory getSessionFactory(){
+	    return sessionFactory;
+	}
+
+	@Resource(name="sessionFactory")
+	private void setSessionFactory(SessionFactory sessionFactory) {
+	    this.sessionFactory = sessionFactory;
+	}
 
 	// 获取当前session的方法
 	private Session getSession() {
 
 		if (session == null) {
-			session = sessionFactory.openSession();
+			session = sessionFactory.getCurrentSession();
 		} else {
 			session = sessionFactory.getCurrentSession();
 		}
@@ -81,6 +89,8 @@ public class PlatformDaoImp implements PlatformDao {
 		// TODO Auto-generated method stub
 		String sql = "from Request where " + "(sellerFrom =? and sellerTo =? " + "and status = 'CLOSED')"
 				+ " or (sellerTo =? and sellerFrom =? " + "and status = 'CLOSED')" + " order by updateTime desc";
+		
+		
 		Query query = getSession().createQuery(sql);
 		query.setMaxResults(5);// cann't write limit 5 in sql
 		query.setInteger(0, sellerFrom);

@@ -421,6 +421,55 @@ public class UserDaoImpl implements UserDao{
 				JdbcUtils_C3P0.release(conn, ps, rs);
 			}
 		}
+		//zhuyifan
+				//@Override
+				public ArrayList<Request> findlatestTrans(int sellerfrom, int sellerto) throws SQLException{
+					Connection conn = null;
+					PreparedStatement ps = null;
+					ResultSet rs = null;
+					String sql = "SELECT r_id,U_ID_FROM,U_ID_TO,request.POINTS_FROM,request.POINTS_TO,request.STATUS,request.UPDATE_TIME, "
+								+"a.u_name AS userNameFrom,b.u_name AS userNameTo, "
+								+"sa.Seller_Name AS sellerNameFrom,sb.Seller_Name AS sellerNameTo , request.offer_from, request.offer_to FROM `request` " 
+								+"LEFT JOIN user a ON request.U_ID_FROM = a.u_id "
+								+"LEFT JOIN user b on request.U_ID_TO = b.u_id "
+								+"LEFT JOIN seller sa on request.SELLER_ID_FROM = sa.Seller_id "
+								+"LEFT JOIN seller sb on request.SELLER_ID_TO = sb.Seller_id "
+								+"WHERE request.SELLER_ID_FROM = ? and request.SELLER_ID_TO = ? ORDER BY request.UPDATE_TIME LIMIT 20;";
+					try {
+						conn = JdbcUtils_C3P0.getConnection();
+						ps = conn.prepareStatement(sql);
+						System.out.println(sql);
+						ps.setInt(1, sellerfrom);
+						ps.setInt(2, sellerto);
+						ArrayList<Request> result = new ArrayList<Request>();
+						rs = ps.executeQuery();
+						while(rs.next()){
+							Request tempOne = new Request();
+							tempOne.setRid(rs.getInt(1));
+							tempOne.setUserFrom(rs.getInt(2));
+							tempOne.setUserTo(rs.getInt(3));
+							tempOne.setPointsFrom(rs.getInt(4));
+							tempOne.setPointsTo(rs.getInt(5));
+							tempOne.setStatus(rs.getString(6));
+							tempOne.setUpdateTime(rs.getString(7));
+							tempOne.setUserNameFrom(rs.getString(8));
+							tempOne.setUserNameTo(rs.getString(9));
+							tempOne.setSellerNameFrom(rs.getString(10));
+							tempOne.setSellerNameTo(rs.getString(11));
+							tempOne.setOfferFrom(rs.getInt(12));
+							tempOne.setOfferTo(rs.getInt(13));
+							result.add(tempOne);
+					    }
+						return result;
+
+					} catch (SQLException e) {
+						System.out.println(sql);
+						e.printStackTrace();
+						throw new SQLException("故障");
+					} finally {
+						JdbcUtils_C3P0.release(conn, ps, rs);
+					}
+				}
 	
 	@Override
 	//zhuyifan
@@ -525,4 +574,6 @@ public class UserDaoImpl implements UserDao{
 		}
 		return user;
 	}
+	
+	
 }

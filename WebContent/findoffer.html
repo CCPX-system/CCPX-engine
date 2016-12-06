@@ -16,12 +16,14 @@
 		<![endif]-->
         <script src="scripts/jquery.min.js"></script>
 		<script src="scripts/function.js"></script>
+		<script src="js/jquery.md5.js"></script>
+        <script src="js/jquery.cookie.js"></script>
 		<script src="bootstrap/js/toastr.js"></script>
 		<script src="bootstrap/js/toastr.min.js"></script>
         <script src="bootstrap/js/bootstrap.js"></script>
 	</head>
 	
-	<body onload="getSellerInfo()">
+	<body onload="getAllSellerInfo()">
 		<div class="container">
 		
 			<div class="header">
@@ -90,100 +92,113 @@
        </div>
 	   <br>
 	   <br>
-		<div class="prayer-form">
+       <div class="prayer-form">
                 <div class="col-md-12 col-md-12 col-xs-12 column">
-                       <div class="col-md-2 col-sm-1 col-xs-0">
+                       <div class="col-md-4 col-sm-1 col-xs-0">
                        </div>					   
-                       <div class="col-md-8 col-sm-10 col-xs-12" style="text-align: center">
-							<p style="font-family:arial;color:red;font-size:20px;">Amount of points you want to propose:</p>
-                       </div>
-				</div>
-		</div>
-
+                       <div class="col-md-8 col-sm-4 col-xs-5">
+					   <p style="font-family:arial;color:red;font-size:20px;">Amount of points you want to propose:</p>
+                        </div>
+						
+                       
+                        
+              </div>
+			  </div>
           <!--select company-->
               <br>
 			  <br>
+			  <br>
               <div class="row clearfix">
                 <div class="col-md-12 col-md-12 col-xs-12 column">
-                       <div class="col-md-2 col-sm-2 col-xs-1">
+                       <div class="col-md-2 col-sm-1 col-xs-0">
                        </div>					   
-                       <div class="col-md-3 col-sm-8 col-xs-10">
-						   <form>                                                                           
-							   <div class="form-group">
-									<input type="number" class="form-control" id="pts" placeholder="put your points">
-							   </div>
-							</form>
+                       <div class="col-md-3 col-sm-4 col-xs-5">
+					 
+					   <form>                                                                           
+                           <div class="form-group">
+ 
+                            <input  style="margin-top:9px" type="number" class="form-control col-md-2 " id="pts" placeholder="put your points">
+                           </div>
+                        </form>
 						</div>
                       
-                        <div class="col-md-2 col-sm-2 col-xs-1">
+                        <div class="col-md-2 col-sm-2 col-xs-2">
+                       
                         </div>
-
-						
-                        <div class="col-md-3 col-sm-8 col-xs-10">
+                        <div class="col-md-3 col-sm-4 col-xs-5">
                             <div class="form-group">
+                                  <label class="col-md-4 control-label" for="selectbasic1"></label>
                                   <select id="selectbasic1" name="selectbasic1" class="form-control">
 
                                   </select>
                              </div>
                          </div>
-           
+                        <div class="col-md-2 col-sm-0 col-xs-0">
+                        </div>
                  </div>
               </div>
               
         <br>
 		
                 <div class="row clearfix">
-				    
-					<div class="col-md-1 col-sm-1 col-xs-1">
+				    <div class="col-md-12 col-md-12 col-xs-12 column">
+					<div class="col-md-2 col-sm-1 col-xs-0">
 					</div>
-					<div class="col-md-4 col-sm-4 col-xs-4">
+					<div class="col-md-4 col-sm-4 col-xs-0">
 				      <hr style="height:10px;border:none;border-top:10px groove skyblue;" />
 				</div>
-				    <div class="col-md-2 col-sm-2 col-xs-2 ">
+				    <div class="col-md-1 col-sm-1 col-xs-0">
 					<br>
-						<div style="text-align: center">
-						<i class="glyphicon glyphicon-hand-down center-block" style="font-size:30px"></i>
-						</div>
-				   </div>
-				    <div class="col-md-4 col-sm-4 col-xs-4">
+				    <i class="glyphicon glyphicon-hand-down center-block" style="font-size:30px"></i>
+				    </div>
+				   
+				    <div class="col-md-4 col-sm-4 col-xs-0">
 					<hr style="height:10px;border:none;border-top:10px groove skyblue;" />
 					</div>
-
-				</div>
+					
+				  
+				     </div>
+					 </div>
 					 <br>
-		<div class="prayer-form">
+  <div class="prayer-form">
+                <div class="col-md-12 col-md-12 col-xs-12 column">
+                       <div class="col-md-4 col-sm-1 col-xs-0">
+                       </div>					   
+                       <div class="col-md-8 col-sm-4 col-xs-5">
+					   <p style="font-family:arial;color:red;font-size:20px;">Amount of points you want get:</p>
+                        </div>
+						
+						
+                       
+                        
+              </div>
+			  </div>
+             <div class="row clearfix">
                 <div class="col-md-12 col-md-12 col-xs-12 column">
                        <div class="col-md-2 col-sm-1 col-xs-0">
                        </div>					   
-                       <div class="col-md-8 col-sm-10 col-xs-12" style="text-align: center">
-							<p style="font-family:arial;color:red;font-size:20px;">Amount of points you want to get:</p>
-                       </div>
-				</div>
-		</div>
-             <div class="row clearfix">
-                <div class="col-md-12 col-md-12 col-xs-12 column">
-                       <div class="col-md-2 col-sm-2 col-xs-1">
-                       </div>					   
-                       <div class="col-md-3 col-sm-8 col-xs-10">
-						   <form>                                                                           
-							   <div class="form-group">
-									<input type="number" class="form-control" id="pts2" placeholder="put min points">
-							   </div>
-							</form>
+                       <div class="col-md-3 col-sm-4 col-xs-5">
+					 
+					   <form>                                                                           
+                           <div class="form-group">
+  
+				<input  style="margin-top:9px" type="number" class="form-control  " id="pts2" placeholder="put your min points">
+                           </div>
+                        </form>
 						</div>
                       
-                        <div class="col-md-2 col-sm-2 col-xs-1">
+                        <div class="col-md-2 col-sm-2 col-xs-2">
+                       
                         </div>
-
-						
-                        <div class="col-md-3 col-sm-8 col-xs-10">
+                        <div class="col-md-3 col-sm-4 col-xs-5">
                             <div class="form-group">
+                                  <label class="col-md-4 control-label" for="selectbasic2"></label>
                                   <select id="selectbasic2" name="selectbasic2" class="form-control">
-
                                   </select>
                              </div>
                          </div>
-           
+                        <div class="col-md-2 col-sm-0 col-xs-0">
+                        </div>
                  </div>
               </div>
 				
@@ -197,7 +212,7 @@
 					 <button type="button" class="btn btn-default btn-info center-block" onclick="window.location.href='ExchangeCenter.html'">Back</button>
 						</div>
                         <div class="col-md-2 col-sm-4 col-xs-5">
-                            <button type="button" id="findbutton" class="btn btn-default btn-info center-block" onclick="make_an_offer()">Find</button>
+                            <button type="button" id="findbutton" class="btn btn-default btn-info center-block" onclick="find_an_offer()">Find</button>
                          </div>
 						 <!--
 						  <div class="col-md-2 col-sm-4 col-xs-5">
@@ -207,7 +222,7 @@
                        
                  </div>
               </div>
-		</div>
+		        </div>
 				
 	</body>
   

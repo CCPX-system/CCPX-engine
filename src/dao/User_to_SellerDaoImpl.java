@@ -42,6 +42,7 @@ public class User_to_SellerDaoImpl implements User_to_SellerDao{
 		}
 		return points;
 	}
+	/*
 	@Override
 	public boolean lockPoints(int user_id, int seller_id, int points) throws SQLException {
 		Connection conn = null;
@@ -105,6 +106,7 @@ public class User_to_SellerDaoImpl implements User_to_SellerDao{
 		}
 		return true;
 	}
+	//*/
 	@Override
 	public boolean addPoints(int user_id, int seller_id, int points) throws SQLException {
 		Connection conn = null;
@@ -217,16 +219,17 @@ public class User_to_SellerDaoImpl implements User_to_SellerDao{
 		} finally {
 			JdbcUtils_C3P0.release(conn, ps, rs);
 		}
-		return points-points_blocked;
+		return points;
 	}
-	/*
+	///*
 	//当用户发出offer请求时的锁分操作
 	@Override
-	public void lockPoints(int u_id, int seller_id,int points_from) throws SQLException {
+	public boolean lockPoints(int u_id, int seller_id,int points_from) throws SQLException {
 		Connection conn = null;
 		PreparedStatement ps = null;
-		String sql = "update user_to_seller set points_blocked=points_blocked + '"+points_from+"' where u_id =? and seller_id =?";
+		String sql = "update user_to_seller set points_blocked=points_blocked + "+points_from+",points = points - "+points_from+" where u_id =? and seller_id =?";
 		try {
+			System.out.println(sql);
 			conn = JdbcUtils_C3P0.getConnection();
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, u_id);
@@ -239,7 +242,7 @@ public class User_to_SellerDaoImpl implements User_to_SellerDao{
 		} finally {
 			JdbcUtils_C3P0.release(conn, ps, null);
 		}
-		
+		return true;
 	}
-	*/
+	//*/
 }

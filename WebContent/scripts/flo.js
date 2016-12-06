@@ -56,14 +56,14 @@ function historyTable(){
         type : "get",
         data : {'u_id':id,'u_token':token},
         async: false,
-        url : "/user/all_records",
+        url : "/ccpx/user/all_records",
         success : function(result){
             if (result.errno==0) { 
 				var i;
 				$("#history").empty();
-                $.each(result.rsm, function (index, val) {
-                i = index + 1;
-                $("#history").append("<tr><td>"+val.rid+"</td><td>"+val.updateTime+"</td><td>"+val.sellerNameFrom+"</td><td>"+val.pointsFrom+"</td><td>"+val.pointsTo+"</td><td>"+val.sellerNameTo+"</td><td class='col-md-2'><img class='img-circle' src='img/bonus.png' width='50' height='50' /><a href='#'>"+val.userFrom+"</a></td></tr>");				
+                $.each(result.rsm.requests, function (index, val) {
+                    i = index + 1;
+                    $("#history").append("<tr><td>"+val.rid+"</td><td>"+val.updateTime+"</td><td>"+val.sellerNameFrom+"</td><td>"+val.pointsFrom+"</td><td>"+val.pointsTo+"</td><td>"+val.sellerNameTo+"</td><td class='col-md-2'><img class='img-circle' src='img/bonus.png' width='50' height='50' /><a href='#'>"+val.userFrom+"</a></td></tr>");				
                 });
                 return true;
             }
@@ -113,23 +113,24 @@ function historyTable(){
 // 			})
 			
 function getSellerLogo(sellerId){
-	  
-			$.ajax({
-			type : "post",
-			dataType:"JSON",
-			data : { id: sellerId
-			},
-			async: false,
-			url	: "info/getSellerProfile",
-			success : function(data){
-//						$("#logoSeller").attr("src",result.seller_Logo);
-						return data.seller_Logo;
-				},
-			error:function(){
-					toastr.error("error", "error");
-				}
-			});
-}
+            //return "img/blue.png";
+            var sellerLogo ;
+                    $.ajax({
+                    type : "post",
+                    dataType:"JSON",
+                    data : { id: sellerId
+                    },
+                    async: false,
+                    url : "info/getSellerProfile",
+                    success : function(data){
+                              sellerLogo = data.seller_Logo;
+                        },
+                    error:function(){
+                            toastr.error("error", "error");
+                        }
+                    });
+           return sellerLogo;
+      }
 
 function exchangesFound(){ 
  
@@ -168,21 +169,21 @@ function exchangesFound(){
              }*/		 
 	   
     $.ajax({
-        type : "post",
+        type : "get",
         data : {'u_id':id,'u_token':token,'seller_from':sellerfrom,'seller_to':sellerto,'points_from':pointsfrom,'points_to_min':pointsto},
         async: false,
-        url : "/user/searchExchangeOffer",
+        url : "/ccpx/user/searchExchangeOffer",
         success : function(result){
             if (result.errno==0) { // parameter in their response
 				$.cookie('u_id_from',result.rsm.user_from);
 				var i;
 				$("#exchangesFound").empty();
 				
-                $.each(result.rsm.exchange_offer, function (index, val) {
+                $.each(result.rsm, function (index, val) {
                 	var logosellerto = getSellerLogo(val.seller_to);
 					var logosellerfrom = getSellerLogo(val.seller_from);
 					i = index + 1;
-					$("#exchangesFound").append("<tr><td class='col-md-1'></td><td class='col-md-2'><img src='"+logosellerfrom+"' class='img-rounded' width='50' height='50' /> <b>"+val.points_from+"</b> pts </td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><img src='"+logosellerto+"' class='img-rounded' width='50' height='50' /><b>"+val.points_to_min+"</b> pts</td><td class='col-md-3'><img class='img-circle' src='img/bonus.png' width='50' height='50' /><a onclick='SeeUserProfile("+val.user_id+")'>"+val.user_id+"</a><td class='col-md-1'><button type='button' id='makerequest' class='btn btn-info btn-danger' onClick='makeRequest("+val.user_id+","+val.offer_id")'><i class='glyphicon glyphicon-plus' style='color:black;'></i></button></td></tr>");
+					$("#exchangesFound").append("<tr><td class='col-md-1'>"+val.offer_id+"</td><td class='col-md-2'><img src='"+logosellerfrom+"' class='img-rounded' width='50' height='50' /> <b>"+val.points_from+"</b> pts </td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><img src='"+logosellerto+"' class='img-rounded' width='50' height='50' /><b>"+val.ponits_to_min+"</b> pts</td><td class='col-md-3'><img class='img-circle' src='img/bonus.png' width='50' height='50' /><a onclick='SeeUserProfile("+val.user_id+")'>"+val.user_id+"</a><td class='col-md-1'><button type='button' id='makerequest' class='btn btn-info btn-danger' onClick='makeRequest("+val.user_id+","+val.offer_id+")'><i class='glyphicon glyphicon-plus' style='color:black;'></i></button></td></tr>");
 			    });
 				
                 return true;
@@ -208,7 +209,7 @@ function makeRequest(user_id,offer_id){
 	var offerTo = offer_id;
 	}
 	else if (type==1){
-	var offerFrom = "";
+	var offerFrom = 0;
 	var offerTo = offer_id;
 	}
     data = {'user_from':user_id,'offer_from':offerFrom,'offer_to':offerTo}; //creating json file
@@ -218,7 +219,7 @@ function makeRequest(user_id,offer_id){
         type : "post",
         data : data,
         async: false,
-        url : "/user/make_request",
+        url : "/ccpx/user/makeRequest",
         success : function(result){
             if (result.errno==0) { // parameter in their response
                 toastr.success(result.rsm.token, "Request sent");
@@ -275,7 +276,7 @@ function loadNotif(){
         type : "get",
         data : {'u_id':id,'u_token':token},
         async: false,
-        url : "/user/Read_notification",
+        url : "/ccpx/user/Read_notification",
         success : function(result){
             if (result.errno==0) { 
             	var color = "color";
@@ -315,7 +316,7 @@ function markedSeen(notificationId){
         type : "post",
         data : data,
         async: false,
-        url : "/user/seen_notification",
+        url : "/ccpx/user/seen_notification",
         success : function(result){
             if (result.errno==0) { // parameter in their response
                 toastr.success(result.rsm.token, "Marked as seen");
@@ -365,17 +366,17 @@ function ShowUserProfile(){
                 var id = newsid;
 				//alert(id);
         		$.ajax({
-					type : "post",
+					type : "GET",
 					dataType:"JSON",
-					data : { id: id
+					data : { u_id: id
 					},
 					async: false,
-					url	: "/user/userprofile",
+					url	: "/ccpx/user/userprofile",
 					success : function(result){
 								if (result.errno==0) { 
 								$("#userPicture").attr("src",result.userPicture);
-								$("#userName").text(result.userName);
-								$("#userWechat").text(result.userWechat);
+								$("#userName").text(result.rsm.u_name);
+								$("#userWechat").text(result.rsm.u_wechat_id);}
 								/*
 								var i;
 								$("#pointsTable").empty();	
@@ -386,8 +387,9 @@ function ShowUserProfile(){
                                 $("#pointsTable").append("<tr><td class='col-md-1'></td><td class='col-md-2'><img class='img-rounded' src='"+logosellerfrom+"' width='50' height='50' /><b>"+val.seen+"</b>pts</td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><img class='img-rounded' src='"+logosellerto+"' width='50' height='50' /><b>"+val.seen+"</b>pts</td><td class='col-md-3'><img class='img-circle' src='img/bonus.png' width='50' height='50' /><a href='#' id='"+val.userId+"' onclick='SeeUserProfile(this.id)'>"+val.userId+"</a></td><td class='col-md-1'><button type='button'  id='"+val.userId+"' onclick='makeRequest(this.id)' class='btn btn-info btn-danger'><i class='glyphicon glyphicon-plus' style='color:black;'></i></button></td></tr>");
                 				});
 								
-                				$.cookie("otheruserid", null, { path: '/' }); */
+                				$.cookie("otheruserid", null, { path: '/' });
                 				}
+								*/
                 				else{
                					 toastr.warning(result.err, "Warning:CODE "+result.errno);
           						}
@@ -416,16 +418,40 @@ function getUserExchangeOffers(){
         type : "post",
         data : data,
         async: false,
-        url : "/user/all_records ",
+        url : "/ccpx/user/all_records ",
         success : function(result){
             if (result.errno==0) { // parameter in their response
             	var i;
 				$("#exchangeOffersList").empty();	
-                $.each(result.rsm.fromMe, function (index, val) {
+                $.each(result.rsm, function (index, val) {
                 i = index + 1;
+                // var img1;
+            	// var img2;
+            	// var img3;
+            	// var candiList = eval(val.candidates);
+            	// if (candiList.length==0){
+            		// img1="img/user.png";
+            		// img2="img/user.png";
+            		// img3="img/user.png";
+            	// }
+            	// if (candiList.length==1){
+            		// img1=val.candidates[0].userPicture;
+            		// img2="img/user.png";
+            		// img3="img/user.png";
+            	// }
+            	// if (candiList.length==2){
+            		// img1=val.candidates[0].userPicture;
+            		// img2=val.candidates[1].userPicture;
+            		// img3="img/user.png";
+            	// }
+            	// if (candiList.length==3){
+            		// img1=val.candidates[0].userPicture;
+            		// img2=val.candidates[1].userPicture;
+            		// img3=val.candidates[2].userPicture;
+            	// }
             	var logosellerfrom = getSellerLogo(val.sellerFrom);
                 var logosellerto = getSellerLogo(val.sellerTo);
-               $("#exchangeOffersList").append("<tr><td class='col-md-1'></td><td class='col-md-2'><img class='img-rounded' src='"+logosellerfrom+"' width='50' height='50' /><b>"+val.pointsFrom+"</b> pts</td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><img class='img-rounded' src='"+logosellerto+"' width='50' height='50' /><b>"+val.pointsTo+"</b>pts</td><td class='col-md-1'><br><p>Candidate:</p></td><td class='col-md-1'><img class='img-circle' src='img/bonus.png' width='50' height='50' /></td><td class='col-md-1'><br><a onclick='SeeUserProfile("+val.userFrom+")'>"+val.userNameFrom+"</a></td><td class='col-md-1'><br><button type='button' class='btn btn-success' onclick='accept_Offer("+val.offer_id+")'><i class='glyphicon glyphicon-check'></i></button></td><td class='col-md-1'><br><button type='button' class='btn btn-info' onclick='rejectOffer("+val.offer_id+")'><i class='glyphicon glyphicon-ban-circle'></i></button></td><td class='col-md-1'><br><button type='button' class='btn btn-danger' onclick='deleteOffer("+val.offer_id+")'><i class='glyphicon glyphicon-trash'></i></button></td></tr></tr>");
+               $("#exchangeOffersList").append("<tr><td class='col-md-1'></td><td class='col-md-2'><img class='img-rounded' src='"+logosellerfrom+"' width='50' height='50' /><b>"+val.pointsFrom+"</b> pts</td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><img class='img-rounded' src='"+logosellerto+"' width='50' height='50' /><b>"+val.pointsTo+"</b>pts</td><td class='col-md-3'><p>Candidate: </button></p><img class='img-circle' src='img/bonus.png' width='50' height='50' /></td><td class='col-md-1'><button type='button' class='btn btn-success' onclick='accept_Offer("+val.offer_id+")'><i class='glyphicon glyphicon-check'></i></button><button type='button' class='btn btn-info' onclick='rejectOffer("+val.offer_id+")'><i class='glyphicon glyphicon-ban-circle'></i></button><button type='button' class='btn btn-danger' onclick='deleteOffer("+val.offer_id+")'><i class='glyphicon glyphicon-trash'></i></button></td></tr>");
 				});
                 }
             else{
@@ -472,24 +498,49 @@ function getUserExchangeRequests(){
  					 ]
              }
 	          */  
-	
+	// /remove_request(offer_id,u_id,s_id,points)
     var id =getCookie("u_id");
 	var token =getCookie("u_token");
+    var u_name = getCookie("u_name");
     data = {'u_id':id,'u_token':token};  
     $.ajax({
-        type : "post",
+        type : "get",
         data : data,
         async: false,
-        url : "/user/seen_notification",
+        url : "/ccpx/user/all_records",
         success : function(result){
             if (result.errno==0) { // parameter in their response
             	var i;
+            	var j;
 				$("#exchangeRequestsList").empty();	
-                $.each(result.rsm.toMe, function (index, val) {
+				$("#exchangeOffersList").empty();	
+				//console.log(result.rsm.requ3ests);
+                $.each(result.rsm.requests, function (index, val) {
 					i = index + 1;
-					var logosellerfrom = getSellerLogo(val.sellerFrom);
-					var logosellerto = getSellerLogo(val.sellerTo);
-					$("#exchangeRequestsList").append("<tr><td class='col-md-1'></td><td class='col-md-2'><img class='img-rounded' src='"+logosellerfrom+"' width='50' height='50' /><b>"+val.pointsFrom+"</b>pts</td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><img class='img-rounded' src='"+logosellerto+"' width='50' height='50' /><b>"+val.pointsTo+"</b>pts</td><td class='col-md-2'><img class='img-circle' src='img/bonus.png' width='50' height='50' /><a onclick='SeeUserProfile("+val.userFrom+")'>"+val.userNameFrom+"</a></td><td class='col-md-1'>"+val.status+"</td><td class='col-md-1'><button type='button' class='btn btn-danger' onclick='deleteOffer("+val.offer_id+")' name='deleteofferbutton'><i class='glyphicon glyphicon-trash'></i></button></td></tr>");                     });
+					//var logosellerfrom = getSellerLogo(val.sellerFrom);
+					//var logosellerto = getSellerLogo(val.sellerTo);
+					var line = "<tr><td class='col-md-1'>"+val.sellerNameFrom+"</td><td class='col-md-2'><b>"+val.pointsFrom+"</b>pts</td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><b>"+val.pointsTo+"</b>pts</td><td class='col-md-1'>"+val.sellerNameTo+"</td><td class='col-md-1'><a href='#' onclick='SeeUserProfile("+val.userFrom+")'>"+val.userNameFrom+"</a><br/>→<br/><a href='#' onclick='SeeUserProfile("+val.userTo+")'>"+val.userNameTo+"</a></td><td class='col-md-1'>"+val.status+"</td>";
+					if(val.status == "PENDING" && id == val.userFrom){
+						line += "<td class='col-md-1'><button type='button' class='btn btn-danger' onclick='remove_request("+val.rid+","+val.userFrom+","+val.sellerFrom+","+val.pointsFrom+")' name='deleteofferbutton'><i class='glyphicon glyphicon-trash'></i></button></td></tr>";
+					}else if(val.status == "PENDING" && id == val.userTo){
+                        line += "<td class='col-md-1'><button type='button' class='btn btn-success' onclick='accept_request("+val.rid+","+val.userTo+")'><i class='glyphicon glyphicon-check'></i></button><button type='button' class='btn btn-info' onclick='reject_request("+val.rid+","+val.userTo+")'><i class='glyphicon glyphicon-ban-circle'></i></button></td></tr>";
+                    }else{
+                        line += "<td class='col-md-1'></td></tr>";
+                    }
+					$("#exchangeRequestsList").append(line);
+                });
+                $.each(result.rsm.offers, function (index, val) {
+                    j = index + 1;
+                    var line = "<tr><td class='col-md-1'>"+val.sellerNameFrom+"</td><td class='col-md-2'><b>"+val.points_from+"</b> pts</td><td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td><td class='col-md-2'><b>"+val.points_to_min+"</b>pts</td><td class='col-md-1'>"+val.sellerNameTo+"</td><td class='col-md-2'><p>Status: "+val.status+"</p></td>";
+                    if (val.status == "OPEN" ||val.status == "open" ) {
+                        line += "<td class='col-md-1'><button type='button' class='btn btn-danger' onclick='deleteOffer("+val.offer_id+")'><i class='glyphicon glyphicon-trash'></i></button></td></tr>";
+                    }else{
+                        line += "<td class='col-md-1'></td></tr>";
+                    }
+                    //var logosellerfrom = getSellerLogo(val.sellerFrom);
+                    //var logosellerto = getSellerLogo(val.sellerTo);
+                    $("#exchangeOffersList").append(line);
+                });
             }
             else{
                 toastr.warning(result.err, "Warning:CODE "+result.errno); //pop up
@@ -509,10 +560,10 @@ function deleteOffer(offer_id){
 	var token =getCookie("u_token");
     data = {'u_id':id,'u_token':token,'offer_id':offer_id};  
     $.ajax({
-        type : "post",
+        type : "get",
         data : data,
         async: false,
-        url : "/user/deleteOffer",
+        url : "/ccpx/user/canceloffer",
         success : function(result){
             if (result.errno==0) { // parameter in their response
                 toastr.success("Offer deleted!","succeed");
@@ -571,7 +622,7 @@ function deleteOffer(offer_id){
  							$("#candidatesTable").append("<tr><td class='col-md-1'></td><td class='col-md-2'><img class='img-rounded' src='"+logosellerto+"' width='50' height='50' /><b>"+val.proposition+"</b>pts</td><td class='col-md-3'><p><img class='img-circle' src='"+val.candidatePicture+"' width='50' height='50' /><a href ='#' onclick='SeeUserProfile("+val.candidate+")'>"+val.candidate+"</a></p><p>"+val.candidateWechat+"</p></td><td class='col-md-1'><button id='acceptRequestButton' type='button' class='btn btn-info btn-danger' onclick='accept_request("+val.request_id+")'> <i class='glyphicon glyphicon-ok'></i> </button></td><td id='rejectRequestButton' class='col-md-1'><button type='button' class='btn btn-info btn-danger' onclick='reject_request("+val.request_id+")'> <i class='glyphicon glyphicon-remove'></i> </button> </td> </tr> ");		
  						});  */
 
-	
+	function showCanditate(){
      		var offerId =getCookie("select_candidate_offer_id");		
             $.ajax({		
  			type : "post",		
@@ -579,7 +630,7 @@ function deleteOffer(offer_id){
  			data : {'offer_id': offerId		
  			},		
  			async: false,		
- 			url	: "/user/showCandidate",		
+ 			url	: "ccpx/user/showCandidate",		
  			success : function(result){		
  						if (result.errno==0) { 		
  						 $("#PointsFrom").text(result.pointsFrom);		
@@ -603,23 +654,23 @@ function deleteOffer(offer_id){
  						}		
  			});	
 			
- }		
- 		
- function accept_request(offer_id){	
+ //}		
+	}
+ function accept_request(offer_id,user_to){	
  	$("#acceptRequestButton").attr({"disabled":"disabled"});		
      var flag = false;		
      var id =getCookie("u_id");		
      var token =getCookie("u_token");		
-     data = {'u_id':id,'u_token':token,'r_id':offer_id};  		
+     data = {'u_id':id,'u_token':token,'r_id':offer_id,'user_to':user_to};  		
      $.ajax({		
          type : "post",		
          data : data,		
          async: false,		
-         url : "/user/accept_request",		
+         url : "/ccpx/user/acceptRequest",		
          success : function(result){		
              if (result.errno==0) { // parameter in their response		
                  toastr.success(result.rsm.token, "Request accepted! Transaction complete!");		
-                 location.href="HistoryPage.html"		
+                 location.href="HistoryPage.html";		
  		
  		
              }else{		
@@ -635,18 +686,18 @@ function deleteOffer(offer_id){
      return flag;		
  }		
  		
- function reject_request(offer_id){	
+ function reject_request(offer_id,user_to){	
   
  	$("#rejectRequestButton").attr({"disabled":"disabled"});		
      var flag = false;		
      var id =getCookie("u_id");		
      var token =getCookie("u_token");		
-     data = {'u_id':id,'u_token':token,'r_id':offer_id};  		
+     data = {'u_id':id,'u_token':token,'r_id':offer_id,'user_to':user_to};  		
      $.ajax({		
          type : "post",		
          data : data,		
          async: false,		
-         url : "/user/reject_request",		
+         url : "/ccpx/user/rejectRequest",		
          success : function(result){		
              if (result.errno==0) { // parameter in their response		
                  toastr.success(result.rsm.token, "User rejected!");		
@@ -664,4 +715,34 @@ function deleteOffer(offer_id){
      return false;		
      $("#rejectRequestButton").removeAttr("disabled");		
      return flag;		
+  }
+function remove_request(offer_id,u_id,s_id,points){  
+  
+    $("#rejectRequestButton").attr({"disabled":"disabled"});        
+     var flag = false;      
+     var id =getCookie("u_id");     
+     var token =getCookie("u_token");       
+     data = {'u_id':id,'u_token':token,'r_id':offer_id,'u_id':u_id,'s_id':s_id,'points':points};          
+     $.ajax({       
+         type : "post",     
+         data : data,       
+         async: false,      
+         url : "/ccpx/user/removeRequest",      
+         success : function(result){        
+             if (result.errno==0) { // parameter in their response      
+                 toastr.success("Opreation succeed", "Request removed!");        
+                 location.href="ExchangeStatus.html"        
+        
+        
+             }else{     
+                 toastr.warning(result.err, "Warning:CODE "+result.errno); //pop up     
+             }      
+         },     
+         error:function(){      
+             toastr.error("error", "error");        
+         }      
+     });        
+     return false;      
+     $("#rejectRequestButton").removeAttr("disabled");      
+     return flag;       
   }

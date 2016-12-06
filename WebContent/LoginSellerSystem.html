@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Login in Company's system</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+        <script src="scripts/jquery.min.js"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
+	</head>
+	
+	
+	<body onload="ShowProfile()">
+		<div class="container">
+		
+			<div class="header">
+
+				<!-- Form Name -->
+				<legend>Login in Company's system</legend>
+			
+				<!-- Navbar --> 
+				<nav class="navbar navbar-default" style="background-image: url('img/blue.png'); background-position : 10% 10%;" role="navigation">
+					<div class="container-fluid">  
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+									data-target="#mynav">
+								<span class="sr-only">change nav</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+					   
+							</button>
+							<a class="navbar-brand" href="#">Exchange Platform</a>
+						</div>
+						<div class="collapse navbar-collapse" id="mynav">
+							<ul class="nav navbar-nav center-block pull-right">
+								<li class="nav-item pull-left">
+								  <a class="nav-link" href="HomePage.html"><span class="glyphicon glyphicon-home"></span><U> Home</U></a>
+								</li>
+								
+								<li class="nav-item pull-left">
+								  <a class="nav-link" href="MyAccount.html"><span class="glyphicon glyphicon-user"></span> My Account </a>
+								</li>
+								
+								 <li class="nav-item pull-left">
+								  <a class="nav-link" href="MyPointsPage.html"><span class="glyphicon glyphicon-yen"></span> My Points </a>
+								</li>
+								
+								<li class="nav-item pull-left">
+								<a class="nav-link" href="ListOfSellers2Page.html"><span class="glyphicon glyphicon-shopping-cart"></span> List Of Companies </a>
+								</li>	
+                                
+                                <li class="nav-item pull-left">
+								<a class="nav-link" href="ExchangeCenter.html"><span class="glyphicon glyphicon-transfer"></span> Exchange Center </a>
+  								</li>	
+  								
+  								 <li class="nav-item pull-left">
+								<a class="nav-link" href="Notification.html"><span class="glyphicon glyphicon-envelope"></span> Notifications </a>
+  								</li>	
+                                
+                                <li class="nav-item pull-left">
+								<a class="nav-link" href="MainPage.html"><span class="glyphicon glyphicon-log-out"></span> Logout </a>
+								</li>											
+							</ul>
+						</div> 
+					</div>
+				</nav>
+			
+				<!-- Website Logo -->
+				<div class="row">
+					<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="Logo"></label>
+					<div class="col-md-2 col-sm-4 col-xs-6">
+						<img class="img-responsive center-block" src="img/logo.png" width="60%" />
+					</div>
+				</div>
+				
+				<!-- message-->
+				<div class="row">
+					<div class="col-md-4 col-sm-3 col-xs-2">
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-8" id="message">
+					</p>
+				</div>
+			</div>
+		
+<!-- ********************************* ^ here ^ ********************************* -->	
+  <!-- Companies Logo -->
+			<div class="row">
+				<label class="col-md-5 col-sm-1 col-xs-1 control-label" for="CompanyLogo"></label>
+				<div class="col-md-2 col-sm-4 col-xs-6">
+						<img class="img-responsive center-block" src="img/CompanyLogo.png" width="80%" />
+						<br>
+				</div>
+					<h3 style="color:#39F; margin-bottom: 20px" id="Seller_name"> </h3>
+			</div>
+			<div>
+			
+		<form  name="myForm" class="form-horizontal" enctype="multipart/form-data" >
+		<fieldset>
+		
+			<!-- ID input-->
+			<div class="form-group">
+				<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="ID"> Seller ID
+				</label>  
+				<div class="col-md-2 col-sm-4 col-xs-6">
+					<input id="ID" name="ID" type="text" placeholder="enter your ID" class="form-control input-sm">
+				</div>
+			</div>
+
+			<!-- Password input-->
+			<div class="form-group">
+				<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="password"> Password
+				</label>
+				<div class="col-md-2 col-sm-4 col-xs-6">
+					<input id="password" name="password" type="password" placeholder="enter your password" class="form-control input-sm">
+				</div>
+				<div class="col-md-1 col-sm-1 col-xs-1">
+					<button href="#" onClick="pwdhelp()" id="pwdbutton" name="pwdbutton" class="btn btn-sm btn-danger center-block">Help</button>
+				</div>
+			</div>
+
+			<!-- Button -->
+			<div class="form-group">
+				<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="loginbutton">
+				</label>
+				<div class="col-md-2 col-sm-4 col-xs-6">
+					<button type="button" id="loginbutton"   name="loginbutton"   onClick="checkSeller()" class="btn btn-primary center-block"><span class="glyphicon glyphicon-user"></span> Login</button>
+				</div>
+			</div>
+
+		</fieldset>
+		</form>
+				<div class="form-group">
+				<label class="col-md-4 col-sm-2 col-xs-1 control-label" for="sellerarea">
+				</label>
+				<div class="col-md-6 col-sm-8 col-xs-10">
+					<a class="nav-link" href="RegistrationInCompany.html"><U>If you don't have an account in this company, click here to create one</U></a> 
+				</div>
+				</div>
+			</div>
+
+		</fieldset>
+		</form>
+		
+		</div>
+	</body>
+  
+</html>

@@ -28,9 +28,10 @@ public class RequestDaoImpl implements RequestDao{
 		OfferDaoImpl offerDaoImpl=new OfferDaoImpl();
 		Offer offer1=offerDaoImpl.getOfferByID(offer_from);
 		Offer offer2=offerDaoImpl.getOfferByID(offer_to);
-		if (!offer1.getStatus().equals("OPEN")||!offer2.getStatus().equals("OPEN")) {
-
-			return null;
+		if (!offer2.getStatus().equals("OPEN")) {
+			if (offer1.getStatus() != null&&!offer1.getStatus().equals("OPEN")) {
+				return null;
+			}
 		}
 		Connection conn = null;
 		PreparedStatement ps = null;

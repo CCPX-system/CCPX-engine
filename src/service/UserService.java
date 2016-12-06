@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,6 +41,8 @@ import dao.User_to_SellerDaoImpl;
 @Controller
 @RequestMapping(value = "/user")
 public class UserService {
+	@Resource(name = "PlatformServiceImp")
+	private PlatformService  platformServiceImp;
 
 	public boolean check_token(int u_id, String u_token,
 			HttpServletResponse response) throws IOException, SQLException {
@@ -276,38 +279,43 @@ public class UserService {
     	 response.setCharacterEncoding("UTF-8"); 
          response.setContentType("text/json");
          PrintWriter out = response.getWriter();
-         JSONObject json = new JSONObject();
+         //JSONObject json = new JSONObject();
          
         	 int seller_from=Integer.parseInt(request.getParameter("seller_from"));
              int seller_to =Integer.parseInt(request.getParameter("seller_to"));
-             PlatformDaoImp platformDaoImp=new PlatformDaoImp();
-             List<Request>requests=new ArrayList<Request>();
+             //PlatformDaoImp platformDaoImp=new PlatformDaoImp();
+             ArrayList<Request>requests=new ArrayList<Request>();
+             UserDaoImpl impl = new UserDaoImpl();
+             requests=impl.findlatestTrans(seller_from, seller_to);
              
-             requests=platformDaoImp.showLatestTransaction(seller_from, seller_to);
-             
-             JSONArray jsonArr = new JSONArray();//json格式的数组  
-             JSONObject jsonObjArr = new JSONObject(); 
-             Request request1=new Request();
-              for(int i=0;i<requests.size();i++){
-            	  request1=requests.get(i);
-            	// System.out.println(""+record.getR_id()+record.getU_id_from()+record.getU_id_to()+record.getSeller_id_from()+record.getSeller_id_to());
-            	  jsonObjArr=new JSONObject(); 
-            	  jsonObjArr.put("r_id", request1.getRid());
-            	  jsonObjArr.put("user_from",request1.getUserFrom());
-            	  jsonObjArr.put("user_to",	 request1.getUserTo());
-            	  jsonObjArr.put("seller_from",	 request1.getSellerFrom());
-            	  jsonObjArr.put("seller_to",	 request1.getSellerTo());
-            	  jsonObjArr.put("points_from",	 request1.getPointsFrom());
-            	  jsonObjArr.put("ponits_to",	 request1.getPointsTo());
-            	  jsonObjArr.put("status",	 request1.getStatus());
-            	  jsonArr.add(jsonObjArr);   //??
-            	  jsonObjArr=null;
-              }
-          Response response2=new Response(0,"",jsonArr);
-          json=JSONObject.fromObject(response2);
-          out.print(json);
-          System.out.println(json.toString());
-          out.close();
+ 			JSONArray result = JSONArray.fromObject(requests);
+ 			Response rs = new Response(0, "", result);
+ 			JSONObject json = JSONObject.fromObject(rs);
+ 			out.print(json);
+             out.close();
+//             JSONArray jsonArr = new JSONArray();//json格式的数组  
+//             JSONObject jsonObjArr = new JSONObject(); 
+//             Request request1=new Request();
+//              for(int i=0;i<requests.size();i++){
+//            	  request1=requests.get(i);
+//            	// System.out.println(""+record.getR_id()+record.getU_id_from()+record.getU_id_to()+record.getSeller_id_from()+record.getSeller_id_to());
+//            	  jsonObjArr=new JSONObject(); 
+//            	  jsonObjArr.put("r_id", request1.getRid());
+//            	  jsonObjArr.put("user_from",request1.getUserFrom());
+//            	  jsonObjArr.put("user_to",	 request1.getUserTo());
+//            	  jsonObjArr.put("seller_from",	 request1.getSellerFrom());
+//            	  jsonObjArr.put("seller_to",	 request1.getSellerTo());
+//            	  jsonObjArr.put("points_from",	 request1.getPointsFrom());
+//            	  jsonObjArr.put("ponits_to",	 request1.getPointsTo());
+//            	  jsonObjArr.put("status",	 request1.getStatus());
+//            	  jsonArr.add(jsonObjArr);   //??
+//            	  jsonObjArr=null;
+//              }
+//          Response response2=new Response(0,"",jsonArr);
+//          json=JSONObject.fromObject(response2);
+//          out.print(json);
+//          System.out.println(json.toString());
+//          out.close();
     }
     
     @RequestMapping(value = "/searchExchangeOffer", method = RequestMethod.GET)  
@@ -316,7 +324,8 @@ public class UserService {
     	 response.setCharacterEncoding("UTF-8"); 
          response.setContentType("text/json");
          int size=request.getParameterMap().size();
-         PlatformDaoImp platformDaoImp=new PlatformDaoImp();
+         //PlatformDaoImp platformDaoImp=new PlatformDaoImp();
+         //PlatformService psi = new PlatformServiceImp();
          List<Offer>offers=new ArrayList<Offer>();
          PrintWriter out = response.getWriter();
          JSONObject json=new JSONObject();
@@ -324,7 +333,7 @@ public class UserService {
           int seller_to =Integer.parseInt(request.getParameter("seller_to"));
           int points_from=Integer.parseInt(request.getParameter("points_from"));
           int points_to_min=Integer.parseInt(request.getParameter("points_to_min"));
-         offers=platformDaoImp.showRecommendationList(seller_from, seller_to,points_from,points_to_min);
+          offers=platformServiceImp.showRecommendationList(seller_from, seller_to,points_from,points_to_min);
 				
              JSONArray jsonArr = new JSONArray();//json格式的数组  
              JSONObject jsonObjArr = new JSONObject(); 

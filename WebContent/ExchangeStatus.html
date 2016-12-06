@@ -25,7 +25,7 @@
         <script src="bootstrap/js/toastr.min.js"></script>
 	</head>
 	
-	<body onload="getUserExchangeOffers();getUserExchangeRequests();">
+	<body onload="getUserExchangeRequests();">
 		<div class="container">
 		
 			<div class="header">
@@ -110,22 +110,43 @@
                                                 <tbody id="exchangeOffersList">
                                                 </tbody>
                                             </table>
-                                            <table class="table table-hover table-striped">
+                                            
+                                            <!-- exemple-->
+                                        <!--    <table class="table table-hover table-striped">
                                                 <tbody>
-               									<tr><td class='col-md-1'></td>
-               									<td class='col-md-2'><img class='img-rounded' src='img/blue.png' width='50' height='50' /><b>pointsFrom</b> pts</td>
-               									<td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td>
-               									<td class='col-md-2'><img class='img-rounded' src='img/blue.png' width='50' height='50' /><b>pointsTo+</b>pts</td>
-               									<td class='col-md-1'><br><p>Candidate:</p></td>
-                                                <td class='col-md-1'><img class='img-circle' src='img/bonus.png' width='50' height='50' /></td>
-                                                <td class='col-md-1'><br><a onclick='SeeUserProfile("+val.userFrom+")'>"+val.userNameFrom+"</a></td>
-               									<td class='col-md-1'><br><button type='button' class='btn btn-success' onclick='accept_Offer("+val.offer_id+")'><i class='glyphicon glyphicon-check'></i></button></td>
-               									<td class='col-md-1'><br><button type='button' class='btn btn-info' onclick='rejectOffer("+val.offer_id+")'><i class='glyphicon glyphicon-ban-circle'></i></button></td>
-               									<td class='col-md-1'><br><button type='button' class='btn btn-danger' onclick='deleteOffer("+val.offer_id+")'><i class='glyphicon glyphicon-trash'></i></button></td></tr>
+                                                    <tr class="info">
+                                                        <td class="col-md-1">
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <img class="img-rounded" src="img/blue.png" width="50" height="50" />
+                                                            <b>80</b>  
+                                                            pts
+                                                        </td>
+                                                        <td class="col-md-1">
+                                                           <br>
+                                                           <i class="glyphicon glyphicon-circle-arrow-right"></i>
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <img class="img-rounded" src="img/blue.png" width="50" height="50" />
+                                                            <b>30</b>  
+                                                            pts
+                                                        </td>
 
+                                                         <td class="col-md-3">
+                                                            <p>candidates:
+                                                            <button type="button" onclick="window.location.href='Editoffer.html'" onclick="window.location.href='SelectUserPage.html'" class="btn btn-success btn-xs" style="border-radius:50px;"><i class="glyphicon glyphicon-eye-open"></i> &nbsp; select &nbsp; </button>
+                                                            </p>
+                                                            <img class="img-circle" src="img/bonus.png" width="50" height="50" />
+                                                            <img class="img-circle" src="img/bonus.png" width="50" height="50" />
+                                                            <img class="img-circle" src="img/bonus.png" width="50" height="50" />
+                                                        </td>
+                                                        <td class="col-md-1">
+                                                        <button type="button" class="btn btn-danger btn-xs" style="border-radius:50px;"><i class="glyphicon glyphicon-trash"></i></button>
+                                                        </td>
+                                                    </tr>
                                                 </tbody>
-                                            </table>
-
+                                            </table>-->
+                                        <!-- -->
                                             
                                     </div>  
                                     </div>
@@ -147,19 +168,70 @@
                                             <tbody id="exchangeRequestsList">
                                             </tbody>
                                         </table>
-                                        <table class="table table-hover table-striped">
-                                                <tbody>
-                                                 <tr>
-                                                 <td class='col-md-1'></td>
-                                                 <td class='col-md-2'><img class='img-rounded' src="img/blue.png" width='50' height='50' /><b>+val.pointsFrom+</b>pts</td>
-                                                 <td class='col-md-1'><br><i class='glyphicon glyphicon-circle-arrow-right'></i></td>
-                                                 <td class='col-md-2'><img class='img-rounded' src="img/blue.png" width='50' height='50' /><b>"+val.pointsTo+"</b>pts</td>
-                                                 <td class='col-md-2'><img class='img-circle' src='img/bonus.png' width='50' height='50' /><a onclick='SeeUserProfile("+val.userFrom+")'>"+val.userNameFrom+"</a></td>
-                                                 <td class='col-md-1'>+val.status+</td><td class='col-md-1'><button type='button' class='btn btn-danger' onclick='deleteOffer("+val.offer_id+")' name='deleteofferbutton'><i class='glyphicon glyphicon-trash'></i></button></td>
-                                                 </tr>
-                                                </tbody>
-                                    	</table>
-
+                                        
+                                        <!-- exemple -->
+                                        
+                                   <!--     <table class="table table-hover table-striped">
+                                            <tbody>
+                                                <tr class="error">
+                                                    <td class="col-md-1">
+                                                    </td>
+                                                    <td class="col-md-2">
+                                                        <img class="img-rounded" src="img/blue.png" width="50" height="50" />
+                                                        <b>10</b>  
+                                                        pts
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                       <br>
+                                                       <i class="glyphicon glyphicon-circle-arrow-right"></i>
+                                                    </td>
+                                                    <td class="col-md-2">
+                                                        <img class="img-rounded" src="img/blue.png" width="50" height="50" />
+                                                        <b>500</b>  
+                                                        pts
+                                                    </td>
+                                                    <td class="col-md-2">
+                                                        <img class="img-circle" src="img/bonus.png" width="50" height="50" />
+                                                        <a href="#">user nickname</a>
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                   Status
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                    <button type="button" class="btn btn-danger btn-xs" style="border-radius:50px;"><i class="glyphicon glyphicon-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr class="info">
+                                                    <td class="col-md-1">
+                                                    </td>
+                                                    <td class="col-md-2">
+                                                        <img class="img-rounded" src="img/blue.png" width="50" height="50" />
+                                                        <b>80</b>  
+                                                        pts
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                       <br>
+                                                       <i class="glyphicon glyphicon-circle-arrow-right"></i>
+                                                    </td>
+                                                    <td class="col-md-2">
+                                                        <img class="img-rounded" src="img/blue.png" width="50" height="50" />
+                                                        <b>30</b>  
+                                                        pts
+                                                    </td>
+                                                    <td class="col-md-2">
+                                                        <img class="img-circle" src="img/bonus.png" width="50" height="50" />
+                                                        <a href="#">user nickname</a>
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                   Status
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                    <button type="button" class="btn btn-danger btn-xs" style="border-radius:50px;"><i class="glyphicon glyphicon-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>-->
+                                    <!-- -->    
                                     
                                 </div> 
                                 </div>
