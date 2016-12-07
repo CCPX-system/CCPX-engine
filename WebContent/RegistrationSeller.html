@@ -152,7 +152,7 @@
 				</label>  
 				<div class="col-md-2 col-sm-4 col-xs-6">
 					
-					<input id="Telephone" name="Telephone" type="text" placeholder="enter your Telephone" ng-model="telephone" class="form-control input-sm" required>
+					<input id="Telephone" name="Telephone" type="text" pattern="^([0|\+[0-9]{1,5})?([1-9][0-9]{10})$" placeholder="enter your Telephone" ng-model="phoneNumber" class="form-control input-sm" required>
 
 				</div>
 			</div>
@@ -210,14 +210,7 @@
 		</fieldset>
 		</form>
 		
-		</div>
-						<!-- Website Logo -->
-				<div class="row">
-					<label class="col-md-5 col-sm-4 col-xs-3 control-label" for="Logo"></label>
-					<div class="col-md-2 col-sm-4 col-xs-6">
-						<img class="img-responsive center-block" src="img/logo.png" width="60%" />
-					</div>
-				</div>
+		
 				
 				<!-- message-->
 				<div class="row">

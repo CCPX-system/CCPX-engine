@@ -4,6 +4,7 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -36,25 +37,38 @@ public class AdDaoImp implements AdDao{
 	
 	@Override
 	public List<ad_present> getAd(){
-		String hql = "from advertisement";
+		String conhql = "select count(*) from advertisement";
+		Query cquery = getSession().createQuery(conhql);
+		long count1 = (long) cquery.uniqueResult();
+		int count = new Long(count1).intValue();
+		long t = System.currentTimeMillis();
+	    Random rd = new Random(t);
+	    int a1= rd.nextInt(count-1);
+	    int a2= rd.nextInt(count-1);
+	    int a3= rd.nextInt(count-1);
+	    System.out.println(a1);
+	    System.out.println(a2);
+	    System.out.println(a3);
+		
+		String hql = "from advertisement";		
 		Query query = getSession().createQuery(hql);
-		query.setFirstResult(0);
-		query.setMaxResults(3);
 		List<advertisement> list = query.list();
 		
 		List<ad_present> advertisement_list = new ArrayList<ad_present>();
 		
 		for(int i=0;i<list.size();i++){
-			int id = list.get(i).getSeller_id();
-			String hql1 = "from seller where Seller_id=:Seller_id";
-			Query query1 = getSession().createQuery(hql1);
-			query1.setInteger("Seller_id", id);
-			seller Seller = (seller) query1.uniqueResult();
-			ad_present Ad = new ad_present();
-			Ad.setSeller_name(Seller.getSeller_Name());
-			Ad.setSeller_Description(Seller.getSeller_Description());
-			Ad.setAdvertisement_Image(list.get(i).getAdvertisement_Image());
-			advertisement_list.add(Ad);
+			if((i==a1)||(i==a2)||(i==a3)){
+			    int id = list.get(i).getSeller_id();
+			    String hql1 = "from seller where Seller_id=:Seller_id";
+			    Query query1 = getSession().createQuery(hql1);
+			    query1.setInteger("Seller_id", id);
+			    seller Seller = (seller) query1.uniqueResult();
+			    ad_present Ad = new ad_present();
+			    Ad.setSeller_name(Seller.getSeller_Name());
+			    Ad.setSeller_Description(Seller.getSeller_Description());
+			    Ad.setAdvertisement_Image(list.get(i).getAdvertisement_Image());
+			    advertisement_list.add(Ad);
+			}
 		}
 		return advertisement_list;
 	}
