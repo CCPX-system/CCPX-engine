@@ -162,6 +162,9 @@
 			  <label class="col-md-5 col-sm-4 col-xs-3 control-label" for="filebutton">Upload your Logo</label>
 			  <div class="col-md-2 col-sm-4 col-xs-6">
 				<input id="Logo" name="Logo" class="input-file" type="file">
+				<div id="image" style="float:right;">
+                <img src="img/logo.png" width="120" height="120"/>
+                </div>
 			  </div>
 			</div>
 
@@ -221,7 +224,21 @@
 				</div>
 			</div>
 		
-		
+<script type="text/javascript">
+document.getElementById('Logo').onchange = function() {
+    var imgFile = this.files[0];
+    if(imgFile!=null){
+    var fr = new FileReader();
+    fr.onload = function() {
+        document.getElementById('image').getElementsByTagName('img')[0].src = fr.result;
+    };
+    fr.readAsDataURL(imgFile);
+    }else{
+     document.getElementById('image').getElementsByTagName('img')[0].src = "img/logo.png";
+    }
+};
+</script>
+
 	</body>
   
 </html>

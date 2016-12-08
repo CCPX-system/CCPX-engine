@@ -22,38 +22,10 @@
 		<script src="js/ljs.js"></script>
 		<script src="js/ajaxfileupload.js"></script>
 		<script src="js/toastr.js"></script>
-		<script type="text/javascript">
-		
-				function readURL(input) {
-					if (input.files && input.files[0]) {
-						var reader = new FileReader();
-
-						reader.onload = function (e) {
-							$('#blah')
-								.attr('src', e.target.result)
-								.width(150)
-								.height(150);
-						};
-
-						reader.readAsDataURL(input.files[0]);
-					}
-				}	
-				$('.thumbnail').hover(
-						function(){
-							$(this).find('.caption').slideDown(250); //.fadeIn(250)
-						},
-						function(){
-							$(this).find('.caption').slideUp(250); //.fadeOut(205)
-						}
-					); 
-
-		  </script>
-
 	</head>
 	
 	<body onLoad="ShowProfile();">
 		<div class="container">
-	
 			<div class="header">
 
 				<!-- Form Name -->
@@ -123,8 +95,11 @@
 		
 		
 <!-- ********************************* ^ here ^ ********************************* -->	
-<form method="post" action="Register" id="EditProfile" class="form-horizontal" enctype="multipart/form-data">
-	<fieldset>
+<form  id="EditProfile" class="form-horizontal" enctype="multipart/form-data">
+<fieldset>
+	
+	
+	
 			<!-- Avatar -->
 			<div class="form-group" id="container" >       
 				<div class="thumbnail">
@@ -132,19 +107,16 @@
 						<h4>Edit Logo</h4>
 						<p>click to add picture</p>
 						<label class="fileContainer">
-							<input id="updateLogo" type="file" name="updateLogo" size="50" required onchange="readURL(this);" />
-						</label>
-					</div>
-					<img id="companyLogo" alt="...">
-				</div>
-				<div>
-				</div>				
+							<input id="updateLogo" type="file" name="updateLogo" size="50" />	    
+                        </label>
+                    </div>
+					<!--<div id="image" style="width:30px;height:20px; float:reght;">-->
+                    <img id="image" src="img/logo.png" width="120" height="120"/>
+                    <!--</div>-->
+				</div>			
 			</div>
-			
-			
-			
-			
-			<!-- New Name-->	
+     
+		   <!-- New Name-->	
 			
 				
 			<div class="form-group">
@@ -231,9 +203,35 @@
 		</fieldset>
 	
 </form>
-
 		
 		</div>
+		
+		
+  <script type="text/javascript">
+				   document.getElementById('updateLogo').onchange = function() {
+						var imgFile = this.files[0];
+						if(imgFile!=null){
+						var fr = new FileReader();
+						fr.onload = function() {
+							document.getElementById('image').src = fr.result;
+						};
+						fr.readAsDataURL(imgFile);
+						}else{
+						 document.getElementById('image').src = "img/logo.png";
+						}
+					};
+					
+					$('.thumbnail').hover(
+									function(){
+										$(this).find('.caption').slideDown(250); //.fadeIn(250)
+									},
+									function(){
+										$(this).find('.caption').slideUp(250); //.fadeOut(205)
+									}
+								); 
+           </script>
+		
+		
 	</body>
   
 </html>

@@ -103,11 +103,14 @@
 							<div class="modal-body">
 							<form id="inputform" enctype="multipart/form-data">
 							  <div class="row">
-							  <div class="col-md-4" style="vertical-align:middle;">
+							  <div class="col-md-3 col-sm-4 col-xs-12" style="vertical-align:middle;">
 										<input type="file" class="input-file"  name="Adimage" id="Adimage" />
+										<div id="image" style="float:left;">
+                                        <img src="img/logo.png" width="120" height="120"/>
+                                        </div>
 							  </div>												  
 							  
-							  <div class="col-md-8 form-group">
+							  <div class="col-md-9 col-sm-8 col-xs-12 form-group">
 								  <label for="description">Title</label>
 									<textarea class="form-control" rows="8" id="title"></textarea>
 							  </div>
@@ -159,6 +162,30 @@
 						<input type="text" class="form-control" name="description" />
 						</div>
 					</div>
+					
+					
+					
+					
+					
+<script type="text/javascript">
+document.getElementById('Adimage').onchange = function() {
+    var imgFile = this.files[0];
+    if(imgFile!=null){
+    var fr = new FileReader();
+    fr.onload = function() {
+        document.getElementById('image').getElementsByTagName('img')[0].src = fr.result;
+    };
+    fr.readAsDataURL(imgFile);
+    }else{
+     document.getElementById('image').getElementsByTagName('img')[0].src = "img/logo.png";
+    }
+};
+</script>	
+		
+					
+					
+					
+					
 	</body>
   
 </html>

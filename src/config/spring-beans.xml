@@ -11,9 +11,11 @@
 
 
 	<!-- 配置注解扫描包 -->
+	<context:component-scan base-package="controller"></context:component-scan>
 	<context:component-scan base-package="service"></context:component-scan>
 	<context:component-scan base-package="dao"></context:component-scan>
 	<context:component-scan base-package="model"></context:component-scan>
+	<mvc:annotation-driven></mvc:annotation-driven>
 	
 	<!--配置文件上传bean -->
 	<bean id="multipartResolver"
@@ -23,7 +25,6 @@
 		<property name="maxInMemorySize" value="40960" />
 
 	</bean>
-	
 	
 	
 </beans>
