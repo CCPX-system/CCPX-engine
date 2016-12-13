@@ -10,7 +10,7 @@ function getCookie(name){
 
 var Chat = {};
 Chat.socket = null;
-var UserId = 2;//getCookie("u_id");
+var UserId = getCookie("u_id"); //UserId = 2;//
 // connect()
 Chat.connect = (function(host) {
 	if ('WebSocket' in window) {
